@@ -5,23 +5,23 @@ import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
-// const body = document.getElementsByTagName("body")[0];
+const body = document.getElementsByTagName("body")[0];
 
-// const store = useStore();
-// onBeforeMount(() => {
-//   store.state.hideConfigButton = true;
-//   store.state.showNavbar = false;
-//   store.state.showSidenav = false;
-//   store.state.showFooter = false;
-//   body.classList.remove("bg-gray-100");
-// });
-// onBeforeUnmount(() => {
-//   store.state.hideConfigButton = false;
-//   store.state.showNavbar = true;
-//   store.state.showSidenav = true;
-//   store.state.showFooter = true;
-//   body.classList.add("bg-gray-100");
-// });
+const store = useStore();
+onBeforeMount(() => {
+  store.state.hideConfigButton = true;
+  store.state.showNavbar = false;
+  store.state.showSidenav = false;
+  store.state.showFooter = false;
+  body.classList.remove("bg-gray-100");
+});
+onBeforeUnmount(() => {
+  store.state.hideConfigButton = false;
+  store.state.showNavbar = true;
+  store.state.showSidenav = true;
+  store.state.showFooter = true;
+  body.classList.add("bg-gray-100");
+});
 </script>
 <template>
   <div class="container top-0 position-sticky z-index-sticky">
