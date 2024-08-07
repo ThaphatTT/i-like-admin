@@ -1,15 +1,21 @@
-<!-- <script setup>
-import { RouterView } from 'vue-router';
-</script>
+<!--
+=========================================================
+* Vue Argon Dashboard 2 - v4.0.0
+=========================================================
 
-<template>
-  <RouterView/>
-</template> -->
+* Product Page: https://creative-tim.com/product/vue-argon-dashboard
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
 
+Coded by www.creative-tim.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
 <script setup>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import Sidenav from "@/examples/Sidenav/index.vue";
+import Sidenav from "./examples/Sidenav"; ////
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
@@ -18,7 +24,7 @@ const store = useStore();
 const isNavFixed = computed(() => store.state.isNavFixed);
 const darkMode = computed(() => store.state.darkMode);
 const isAbsolute = computed(() => store.state.isAbsolute);
-const showSidenav = computed(() => store.state.showSidenav);
+const showSidenav = computed(() => store.state.showSidenav); ////
 const layout = computed(() => store.state.layout);
 const showNavbar = computed(() => store.state.showNavbar);
 const showFooter = computed(() => store.state.showFooter);
@@ -38,17 +44,13 @@ const navClasses = computed(() => {
 });
 </script>
 <template>
-  <div
-    v-show="layout === 'landing'"
-    class="landing-bg h-100 bg-gradient-primary position-fixed w-100"
-  ></div>
+  <div v-show="layout === 'landing'" class="landing-bg h-100 bg-gradient-primary position-fixed w-100"></div>
 
+  <!-- side nav -->
   <sidenav v-if="showSidenav" />
 
-  <main
-    class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
-  >
-    <!-- nav -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
 
     <navbar :class="[navClasses]" v-if="showNavbar" />
 
@@ -56,9 +58,6 @@ const navClasses = computed(() => {
 
     <app-footer v-show="showFooter" />
 
-    <configurator
-      :toggle="toggleConfigurator"
-      :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
-    />
+    <configurator :toggle="toggleConfigurator" :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']" />
   </main>
 </template>

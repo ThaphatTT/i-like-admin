@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, nextTick } from "vue";
+import { onMounted } from "vue";
 import Chart from "chart.js/auto";
 
 const props = defineProps({
@@ -31,22 +31,16 @@ const props = defineProps({
   },
 });
 
-onMounted( async () => {
-  await nextTick();
-  const gradientLineChart = document.getElementById(props.id).getContext("2d");
+onMounted(() => {
+  var gradientLineChart = document.getElementById(props.id).getContext("2d");
 
-  if (!gradientLineChart) {
-    console.error("Cannot get the canvas context. Make sure the canvas element is rendered.");
-    return;
-  }
-
-  const gradientStroke1 = gradientLineChart.createLinearGradient(0, 230, 0, 50);
+  var gradientStroke1 = gradientLineChart.createLinearGradient(0, 230, 0, 50);
 
   gradientStroke1.addColorStop(1, "rgba(203,12,159,0.2)");
   gradientStroke1.addColorStop(0.2, "rgba(72,72,176,0.0)");
   gradientStroke1.addColorStop(0, "rgba(203,12,159,0)"); //purple colors
 
-  const gradientStroke2 = gradientLineChart.createLinearGradient(0, 230, 0, 50);
+  var gradientStroke2 = gradientLineChart.createLinearGradient(0, 230, 0, 50);
 
   gradientStroke2.addColorStop(1, "rgba(20,23,39,0.2)");
   gradientStroke2.addColorStop(0.2, "rgba(72,72,176,0.0)");
@@ -56,7 +50,6 @@ onMounted( async () => {
   if (chartStatus != undefined) {
     chartStatus.destroy();
   }
-
   if (props.chart.datasets.length == 2) {
     new Chart(gradientLineChart, {
       type: "line",

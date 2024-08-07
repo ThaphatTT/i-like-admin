@@ -37,11 +37,11 @@ onBeforeUnmount(() => {
   </div>
   <main class="mt-0 main-content">
     <section>
-      <div class="container d-flex align-items-center justify-content-center min-vh-100 ">
+      <div class="page-header min-vh-100">
         <div class="container">
           <div class="row">
             <div
-              class="mx-auto col-xl-5 col-lg-6 col-md-10 d-flex flex-column mx-lg-0"
+              class="mx-auto col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0"
             >
               <div class="card card-plain">
                 <div class="pb-0 card-header text-start">
@@ -97,10 +97,10 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <div
-              class="top-0 my-auto text-center col-6 d-lg-flex d-none h-50 pe-0 end-0 justify-content-center align-items-center flex-column "
+              class="top-0 my-auto text-center col-6 d-lg-flex d-none h-100 pe-0 position-absolute end-0 justify-content-center flex-column"
             >
               <div
-                class="position-relative bg-gradient-primary h-50 m-1 px-1 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
+                class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
                 style="
                   background-image: url(&quot;https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg&quot;);
                   background-size: cover;

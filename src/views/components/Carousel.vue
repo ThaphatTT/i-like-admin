@@ -1,9 +1,3 @@
-
-<script setup>
-import carousel1 from '@/assets/img/carousel-1.jpg';
-import carousel2 from '@/assets/img/carousel-2.jpg';
-import carousel3 from '@/assets/img/carousel-3.jpg';
-</script>
 <template>
   <div class="card card-carousel overflow-hidden h-100 p-0">
     <div
@@ -16,7 +10,7 @@ import carousel3 from '@/assets/img/carousel-3.jpg';
           class="carousel-item h-100 active"
           :style="{
             backgroundImage:
-              'url(' + carousel1 + ')',
+              'url(' + require('@/assets/img/carousel-1.jpg') + ')',
             backgroundSize: 'cover',
           }"
         >
@@ -39,7 +33,7 @@ import carousel3 from '@/assets/img/carousel-3.jpg';
           class="carousel-item h-100"
           :style="{
             backgroundImage:
-              'url(' + carousel2 + ')',
+              'url(' + require('@/assets/img/carousel-2.jpg') + ')',
             backgroundSize: 'cover',
           }"
         >
@@ -62,7 +56,7 @@ import carousel3 from '@/assets/img/carousel-3.jpg';
           class="carousel-item h-100"
           :style="{
             backgroundImage:
-              'url(' + carousel3 + ')',
+              'url(' + require('@/assets/img/carousel-3.jpg') + ')',
             backgroundSize: 'cover',
           }"
         >

@@ -208,8 +208,8 @@ onBeforeUnmount(() => {
                 </div>
                 <p class="text-sm mt-3 mb-0">
                   Already have an account?
-                  <router-link to="/signup;" class="text-dark font-weight-bolder"
-                    >Sign in</router-link
+                  <a href="javascript:;" class="text-dark font-weight-bolder"
+                    >Sign in</a
                   >
                 </p>
               </form>

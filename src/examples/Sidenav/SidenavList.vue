@@ -6,17 +6,14 @@ import { useStore } from "vuex";
 import SidenavItem from "./SidenavItem.vue";
 import SidenavCard from "./SidenavCard.vue";
 
-
-
 const store = useStore();
 const isRTL = computed(() => store.state.isRTL);
 
 const getRoute = () => {
   const route = useRoute();
-  console.log(route.name);
-  return route.name || '';
+  const routeArr = route.path.split("/");
+  return routeArr[1];
 };
-
 </script>
 <template>
   <div
@@ -119,7 +116,7 @@ const getRoute = () => {
       <li class="nav-item">
         <sidenav-item
           to="/signin"
-          :class="getRoute() === 'sign-in' ? 'active' : ''"
+          :class="getRoute() === 'signin' ? 'active' : ''"
           :navText="isRTL ? 'تسجيل الدخول' : 'Sign In'"
         >
           <template v-slot:icon>
