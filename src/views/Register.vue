@@ -1,5 +1,36 @@
 <script setup>
+import axios from 'axios';
+import {reactive} from 'vue';
+import { useRouter, RouterLink } from 'vue-router';
 
+const router = useRouter();
+const userData = reactive({
+    username: '',
+    email: '',
+    password: '',
+    fname:'',
+    lname:''
+});
+
+const handleSubmit = async()=>{
+    const register={
+        username: userData.username,
+        email: userData.email,
+        password: userData.password,
+        fname: userData.fname,
+        lname: userData.lname
+    }
+    console.log(register);
+    try {
+        const response = await axios.post('http://localhost:1337/api/auth/local/register',register)
+        console.log("response data:", response.data);
+        localStorage.setItem('token', response.data.jwt);
+        router.push({ name: 'dashboard-home' });
+    } catch (error) {
+        console.log('Error fetching user data', error.response);
+        console.log('Register failed');
+    }
+}
 </script>
 
 <template>
@@ -12,29 +43,33 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form @submit.prevent="handleSubmit">
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" />
+                                                        <input class="form-control" v-model="userData.fname" id="inputFirstName" type="text" placeholder="Enter your first name" />
                                                         <label for="inputFirstName">First name</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" />
+                                                        <input class="form-control" v-model="userData.lname" id="inputLastName" type="text" placeholder="Enter your last name" />
                                                         <label for="inputLastName">Last name</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
+                                                <input class="form-control" v-model="userData.username" id="inputUsername" type="text" placeholder="john" />
+                                                <label for="inputEmail">Username</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" v-model="userData.email" id="inputEmail" type="email" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" />
+                                                        <input class="form-control" v-model="userData.password" id="inputPassword" type="password" placeholder="Create a password" />
                                                         <label for="inputPassword">Password</label>
                                                     </div>
                                                 </div>
@@ -46,12 +81,12 @@
                                                 </div>
                                             </div>
                                             <div class="mt-4 mb-0">
-                                                <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div>
+                                                <div class="d-grid"><button class="btn btn-primary btn-block">Create Account</button></div>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="login.html">Have an account? Go to login</a></div>
+                                        <div class="small"><button type="submit" to="/signin">Have an account? Go to login</button></div>
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,8 @@
 <script setup>
 import {ref, onMounted} from 'vue'
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter} from 'vue-router';
 
+const router = useRouter();
 
 const isSidebarToggled = ref(false)
 
@@ -17,12 +18,17 @@ onMounted(() => {
     document.body.classList.add('sb-sidenav-toggled');
   }
 })
+
+const logout = ()=>{
+  localStorage.removeItem('token');
+  router.push({ name: 'sign-in' });
+}
 </script>
 
 <template>
           <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
+            <RouterLink class="navbar-brand ps-3" to="/">Start Bootstrap</RouterLink>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" @click="toggleSidebar" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -40,7 +46,7 @@ onMounted(() => {
                         <li><RouterLink class="dropdown-item" to="/">Settings</RouterLink></li>
                         <li><a class="dropdown-item" to="/">Activity Log</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" to="/">Logout</a></li>
+                        <li><a class="dropdown-item" @click="logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
