@@ -130,6 +130,9 @@ const deleteItem = async (id) => {
                                 <table id="datatablesSimple">
                                     <thead>
                                         <td><RouterLink to="/Promotions-Dashboard/create" class="btn btn-primary btn-block">Create</RouterLink></td>
+                                        <td>
+                                            <RouterLink to="/Promotions-Dashboard/list" class="btn btn-primary btn-block">List</RouterLink>
+                                        </td>
                                     <tr>
                                         <th>Name</th>
                                         <th>Position</th>
@@ -142,6 +145,7 @@ const deleteItem = async (id) => {
                                         <td>{{ item.attributes.description }}</td>
                                         <td><RouterLink  :to="'/Promotions-Dashboard/edit/'+ item.id" class="btn btn-primary btn-block">Edit</RouterLink></td>
                                         <td><button class="btn btn-primary btn-block" @click="deleteItem(item.id)">Delete</button></td>
+                                        <td><RouterLink  :to="'/Promotions-Dashboard/view/'+ item.id" class="btn btn-primary btn-block">View</RouterLink></td>
                                     </tr>
                                     </tbody>
                                 </table>

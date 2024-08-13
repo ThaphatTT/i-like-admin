@@ -14,6 +14,18 @@ import PromotionsCreate from "@/views/PromotionsCreate.vue";
 import ProductsCreate from "@/views/ProductsCreate.vue";
 import ProductsEdit from "@/views/ProductsEdit.vue";
 
+import BlogList from "@/views/BlogList.vue";
+import BlogView from "@/views/BlogView.vue";
+import PromotionsList from "@/views/PromotionsList.vue";
+import PromotionsView from "@/views/PromotionsView.vue";
+import ProductsList from "@/views/ProductsList.vue";
+import ProductsView from "@/views/ProductsView.vue";
+import OrderDashboard from "@/views/OrderDashboard.vue";
+import OrderCreate from "@/views/OrderCreate.vue";
+import OrderEdit from "@/views/OrderEdit.vue";
+import OrderList from "@/views/OrderList.vue";
+import OrderView from "@/views/OrderView.vue";
+
 const router = createRouter({
   history : createWebHistory(import.meta.env.BASE_URL),
   routes:[
@@ -103,6 +115,94 @@ const router = createRouter({
       path: '/Products-Dashboard/create',
       name: 'product-create',
       component: ProductsCreate,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Blog-Dashboard/list',
+      name: 'blog-list',
+      component: BlogList,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Blog-Dashboard/view/:id',
+      name: 'blog-view',
+      component: BlogView,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Promotions-Dashboard/list',
+      name: 'promotions-list',
+      component: PromotionsList,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Promotions-Dashboard/view/:id',
+      name: 'promotions-view',
+      component: PromotionsView,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Product-Dashboard/list',
+      name: 'product-list',
+      component: ProductsList,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Products-Dashboard/view/:id',
+      name: 'product-view',
+      component: ProductsView,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Orders-Dashboard',
+      name: 'order-blog',
+      component: OrderDashboard,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Orders-Dashboard/edit/:id',
+      name: 'order-edit',
+      component: OrderEdit,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Orders-Dashboard/create',
+      name: 'order-create',
+      component: OrderCreate,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Orders-Dashboard/list',
+      name: 'order-list',
+      component: OrderList,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Orders-Dashboard/view/:id',
+      name: 'order-view',
+      component: OrderView,
       meta:{
         middleware: auth
       }

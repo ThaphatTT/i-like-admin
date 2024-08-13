@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 
 const isSidebarToggled = ref(false)
-const products = ref([]);
+const order = ref([]);
 const toggleSidebar = () => {
     isSidebarToggled.value = !isSidebarToggled.value;
     document.body.classList.toggle('sb-sidenav-toggled', isSidebarToggled.value);
@@ -23,13 +23,13 @@ onMounted(() => {
 const fetchPromotionsData = async () => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/products',{
+        const response = await axios.get('http://localhost:1337/api/promotions',{
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }); 
-        products.value = response.data.data;
-        console.log(products);
+        order.value = response.data.data;
+        console.log(promotions);
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -41,7 +41,7 @@ const fetchPromotionsData = async () => {
 const deleteItem = async (id) => {
     try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:1337/api/products/${id}`, {
+        await axios.delete(`http://localhost:1337/api/promotions/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -59,9 +59,9 @@ const deleteItem = async (id) => {
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Products Dashboard</h1>
+                        <h1 class="mt-4">Order Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Products Dashboard</li>
+                            <li class="breadcrumb-item active">Order Dashboard</li>
                         </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
@@ -129,9 +129,9 @@ const deleteItem = async (id) => {
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
-                                        <td><RouterLink to="/Products-Dashboard/create" class="btn btn-primary btn-block">Create</RouterLink></td>
+                                        <td><RouterLink to="/Orders-Dashboard/create" class="btn btn-primary btn-block">Create</RouterLink></td>
                                         <td>
-                                            <RouterLink to="/Product-Dashboard/list" class="btn btn-primary btn-block">List</RouterLink>
+                                            <RouterLink to="/Orders-Dashboard/list" class="btn btn-primary btn-block">List</RouterLink>
                                         </td>
                                     <tr>
                                         <th>Name</th>
@@ -140,12 +140,12 @@ const deleteItem = async (id) => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(item, index) in products" :key="index">
-                                        <td>{{ item.attributes.name }}</td>
-                                        <td>{{ item.attributes.price }}</td>
-                                        <td><RouterLink  :to="'/Products-Dashboard/edit/'+ item.id" class="btn btn-primary btn-block">Edit</RouterLink></td>
+                                    <tr v-for="(item, index) in order" :key="index">
+                                        <td>{{ item.attributes.topic }}</td>
+                                        <td>{{ item.attributes.description }}</td>
+                                        <td><RouterLink  :to="'/Orders-Dashboard/edit/'+ item.id" class="btn btn-primary btn-block">Edit</RouterLink></td>
                                         <td><button class="btn btn-primary btn-block" @click="deleteItem(item.id)">Delete</button></td>
-                                        <td><RouterLink  :to="'/Products-Dashboard/view/'+ item.id" class="btn btn-primary btn-block">View</RouterLink></td>
+                                        <td><RouterLink  :to="'/Orders-Dashboard/view/'+ item.id" class="btn btn-primary btn-block">View</RouterLink></td>
                                     </tr>
                                     </tbody>
                                 </table>
