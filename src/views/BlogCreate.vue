@@ -2,6 +2,8 @@
 import axios from 'axios';
 import {reactive} from 'vue';
 import {useRouter} from 'vue-router';
+import Swal from 'sweetalert2';
+
 
 const router= useRouter();
 const blogs = reactive({
@@ -24,10 +26,23 @@ const handleSubmit = async () => {
                 Authorization: `Bearer ${token}`
             }
         }); 
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Create a data success",
+            showConfirmButton: false,
+            timer: 1500
+            });
         router.push(`/Blog-Dashboard`)
         
     } catch (error) {
         console.error('Error create a data:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'Error create a data',
+            icon: 'error',
+            confirmButtonText: 'OK'
+            })
     }
 };
 </script>

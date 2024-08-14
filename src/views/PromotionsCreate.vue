@@ -2,6 +2,7 @@
 import axios from 'axios';
 import {reactive} from 'vue';
 import {useRouter} from 'vue-router';
+import Swal from 'sweetalert2';
 
 const router= useRouter();
 const promotion = reactive({
@@ -10,7 +11,7 @@ const promotion = reactive({
 })
 
 const handleSubmit = async () => {
-    const CreatePromotion ={
+    const CreateProduct ={
         data:{
             topic:promotion.topic,
             description:promotion.description
@@ -18,16 +19,29 @@ const handleSubmit = async () => {
     }
     try {
         const token = localStorage.getItem('token');
-        await axios.post('http://localhost:1337/api/promotions',CreatePromotion,
+        await axios.post('http://localhost:1337/api/promotions',CreateProduct,
         {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }); 
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Create a data success",
+            showConfirmButton: false,
+            timer: 1500
+            });
         router.push(`/Promotions-Dashboard`)
         
     } catch (error) {
         console.error('Error create a data:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'Error create a data',
+            icon: 'error',
+            confirmButtonText: 'OK'
+            })
     }
 };
 </script>

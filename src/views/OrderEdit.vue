@@ -11,26 +11,64 @@ const order = reactive({
     description:''
 })
 
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success",
+    cancelButton: "btn btn-danger"
+  },
+  buttonsStyling: false
+});
+
 const handleSubmit = async () => {
-    const updatedPromotion ={
+    const updatedOrder ={
         data:{
-            topic:order.topic,
-            description:order.description
+            topic:blogs.topic,
+            description:blogs.description
         }
     }
-    try {
+    swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, edit it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+    }).then( async (result) => {
+    if (result.isConfirmed) {
+        try {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:1337/api/promotions/${orderID}`,updatedPromotion,
+        await axios.put(`http://localhost:1337/api/promotions/${orderID}`,updatedOrder,
         {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }); 
-        router.push(`/Promotions-Dashboard`)
+        swalWithBootstrapButtons.fire({
+            title: "Edit!",
+            text: "Your order has been updated.",
+            icon: "success"
+        });
+        router.push(`/Orders-Dashboard`)
         
-    } catch (error) {
-        console.error('Error updated data:', error);
+        } catch (error) {
+            console.error('Error updated data:', error);
+            swalWithBootstrapButtons.fire({
+            title: "Error!",
+            text: "There was a problem updating the item.",
+            icon: "error"
+            });
+        }
+    } else if (
+        result.dismiss === Swal.DismissReason.cancel
+    ) {
+        swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "Your imaginary item is safe :)",
+        icon: "error"
+        });
     }
+    });
 };
 </script>
 

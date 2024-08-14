@@ -2,6 +2,7 @@
 import axios from 'axios';
 import {reactive} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const router= useRouter();
@@ -11,6 +12,14 @@ const blogs = reactive({
     description:''
 })
 
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success",
+    cancelButton: "btn btn-danger"
+  },
+  buttonsStyling: false
+});
+
 const handleSubmit = async () => {
     const updatedBlogs ={
         data:{
@@ -18,7 +27,17 @@ const handleSubmit = async () => {
             description:blogs.description
         }
     }
-    try {
+    swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, edit it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+    }).then( async (result) => {
+    if (result.isConfirmed) {
+        try {
         const token = localStorage.getItem('token');
         await axios.put(`http://localhost:1337/api/blogs/${blogID}`,updatedBlogs,
         {
@@ -26,11 +45,31 @@ const handleSubmit = async () => {
                 Authorization: `Bearer ${token}`
             }
         }); 
+        swalWithBootstrapButtons.fire({
+            title: "Edit!",
+            text: "Your blog has been edit.",
+            icon: "success"
+        });
         router.push(`/Blog-Dashboard`)
         
-    } catch (error) {
-        console.error('Error updated data:', error);
+        } catch (error) {
+            console.error('Error updated data:', error);
+            swalWithBootstrapButtons.fire({
+            title: "Error!",
+            text: "There was a problem editing the item.",
+            icon: "error"
+            });
+        }
+    } else if (
+        result.dismiss === Swal.DismissReason.cancel
+    ) {
+        swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "Your imaginary item is safe :)",
+        icon: "error"
+        });
     }
+    });
 };
 </script>
 

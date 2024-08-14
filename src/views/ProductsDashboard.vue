@@ -3,6 +3,7 @@ import axios from 'axios';
 import {ref, onMounted} from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
+import Swal from 'sweetalert2';
 
 const isSidebarToggled = ref(false)
 const products = ref([]);
@@ -17,10 +18,10 @@ onMounted(() => {
     if (isSidebarToggled.value) {
     document.body.classList.add('sb-sidenav-toggled');
     }
-    fetchPromotionsData()
+    fetchProductData()
 })
 
-const fetchPromotionsData = async () => {
+const fetchProductData = async () => {
     try {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:1337/api/products',{
@@ -29,7 +30,6 @@ const fetchPromotionsData = async () => {
             }
         }); 
         products.value = response.data.data;
-        console.log(products);
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -38,18 +38,56 @@ const fetchPromotionsData = async () => {
 
 
 
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success",
+    cancelButton: "btn btn-danger"
+  },
+  buttonsStyling: false
+});
+
 const deleteItem = async (id) => {
-    try {
-        const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:1337/api/products/${id}`, {
+    swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:1337/api/products/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
+            });
+
+            swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Your item has been deleted.",
+            icon: "success"
+            });
+            fetchProductData(); 
+        } catch (error) {
+            console.error('Error deleting item:', error);
+
+            swalWithBootstrapButtons.fire({
+            title: "Error!",
+            text: "There was a problem deleting the item.",
+            icon: "error"
+            });
+        }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Your product is safe :)",
+            icon: "error"
         });
-        fetchPromotionsData(); 
-    } catch (error) {
-        console.error('Error deleting item:', error);
-    }
+        }
+    });
 }
 </script>
 

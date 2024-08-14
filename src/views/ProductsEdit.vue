@@ -2,6 +2,7 @@
 import axios from 'axios';
 import {reactive} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const router= useRouter();
@@ -11,16 +12,32 @@ const product = reactive({
     price: ''
 })
 
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success",
+    cancelButton: "btn btn-danger"
+  },
+  buttonsStyling: false
+});
+
 const handleSubmit = async () => {
     const updatedProduct ={
         data:{
             name:product.name,
-            price:Number(product.price)
+            price:product.price
         }
     }
-    console.log(updatedProduct);
-    
-    try {
+    swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, edit it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+    }).then( async (result) => {
+    if (result.isConfirmed) {
+        try {
         const token = localStorage.getItem('token');
         await axios.put(`http://localhost:1337/api/products/${productID}`,updatedProduct,
         {
@@ -28,11 +45,31 @@ const handleSubmit = async () => {
                 Authorization: `Bearer ${token}`
             }
         }); 
+        swalWithBootstrapButtons.fire({
+            title: "Edit!",
+            text: "Your Product has been edit.",
+            icon: "success"
+        });
         router.push(`/Products-Dashboard`)
         
-    } catch (error) {
-        console.error('Error updated data:', error);
+        } catch (error) {
+            console.error('Error updated data:', error);
+            swalWithBootstrapButtons.fire({
+            title: "Error!",
+            text: "There was a problem editing the item.",
+            icon: "error"
+            });
+        }
+    } else if (
+        result.dismiss === Swal.DismissReason.cancel
+    ) {
+        swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "Your Product is safe :)",
+        icon: "error"
+        });
     }
+    });
 };
 </script>
 
