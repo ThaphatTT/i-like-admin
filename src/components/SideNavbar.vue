@@ -9,19 +9,19 @@
                             <div class="sb-sidenav-menu-heading">Core</div>
                             <RouterLink class="nav-link" to="/Blog-Dashboard">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Blog Dashboard
+                                Blog
                             </RouterLink>
                             <RouterLink class="nav-link" to="/Promotions-Dashboard">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Promotions Dashboard
+                                Promotions
                             </RouterLink>
                             <RouterLink class="nav-link" to="/Products-Dashboard">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Products Dashboard
+                                Products
                             </RouterLink>
                             <RouterLink class="nav-link" to="/Orders-Dashboard">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Order Dashboard
+                                Order
                             </RouterLink>
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">

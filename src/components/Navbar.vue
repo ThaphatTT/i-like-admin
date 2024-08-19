@@ -1,6 +1,7 @@
 <script setup>
-import {ref, onMounted} from 'vue'
-import { RouterLink, useRouter} from 'vue-router';
+import {ref, onMounted, computed} from 'vue'
+import { useRouter} from 'vue-router';
+import { hasToken } from '@/auth/auth'
 
 const router = useRouter();
 
@@ -21,14 +22,14 @@ onMounted(() => {
 
 const logout = ()=>{
   localStorage.removeItem('token');
+  window.location.reload();
   router.push({ name: 'sign-in' });
 }
+const isAuthenticated = computed(() => hasToken());
 </script>
 
 <template>
           <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <RouterLink class="navbar-brand ps-3" to="/">Start Bootstrap</RouterLink>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" @click="toggleSidebar" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -39,12 +40,10 @@ const logout = ()=>{
                 </div>
             </form>
             <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <ul v-if="isAuthenticated" class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><RouterLink class="dropdown-item" to="/">Settings</RouterLink></li>
-                        <li><a class="dropdown-item" to="/">Activity Log</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" @click="logout">Logout</a></li>
                     </ul>

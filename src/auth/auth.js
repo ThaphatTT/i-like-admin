@@ -1,11 +1,10 @@
-function auth({ next, router }) {
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-    return router.push({ name: 'sign-in' });
-  }
-
-  return next();
+export function hasToken() {
+  return !!localStorage.getItem('token');
 }
 
-export default auth
+export function auth({ next, router }) {
+  if (!hasToken()) {
+    return router.push({ name: 'sign-in' });
+  }
+  return next();
+}

@@ -5,7 +5,7 @@ import Register from '@/views/Register.vue'
 import BlogDashboard from '@/views/BlogDashboard.vue'
 import PromotionsDashboard from '@/views/PromotionsDashboard.vue'
 import ProductsDashboard from '@/views/ProductsDashboard.vue'
-import auth from '@/auth/auth'
+import { auth } from '@/auth/auth'
 
 import EditBlog from "@/views/BlogEdit.vue";
 import CreateBlog from "@/views/BlogCreate.vue";
@@ -34,7 +34,7 @@ const router = createRouter({
       name: 'dashboard-home',
       component: BlogDashboard,
       meta:{
-        middleware: auth
+        middleware: auth,
       }
     },
     {

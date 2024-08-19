@@ -2,6 +2,7 @@
 import axios from 'axios';
 import {reactive} from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const userData = reactive({
@@ -25,10 +26,22 @@ const handleSubmit = async()=>{
         const response = await axios.post('http://localhost:1337/api/auth/local/register',register)
         console.log("response data:", response.data);
         localStorage.setItem('token', response.data.jwt);
+        Swal.fire({
+            title: 'Successed!',
+            text: 'Login Successed',
+            icon: 'success',
+            confirmButtonText: 'OK'
+            })
         router.push({ name: 'dashboard-home' });
     } catch (error) {
         console.log('Error fetching user data', error.response);
         console.log('Register failed');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Register failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+            })
     }
 }
 </script>

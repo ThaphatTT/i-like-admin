@@ -3,6 +3,8 @@ import axios from 'axios';
 import {reactive} from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
+import Swal from 'sweetalert2';
+import ButtonLink from './components/ButtonLink.vue';
 const userData = reactive({
     email: '',
     password: ''
@@ -18,10 +20,27 @@ const handleSubmit = async()=>{
         const response = await axios.post('http://localhost:1337/api/auth/local',login)
         console.log("response data:", response.data);
         localStorage.setItem('token', response.data.jwt);
-        router.push({ name: 'dashboard-home' });
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Login suceessed",
+            showConfirmButton: false,
+            timer: 1000
+        }).then( async () => {
+            await router.push({ name: 'dashboard-home' });
+            window.location.reload();
+        })
+
     } catch (error) {
         console.log('Error fetching user data', error.response);
         console.log('login failed');
+        Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Login failed",
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
 }
 </script>
