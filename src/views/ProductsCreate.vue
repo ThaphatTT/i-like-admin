@@ -3,6 +3,7 @@ import axios from 'axios';
 import {reactive} from 'vue';
 import {useRouter} from 'vue-router';
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 
 const router= useRouter();
@@ -14,20 +15,14 @@ const product = reactive({
 const handleSubmit = async () => {
     const CreateProduct ={
         data:{
-            topic:blogs.topic,
-            description:blogs.description
+            name:product.name,
+            price:product.price
         }
     }
     try {
-        const token = localStorage.getItem('token');
-        await axios.post('http://localhost:1337/api/products',CreateProduct,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        await api.createProducts(CreateProduct); 
         Swal.fire({
-            position: "top-end",
+            position: "center",
             icon: "success",
             title: "Create a data success",
             showConfirmButton: false,

@@ -4,6 +4,7 @@ import {ref, onMounted} from 'vue'
 import axios from 'axios';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 const blogs = ref([]);
 const isSidebarToggled = ref(false)
@@ -22,13 +23,8 @@ onMounted (()=>{
 
 const fetchBlogData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/blogs',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        blogs.value = response.data.data;
+        const response = await api.getBlogs();
+        blogs.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);

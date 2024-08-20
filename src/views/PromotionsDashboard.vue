@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
+import api from '@/vender/api'
 
 const isSidebarToggled = ref(false)
 const promotions = ref([]);
@@ -24,14 +25,8 @@ onMounted(() => {
 
 const fetchPromotionsData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/promotions',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        promotions.value = response.data.data;
-        console.log(promotions);
+        const response = await api.getPromotions(); 
+        promotions.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -60,13 +55,7 @@ const deleteItem = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:1337/api/promotions/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-            });
-
+            await api.deletePromotions(id)
             swalWithBootstrapButtons.fire({
             title: "Deleted!",
             text: "Your item has been deleted.",
@@ -75,7 +64,6 @@ const deleteItem = async (id) => {
             fetchPromotionsData(); 
         } catch (error) {
             console.error('Error deleting item:', error);
-
             swalWithBootstrapButtons.fire({
             title: "Error!",
             text: "There was a problem deleting the item.",

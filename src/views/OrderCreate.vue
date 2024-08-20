@@ -3,6 +3,7 @@ import axios from 'axios';
 import {reactive} from 'vue';
 import {useRouter} from 'vue-router';
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 const router= useRouter();
 const order = reactive({
@@ -18,13 +19,7 @@ const handleSubmit = async () => {
         }
     }
     try {
-        const token = localStorage.getItem('token');
-        await axios.post('http://localhost:1337/api/blogs',CreateOrder,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        await api.createOrders(CreateOrder); 
         Swal.fire({
             position: "top-end",
             icon: "success",

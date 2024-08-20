@@ -4,6 +4,7 @@ import {ref, onMounted} from 'vue'
 import axios from 'axios';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 const order = ref([]);
 const isSidebarToggled = ref(false)
@@ -22,13 +23,8 @@ onMounted (()=>{
 
 const fetchOrderData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/promotions',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        order.value = response.data.data;
+        const response = await api.getOrders(); 
+        order.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -57,12 +53,7 @@ const deleteItem = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:1337/api/promotions/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            await api.deleteOrders(id);
             swalWithBootstrapButtons.fire({
             title: "Deleted!",
             text: "Your order has been deleted.",

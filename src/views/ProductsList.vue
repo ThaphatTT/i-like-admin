@@ -4,6 +4,7 @@ import {ref, onMounted} from 'vue'
 import axios from 'axios';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 const products = ref([]);
 const isSidebarToggled = ref(false)
@@ -22,13 +23,8 @@ onMounted (()=>{
 
 const fetchProductData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/products',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        products.value = response.data.data;
+        const response = await api.getProducts(); 
+        products.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -97,6 +93,7 @@ const deleteItem = async (id) => {
       :objectQuery="products"
       :deleteItem="deleteItem"
       createLink="/Products-Dashboard/create"
+      createLinkEdit="/Products-Dashboard/edit/"
       :columns="[
         { label: 'Product Name', field: 'name' },
         { label: 'Price', field: 'price' },

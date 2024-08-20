@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
+import api from '@/vender/api'
 
 const isSidebarToggled = ref(false)
 const blogs = ref([]);
@@ -24,13 +25,8 @@ onMounted(() => {
 
 const fetchBlogData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/blogs',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        blogs.value = response.data.data;
+        const response = await api.getBlogs();
+        blogs.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -59,13 +55,7 @@ const deleteItem = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:1337/api/blogs/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-            });
-
+            await api.deleteBlogs(`${id}`);
             swalWithBootstrapButtons.fire({
             title: "Deleted!",
             text: "Your file has been deleted.",

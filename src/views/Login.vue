@@ -5,21 +5,20 @@ import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
+import api from '@/vender/api'
 const userData = reactive({
     email: '',
     password: ''
 });
 
 const handleSubmit = async()=>{
-    const login={
+    const loginData={
         identifier: userData.email,
         password: userData.password
-    }
-    console.log(login);
+    } 
     try {
-        const response = await axios.post('http://localhost:1337/api/auth/local',login)
-        console.log("response data:", response.data);
-        localStorage.setItem('token', response.data.jwt);
+        const response = await api.login(loginData)
+        localStorage.setItem('token', response.jwt);
         Swal.fire({
             position: "center",
             icon: "success",
@@ -32,8 +31,6 @@ const handleSubmit = async()=>{
         })
 
     } catch (error) {
-        console.log('Error fetching user data', error.response);
-        console.log('login failed');
         Swal.fire({
             position: "center",
             icon: "error",

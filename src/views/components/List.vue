@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     default: '/Blog-Dashboard/'
   },
+  createLinkEdit:{
+    type: String,
+    default: '/Blog-Dashboard/'
+  },
   columns: {
     type: Array,
     required: true
@@ -46,7 +50,7 @@ const props = defineProps({
                 <td v-for="column in columns" :key="column.field">
                   {{ item.attributes[column.field] }}
                 </td>
-                  <td><RouterLink  :to="'/Blog-Dashboard/edit/'+ item.id" class="btn btn-primary btn-block">Edit</RouterLink></td>
+                  <td><RouterLink  :to="createLinkEdit + item.id" class="btn btn-primary btn-block">Edit</RouterLink></td>
                   <td><button class="btn btn-primary btn-block" @click="deleteItem(item.id)">Delete</button></td>
               </tr>
               </tbody>

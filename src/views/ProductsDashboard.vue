@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
+import api from '@/vender/api'
 
 const isSidebarToggled = ref(false)
 const products = ref([]);
@@ -24,13 +25,8 @@ onMounted(() => {
 
 const fetchProductData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:1337/api/products',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
-        products.value = response.data.data;
+        const response = await api.getProducts(); 
+        products.value = response.data;
         
     } catch (error) {
         console.error('Error fetching data:', error);

@@ -3,6 +3,7 @@ import axios from 'axios';
 import {reactive} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import Swal from 'sweetalert2';
+import api from '@/vender/api'
 
 const route = useRoute();
 const router= useRouter();
@@ -38,13 +39,7 @@ const handleSubmit = async () => {
     }).then( async (result) => {
     if (result.isConfirmed) {
         try {
-        const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:1337/api/promotions/${promotionID}`,updatedPromotion,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        await api.updatePromotions(promotionID,updatedPromotion); 
         swalWithBootstrapButtons.fire({
             title: "Edit!",
             text: "Your Product has been edit.",
