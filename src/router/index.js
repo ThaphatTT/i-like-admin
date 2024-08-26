@@ -26,6 +26,8 @@ import OrderEdit from "@/views/OrderEdit.vue";
 import OrderList from "@/views/OrderList.vue";
 import OrderView from "@/views/OrderView.vue";
 
+import Dashboard from "@/views/Dashboard.vue";
+
 const router = createRouter({
   history : createWebHistory(import.meta.env.BASE_URL),
   routes:[
@@ -203,6 +205,14 @@ const router = createRouter({
       path: '/Orders-Dashboard/view/:id',
       name: 'order-view',
       component: OrderView,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Dashboard',
+      name: 'main-dashboard',
+      component: Dashboard,
       meta:{
         middleware: auth
       }
