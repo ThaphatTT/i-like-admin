@@ -3,7 +3,7 @@ import axios from 'axios';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
-import api from '@/vendors/api'
+import api from '@/vender/api'
 
 const router = useRouter();
 const promotion = reactive({

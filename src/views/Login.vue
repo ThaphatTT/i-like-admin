@@ -5,7 +5,7 @@ import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
-import api from '@/vendors/api'
+import api from '@/vender/api'
 const userData = reactive({
     email: '',
     password: ''

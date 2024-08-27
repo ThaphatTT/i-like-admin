@@ -5,21 +5,11 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
-import api from '@/vendors/api'
+import api from '@/vender/api'
 
-const isSidebarToggled = ref(false)
 const promotions = ref([]);
-const toggleSidebar = () => {
-    isSidebarToggled.value = !isSidebarToggled.value;
-    document.body.classList.toggle('sb-sidenav-toggled', isSidebarToggled.value);
-    localStorage.setItem('sb|sidebar-toggle', isSidebarToggled.value);
-}
 
 onMounted(() => {
-    isSidebarToggled.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
-    if (isSidebarToggled.value) {
-        document.body.classList.add('sb-sidenav-toggled');
-    }
     fetchPromotionsData()
 })
 
@@ -27,6 +17,8 @@ const fetchPromotionsData = async () => {
     try {
         const response = await api.getPromotions();
         promotions.value = response.data;
+        console.log(promotions.value);
+        
 
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -62,6 +54,7 @@ const deleteItem = async (id) => {
                     icon: "success"
                 });
                 fetchPromotionsData();
+                
             } catch (error) {
                 console.error('Error deleting item:', error);
                 swalWithBootstrapButtons.fire({
@@ -120,8 +113,9 @@ const deleteItem = async (id) => {
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in promotions" :key="index">
-                                        <td>{{ item.attributes.topic }}</td>
-                                        <td>{{ item.attributes.description }}</td>
+                                        <td>{{ item.attributes.publishedAt
+ }}</td>
+                                        <td>{{ item.attributes.createdAt }}</td>
                                         <td>
                                             <RouterLink :to="'/Promotions-Dashboard/edit/' + item.id"
                                                 class="btn btn-primary btn-block">Edit</RouterLink>

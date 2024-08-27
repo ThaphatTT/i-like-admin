@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:1338/api'
+const url = 'http://localhost:1337/api'
 
 const api = {
   // Missing Registration API
@@ -198,6 +198,36 @@ const api = {
       })
     })
   },
+  sortOrders() {
+    return new Promise((resolve, reject) => {
+      axios.get(`${url}/orders?sort=createdAt:desc`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      }).then(response => {
+        resolve(response.data);
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+  getOrder(id) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${url}/orders/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      }).then(response => {
+        console.log(response.data);
+        
+        resolve(response.data);
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
   deleteOrders(id) {
     return new Promise((resolve, reject) => {
       axios.delete(`${url}/orders/${id}`, {
@@ -240,6 +270,20 @@ const api = {
       })
     })
   },
+  queryCarts(){
+    return new Promise((resolve, reject)=>{
+      axios.get(`${url}/carts?populate=order`, {
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then((response)=>{  
+        resolve(response.data);
+      }).catch((error)=>{
+        reject(error);
+      })
+    })
+  }
 }
 
 export default api

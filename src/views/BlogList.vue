@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
-import api from '@/vendors/api'
+import api from '@/vender/api'
 
 const blogs = ref([]);
 const isSidebarToggled = ref(false)

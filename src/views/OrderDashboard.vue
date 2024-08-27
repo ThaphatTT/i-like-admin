@@ -1,25 +1,18 @@
 <script setup>
-import axios from 'axios';
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
-import api from '@/vendors/api'
+import api from '@/vender/api'
+import moment from 'moment';
+import subList from '@/views/components/subList.vue'
+import Swal from 'sweetalert2';
+import sortDropDown from '@/views/components/sortDropDown.vue'
 
-const isSidebarToggled = ref(false)
 const order = ref([]);
-const toggleSidebar = () => {
-    isSidebarToggled.value = !isSidebarToggled.value;
-    document.body.classList.toggle('sb-sidenav-toggled', isSidebarToggled.value);
-    localStorage.setItem('sb|sidebar-toggle', isSidebarToggled.value);
-}
+
 
 onMounted(() => {
-    isSidebarToggled.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
-    if (isSidebarToggled.value) {
-        document.body.classList.add('sb-sidenav-toggled');
-    }
     fetchOrderData()
 })
 
@@ -27,7 +20,6 @@ const fetchOrderData = async () => {
     try {
         const response = await api.getOrders();
         order.value = response.data;
-
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -41,41 +33,111 @@ const swalWithBootstrapButtons = Swal.mixin({
     buttonsStyling: false
 });
 
-const deleteItem = async (id) => {
+const handleUpdateSubmit = async (id) => {
+    const updatedOrder = {
+        data: {
+            status : "เสร็จสิ้น"
+        }
+    }
     swalWithBootstrapButtons.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, Update it!",
         cancelButtonText: "No, cancel!",
         reverseButtons: true
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                await api.deleteOrders(id);
-                swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your order has been deleted.",
-                    icon: "success"
-                });
-                fetchOrderData();
+                const response = await api.getOrder(id);
+                const checkStatus = response.data.attributes.status
+                if (checkStatus == "กำลังดำเนินการ") {
+                    await api.updateOrders(id, updatedOrder);
+                    swalWithBootstrapButtons.fire({
+                        title: "Updated!",
+                        text: "Your order has been updated.",
+                        icon: "success"
+                    });
+                    fetchOrderData()
+                }else{
+                    swalWithBootstrapButtons.fire({
+                        title: "Error!",
+                        text: "This's item cancled or updated",
+                        icon: "error"
+                    });
+                }
+
             } catch (error) {
-                console.error('Error deleting item:', error);
+                console.error('Error updated data:', error);
                 swalWithBootstrapButtons.fire({
                     title: "Error!",
-                    text: "There was a problem deleting the item.",
+                    text: "There was a problem updating the item.",
                     icon: "error"
                 });
             }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        } else if (
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
             swalWithBootstrapButtons.fire({
                 title: "Cancelled",
-                text: "Your order is safe :)",
+                text: "Your imaginary item is safe :)",
                 icon: "error"
             });
         }
     });
+};
+
+const selectedValue = ref('');
+
+const handleUpdateSelection = (value) => {
+    selectedValue.value = value;
+    console.log('Selected value:', selectedValue.value);
+};
+
+const filterOrderWaiting = async()=>{
+    try {
+        const response = await api.getOrders();
+        order.value = response.data.filter(order => order.attributes.status == 'กำลังดำเนินการ')
+        console.log(order.value);
+        
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
+const filterOrderSuceessed = async()=>{
+    try {
+        const response = await api.getOrders();
+        order.value = response.data.filter(order => order.attributes.status == 'เสร็จสิ้น')
+        console.log(order.value);
+        
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
+const filterOrderSort = async()=>{
+    try {
+        const response = await api.sortOrders();
+        order.value = response.data
+        console.log(order.value);
+        
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
+
+const handleDropDown = (data) =>{
+    switch (data){
+        case "กำลังดำเนินการ" : filterOrderWaiting();
+        break;
+        case "เสร็จสิ้น" : filterOrderSuceessed();
+        break;
+        case "newest order" : filterOrderSort();
+        break;
+    }
 }
 </script>
 
@@ -94,11 +156,16 @@ const deleteItem = async (id) => {
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
                         </div>
                     </div>
+                    <sortDropDown @updateSelection="handleUpdateSelection"
+                    :dataText1="'กำลังดำเนินการ'" :dataText2="'เสร็จสิ้น'"
+                    :dataText3="'newest order'" @click="handleDropDown(selectedValue)"
+                    />
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
                             DataTable Example
                         </div>
+                        
                         <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
@@ -121,18 +188,18 @@ const deleteItem = async (id) => {
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in order" :key="index">
-                                        <td>{{ item.attributes.topic }}</td>
-                                        <td>{{ item.attributes.description }}</td>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>{{ item.attributes.price }}</td>
+                                        <td> <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"/></td>
+                                        <td>{{ item.attributes.status }}</td>
                                         <td>
-                                            <RouterLink :to="'/Orders-Dashboard/edit/' + item.id"
-                                                class="btn btn-primary btn-block">Edit</RouterLink>
+                                            <button
+                                                class="btn btn-primary btn-block"
+                                                @click="handleUpdateSubmit(item.id)"
+                                                >Update</button>
                                         </td>
-                                        <td><button class="btn btn-primary btn-block"
-                                                @click="deleteItem(item.id)">Delete</button></td>
-                                        <td>
-                                            <RouterLink :to="'/Orders-Dashboard/view/' + item.id"
-                                                class="btn btn-primary btn-block">View</RouterLink>
-                                        </td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>

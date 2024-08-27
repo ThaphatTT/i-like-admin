@@ -5,21 +5,11 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
-import api from '@/vendors/api'
+import api from '@/vender/api'
 
-const isSidebarToggled = ref(false)
 const blogs = ref([]);
-const toggleSidebar = () => {
-    isSidebarToggled.value = !isSidebarToggled.value;
-    document.body.classList.toggle('sb-sidenav-toggled', isSidebarToggled.value);
-    localStorage.setItem('sb|sidebar-toggle', isSidebarToggled.value);
-}
 
 onMounted(() => {
-    isSidebarToggled.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
-    if (isSidebarToggled.value) {
-        document.body.classList.add('sb-sidenav-toggled');
-    }
     fetchBlogData();
 })
 
