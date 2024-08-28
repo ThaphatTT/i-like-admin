@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import ButtonLink from './components/ButtonLink.vue';
@@ -8,9 +8,11 @@ import moment from 'moment';
 import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
 import sortDropDown from '@/views/components/sortDropDown.vue'
+import Pagination from './components/Pagination.vue';
 
 const order = ref([]);
-
+const itemsInPage = 10;
+const currentPage = ref(1);
 
 onMounted(() => {
     fetchOrderData()
@@ -139,6 +141,19 @@ const handleDropDown = (data) =>{
         break;
     }
 }
+
+const paginatedOrders = computed(() =>{
+    const start =(currentPage.value - 1) * itemsInPage;
+    return order.value.slice(start, start + itemsInPage);
+})
+
+const totalPages = computed(() =>{
+    return Math.ceil(order.value.length/itemsInPage);
+})
+
+const handlePageChange = (data) =>{
+    currentPage.value = data;
+}
 </script>
 
 <template>
@@ -151,9 +166,17 @@ const handleDropDown = (data) =>{
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Order</li>
                     </ol>
-                    <div class="row">
-                        <div>
+                    <div class="row align-items-start">
+                        <div class="col-9">
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
+                        </div>
+                        <div class="col">
+                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" placeholder="Search for user..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <sortDropDown @updateSelection="handleUpdateSelection"
@@ -187,7 +210,7 @@ const handleDropDown = (data) =>{
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in order" :key="index">
+                                    <tr v-for="(item, index) in paginatedOrders" :key="index">
                                         <td>{{ item.id }}</td>
                                         <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>{{ item.attributes.price }}</td>
@@ -199,10 +222,10 @@ const handleDropDown = (data) =>{
                                                 @click="handleUpdateSubmit(item.id)"
                                                 >Update</button>
                                         </td>
-                                        
                                     </tr>
                                 </tbody>
                             </table>
+                            <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange"/>
                         </div>
                     </div>
                 </div>

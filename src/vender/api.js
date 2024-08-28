@@ -220,8 +220,6 @@ const api = {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         }
       }).then(response => {
-        console.log(response.data);
-        
         resolve(response.data);
       }).catch(error => {
         reject(error);

@@ -24,7 +24,6 @@ const handleSubmit = async()=>{
     console.log(register);
     try {
         const response = await axios.post('http://localhost:1337/api/auth/local/register',register)
-        console.log("response data:", response.data);
         localStorage.setItem('token', response.data.jwt);
         Swal.fire({
             title: 'Successed!',
@@ -34,8 +33,6 @@ const handleSubmit = async()=>{
             })
         router.push({ name: 'dashboard-home' });
     } catch (error) {
-        console.log('Error fetching user data', error.response);
-        console.log('Register failed');
         Swal.fire({
             title: 'Error!',
             text: 'Register failed',
