@@ -11,7 +11,7 @@ import sortDropDown from '@/views/components/sortDropDown.vue'
 import Pagination from './components/Pagination.vue';
 
 const order = ref([]);
-const itemsInPage = 10;
+const itemsInPage = 25;
 const currentPage = ref(1);
 
 onMounted(() => {
@@ -94,15 +94,12 @@ const selectedValue = ref('');
 
 const handleUpdateSelection = (value) => {
     selectedValue.value = value;
-    console.log('Selected value:', selectedValue.value);
 };
 
 const filterOrderWaiting = async()=>{
     try {
         const response = await api.getOrders();
         order.value = response.data.filter(order => order.attributes.status == 'กำลังดำเนินการ')
-        console.log(order.value);
-        
     } catch (error) {
         console.log(error);
     }
@@ -112,8 +109,6 @@ const filterOrderSuceessed = async()=>{
     try {
         const response = await api.getOrders();
         order.value = response.data.filter(order => order.attributes.status == 'เสร็จสิ้น')
-        console.log(order.value);
-        
     } catch (error) {
         console.log(error);
     }
@@ -154,6 +149,18 @@ const totalPages = computed(() =>{
 const handlePageChange = (data) =>{
     currentPage.value = data;
 }
+
+const userData = ref('');
+const searchUser = async (data)=>{
+    try {
+        const response = await api.getOrders();
+        order.value = response.data.filter(order => order.attributes.user.data.attributes.username === data)
+        console.log(order.value);
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
 </script>
 
 <template>
@@ -171,10 +178,10 @@ const handlePageChange = (data) =>{
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
                         </div>
                         <div class="col">
-                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" @submit.prevent="searchUser(userData)">
                                 <div class="input-group">
-                                    <input class="form-control" type="text" placeholder="Search for user..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                                    <input v-model="userData" class="form-control" type="text" placeholder="Search for user..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -211,10 +218,10 @@ const handlePageChange = (data) =>{
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
-                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
                                         <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>{{ item.attributes.price }}</td>
-                                        <td> <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"/></td>
+                                        <td> <subList :dataText="item.attributes.link" :orderId="item.id" :index="index" :customerOrder="item.attributes.user.data.attributes.username"/></td>
                                         <td>{{ item.attributes.status }}</td>
                                         <td>
                                             <button

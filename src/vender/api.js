@@ -200,7 +200,7 @@ const api = {
   },
   sortOrders() {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/orders?sort=createdAt:desc`, {
+      axios.get(`${url}/orders?sort=createdAt:desc&populate=*`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
