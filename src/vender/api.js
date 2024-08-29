@@ -270,7 +270,7 @@ const api = {
   },
   queryCarts(){
     return new Promise((resolve, reject)=>{
-      axios.get(`${url}/carts?populate=order`, {
+      axios.get(`${url}/carts?populate=*`, {
         headers:{
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`

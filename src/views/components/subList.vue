@@ -25,8 +25,7 @@ const carts = ref([]);
 const queryCarts = async () => {
     try {
         const response = await api.queryCarts();
-        carts.value = response.data.filter(cart => cart.attributes.order.data && cart.attributes.order.data.id === props.orderId)
-        
+        carts.value = response.data.filter(cart => cart.attributes.order.data && cart.attributes.order.data.id === props.orderId)   
     } catch (error) {
         console.error('Error fetching carts:', error);
     }

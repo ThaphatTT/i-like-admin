@@ -169,9 +169,9 @@ const searchUser = async (data)=>{
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Order</h1>
+                    <h1 class="mt-4">Package</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Order</li>
+                        <li class="breadcrumb-item active">Package</li>
                     </ol>
                     <div class="row align-items-start">
                         <div class="col-9">
@@ -180,7 +180,7 @@ const searchUser = async (data)=>{
                         <div class="col">
                             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" @submit.prevent="searchUser(userData)">
                                 <div class="input-group">
-                                    <input v-model="userData" class="form-control" type="text" placeholder="Search for user..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                    <input v-model="userData" class="form-control" type="text" placeholder="Search for ?..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
                                     <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
@@ -209,7 +209,7 @@ const searchUser = async (data)=>{
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
-                            Order data
+                            Package data
                         </div>
                         
                         <div class="card-body">

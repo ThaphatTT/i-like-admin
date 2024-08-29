@@ -28,6 +28,8 @@ import OrderView from "@/views/OrderView.vue";
 
 import Dashboard from "@/views/Dashboard.vue";
 
+import PackageDashboard from "@/views/PackageDashboard.vue";
+
 const router = createRouter({
   history : createWebHistory(import.meta.env.BASE_URL),
   routes:[
@@ -213,6 +215,14 @@ const router = createRouter({
       path: '/Dashboard',
       name: 'main-dashboard',
       component: Dashboard,
+      meta:{
+        middleware: auth
+      }
+    },
+    {
+      path: '/Packages-Dashboard',
+      name: 'package-dashboard',
+      component: PackageDashboard,
       meta:{
         middleware: auth
       }
