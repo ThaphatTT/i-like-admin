@@ -1,13 +1,18 @@
 <script setup>
 import axios from 'axios';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
+import moment from 'moment';
+import sortDropDown from './components/sortDropDown.vue';
+import Pagination from './components/Pagination.vue';
 
 const promotions = ref([]);
+const itemsInPage = 25;
+const currentPage = ref(1);
 
 onMounted(() => {
     fetchPromotionsData()
@@ -72,6 +77,31 @@ const deleteItem = async (id) => {
         }
     });
 }
+
+const changeLanguage = (data)=>{
+    if(data == true){
+        data = 'เผยแพร่แล้ว';
+        return data;
+    }else if(data == false){
+        data = 'ยังไม่ได้เผยแพร่';
+        return data;
+    }else{
+        data = 'ไม่พบข้อมูล';
+        return data;
+    }
+}
+const paginatedOrders = computed(() =>{
+    const start =(currentPage.value - 1) * itemsInPage;
+    return promotions.value.slice(start, start + itemsInPage);
+})
+
+const totalPages = computed(() =>{
+    return Math.ceil(promotions.value.length/itemsInPage);
+})
+
+const handlePageChange = (data) =>{
+    currentPage.value = data;
+}
 </script>
 
 <template>
@@ -84,52 +114,65 @@ const deleteItem = async (id) => {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Promotions</li>
                     </ol>
-                    <div class="row">
-                        <div>
+                    <div class="row align-items-start">
+                        <div class="col-9">
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
+                        </div>
+                        <div class="col">
+                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" @submit.prevent="">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" placeholder="Search for ?..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row align-items-start mt-2 mb-2">
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <RouterLink to="/Promotions-Dashboard/list" class="btn btn-primary btn-block">
+                                        List</RouterLink>
+                                </div>
+                                <div class="col-auto">
+                                    <RouterLink to="/Promotions-Dashboard/create" class="btn btn-primary btn-block">
+                                        Create</RouterLink>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <sortDropDown/>
                         </div>
                     </div>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
-                            DataTable Example
+                            Promotion data
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
+                            <table class="table table-striped table-hover table-bordered">
                                 <thead>
-                                    <td>
-                                        <RouterLink to="/Promotions-Dashboard/create" class="btn btn-primary btn-block">
-                                            Create</RouterLink>
-                                    </td>
-                                    <td>
-                                        <RouterLink to="/Promotions-Dashboard/list" class="btn btn-primary btn-block">
-                                            List</RouterLink>
-                                    </td>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Position</th>
+                                        <th>isPublish</th>
+                                        <th>CreateAt</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in promotions" :key="index">
-                                        <td>{{ item.attributes.publishedAt
- }}</td>
-                                        <td>{{ item.attributes.createdAt }}</td>
+                                    <tr v-for="(item, index) in paginatedOrders" :key="index">
+                                        <td> {{ item.attributes.cov }}</td>
+                                        <td>{{ changeLanguage(item.attributes.isPublish) }}</td>
+                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>
                                             <RouterLink :to="'/Promotions-Dashboard/edit/' + item.id"
-                                                class="btn btn-primary btn-block">Edit</RouterLink>
-                                        </td>
-                                        <td><button class="btn btn-primary btn-block"
-                                                @click="deleteItem(item.id)">Delete</button></td>
-                                        <td>
-                                            <RouterLink :to="'/Promotions-Dashboard/view/' + item.id"
-                                                class="btn btn-primary btn-block">View</RouterLink>
+                                                class="btn btn-primary btn-block">Update</RouterLink>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange"/>
                     </div>
                 </div>
             </main>

@@ -186,29 +186,37 @@ const searchUser = async (data)=>{
                             </form>
                         </div>
                     </div>
-                    <sortDropDown @updateSelection="handleUpdateSelection"
+                    <div class="row align-items-start mt-2 mb-2">
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <RouterLink to="/Orders-Dashboard/list" class="btn btn-primary btn-block">List
+                                    </RouterLink>
+                                </div>
+                                <div class="col-auto">
+                                    <RouterLink to="/Orders-Dashboard/create" class="btn btn-primary btn-block">
+                                        Create</RouterLink>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <sortDropDown @updateSelection="handleUpdateSelection"
                     :dataText1="'กำลังดำเนินการ'" :dataText2="'เสร็จสิ้น'"
                     :dataText3="'newest order'" @click="handleDropDown(selectedValue)"
                     />
+                        </div>
+                    </div>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
-                            DataTable Example
+                            Order data
                         </div>
                         
                         <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
-                                    <td>
-                                        <RouterLink to="/Orders-Dashboard/create" class="btn btn-primary btn-block">
-                                            Create</RouterLink>
-                                    </td>
-                                    <td>
-                                        <RouterLink to="/Orders-Dashboard/list" class="btn btn-primary btn-block">List
-                                        </RouterLink>
-                                    </td>
                                     <tr>
-                                        <th>Name</th>
+                                        <th>UserName</th>
                                         <th class="text-center">Date</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Sub list</th>
