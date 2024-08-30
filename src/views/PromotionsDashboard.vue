@@ -6,7 +6,7 @@ import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
-import moment from 'moment';
+// import moment from 'moment';
 import sortDropDown from './components/sortDropDown.vue';
 import Pagination from './components/Pagination.vue';
 
@@ -23,7 +23,7 @@ const fetchPromotionsData = async () => {
         const response = await api.getPromotions();
         promotions.value = response.data;
         console.log(promotions.value);
-        
+
 
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -59,7 +59,7 @@ const deleteItem = async (id) => {
                     icon: "success"
                 });
                 fetchPromotionsData();
-                
+
             } catch (error) {
                 console.error('Error deleting item:', error);
                 swalWithBootstrapButtons.fire({
@@ -78,28 +78,28 @@ const deleteItem = async (id) => {
     });
 }
 
-const changeLanguage = (data)=>{
-    if(data == true){
+const changeLanguage = (data) => {
+    if (data == true) {
         data = 'เผยแพร่แล้ว';
         return data;
-    }else if(data == false){
+    } else if (data == false) {
         data = 'ยังไม่ได้เผยแพร่';
         return data;
-    }else{
+    } else {
         data = 'ไม่พบข้อมูล';
         return data;
     }
 }
-const paginatedOrders = computed(() =>{
-    const start =(currentPage.value - 1) * itemsInPage;
+const paginatedOrders = computed(() => {
+    const start = (currentPage.value - 1) * itemsInPage;
     return promotions.value.slice(start, start + itemsInPage);
 })
 
-const totalPages = computed(() =>{
-    return Math.ceil(promotions.value.length/itemsInPage);
+const totalPages = computed(() => {
+    return Math.ceil(promotions.value.length / itemsInPage);
 })
 
-const handlePageChange = (data) =>{
+const handlePageChange = (data) => {
     currentPage.value = data;
 }
 </script>
@@ -119,10 +119,13 @@ const handlePageChange = (data) =>{
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
                         </div>
                         <div class="col">
-                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" @submit.prevent="">
+                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                @submit.prevent="">
                                 <div class="input-group">
-                                    <input class="form-control" type="text" placeholder="Search for ?..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                                    <input class="form-control" type="text" placeholder="Search for ?..."
+                                        aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                            class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -141,7 +144,7 @@ const handlePageChange = (data) =>{
                             </div>
                         </div>
                         <div class="col">
-                            <sortDropDown/>
+                            <sortDropDown />
                         </div>
                     </div>
                     <div class="card mb-4">
@@ -163,7 +166,8 @@ const handlePageChange = (data) =>{
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
                                         <td> {{ item.attributes.cov }}</td>
                                         <td>{{ changeLanguage(item.attributes.isPublish) }}</td>
-                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss')
+                                            }}</td>
                                         <td>
                                             <RouterLink :to="'/Promotions-Dashboard/edit/' + item.id"
                                                 class="btn btn-primary btn-block">Update</RouterLink>
@@ -172,7 +176,8 @@ const handlePageChange = (data) =>{
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange"/>
+                        <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                            @page-change="handlePageChange" />
                     </div>
                 </div>
             </main>

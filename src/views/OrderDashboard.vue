@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
-import moment from 'moment';
+// import moment from 'moment';
 import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
 import sortDropDown from '@/views/components/sortDropDown.vue'
@@ -38,7 +38,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 const handleUpdateSubmit = async (id) => {
     const updatedOrder = {
         data: {
-            status : "เสร็จสิ้น"
+            status: "เสร็จสิ้น"
         }
     }
     swalWithBootstrapButtons.fire({
@@ -62,7 +62,7 @@ const handleUpdateSubmit = async (id) => {
                         icon: "success"
                     });
                     fetchOrderData()
-                }else{
+                } else {
                     swalWithBootstrapButtons.fire({
                         title: "Error!",
                         text: "This's item cancled or updated",
@@ -96,69 +96,69 @@ const handleUpdateSelection = (value) => {
     selectedValue.value = value;
 };
 
-const filterOrderWaiting = async()=>{
+const filterOrderWaiting = async () => {
     try {
         const response = await api.getOrders();
         order.value = response.data.filter(order => order.attributes.status == 'กำลังดำเนินการ')
     } catch (error) {
         console.log(error);
     }
-} 
+}
 
-const filterOrderSuceessed = async()=>{
+const filterOrderSuceessed = async () => {
     try {
         const response = await api.getOrders();
         order.value = response.data.filter(order => order.attributes.status == 'เสร็จสิ้น')
     } catch (error) {
         console.log(error);
     }
-} 
+}
 
-const filterOrderSort = async()=>{
+const filterOrderSort = async () => {
     try {
         const response = await api.sortOrders();
         order.value = response.data
         console.log(order.value);
-        
+
     } catch (error) {
         console.log(error);
     }
-} 
+}
 
 
-const handleDropDown = (data) =>{
-    switch (data){
-        case "กำลังดำเนินการ" : filterOrderWaiting();
-        break;
-        case "เสร็จสิ้น" : filterOrderSuceessed();
-        break;
-        case "newest order" : filterOrderSort();
-        break;
+const handleDropDown = (data) => {
+    switch (data) {
+        case "กำลังดำเนินการ": filterOrderWaiting();
+            break;
+        case "เสร็จสิ้น": filterOrderSuceessed();
+            break;
+        case "newest order": filterOrderSort();
+            break;
     }
 }
 
-const paginatedOrders = computed(() =>{
-    const start =(currentPage.value - 1) * itemsInPage;
+const paginatedOrders = computed(() => {
+    const start = (currentPage.value - 1) * itemsInPage;
     return order.value.slice(start, start + itemsInPage);
 })
 
-const totalPages = computed(() =>{
-    return Math.ceil(order.value.length/itemsInPage);
+const totalPages = computed(() => {
+    return Math.ceil(order.value.length / itemsInPage);
 })
 
-const handlePageChange = (data) =>{
+const handlePageChange = (data) => {
     currentPage.value = data;
 }
 
 const userData = ref('');
-const searchUser = async (data)=>{
+const searchUser = async (data) => {
     try {
         const response = await api.getOrders();
         order.value = response.data.filter(order => order.attributes.user.data.attributes.username === data)
         console.log(order.value);
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 </script>
@@ -178,10 +178,14 @@ const searchUser = async (data)=>{
                             <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
                         </div>
                         <div class="col">
-                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" @submit.prevent="searchUser(userData)">
+                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                @submit.prevent="searchUser(userData)">
                                 <div class="input-group">
-                                    <input v-model="userData" class="form-control" type="text" placeholder="Search for user..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                                    <input v-model="userData" class="form-control" type="text"
+                                        placeholder="Search for user..." aria-label="Search for..."
+                                        aria-describedby="btnNavbarSearch" />
+                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                            class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -200,10 +204,9 @@ const searchUser = async (data)=>{
                             </div>
                         </div>
                         <div class="col">
-                            <sortDropDown @updateSelection="handleUpdateSelection"
-                    :dataText1="'กำลังดำเนินการ'" :dataText2="'เสร็จสิ้น'"
-                    :dataText3="'newest order'" @click="handleDropDown(selectedValue)"
-                    />
+                            <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'กำลังดำเนินการ'"
+                                :dataText2="'เสร็จสิ้น'" :dataText3="'newest order'"
+                                @click="handleDropDown(selectedValue)" />
                         </div>
                     </div>
                     <div class="card mb-4">
@@ -211,7 +214,7 @@ const searchUser = async (data)=>{
                             <i class="fas fa-table me-1"></i>
                             Order data
                         </div>
-                        
+
                         <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
@@ -227,20 +230,23 @@ const searchUser = async (data)=>{
                                 <tbody>
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
                                         <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
-                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss')
+                                            }}</td>
                                         <td>{{ item.attributes.price }}</td>
-                                        <td> <subList :dataText="item.attributes.link" :orderId="item.id" :index="index" :customerOrder="item.attributes.user?.data?.attributes?.username || 'No user'"/></td>
+                                        <td>
+                                            <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"
+                                                :customerOrder="item.attributes.user?.data?.attributes?.username || 'No user'" />
+                                        </td>
                                         <td>{{ item.attributes.status }}</td>
                                         <td>
-                                            <button
-                                                class="btn btn-primary btn-block"
-                                                @click="handleUpdateSubmit(item.id)"
-                                                >Update</button>
+                                            <button class="btn btn-primary btn-block"
+                                                @click="handleUpdateSubmit(item.id)">Update</button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange"/>
+                            <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                                @page-change="handlePageChange" />
                         </div>
                     </div>
                 </div>

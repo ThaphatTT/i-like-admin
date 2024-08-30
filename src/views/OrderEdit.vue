@@ -3,7 +3,7 @@ import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from '@/vender/api'
 import Swal from 'sweetalert2';
-import moment from 'moment';
+// import moment from 'moment';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,11 +15,11 @@ const order = reactive({
     link: '',
 })
 
-onMounted(()=>{
+onMounted(() => {
     fetchingOrderData();
 })
 
-const fetchingOrderData = async () =>{   
+const fetchingOrderData = async () => {
     try {
         const response = await api.getOrder(orderID);
         order.value = response.data;
@@ -27,10 +27,10 @@ const fetchingOrderData = async () =>{
         order.createdAt = moment(order.value.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss');
         order.status = order.value.attributes.status;
         order.link = order.value.attributes.link;
-        
+
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
@@ -46,8 +46,8 @@ const handleSubmit = async () => {
     const updatedOrder = {
         data: {
             createdAt: order.createdAt,
-            link : order.link,
-            status : "เสร็จสิ้น"
+            link: order.link,
+            status: "เสร็จสิ้น"
         }
     }
     swalWithBootstrapButtons.fire({
@@ -71,7 +71,7 @@ const handleSubmit = async () => {
                         icon: "success"
                     });
                     router.push(`/Orders-Dashboard`)
-                }else{
+                } else {
                     swalWithBootstrapButtons.fire({
                         title: "Error!",
                         text: "This's item cancled or updated",
@@ -124,20 +124,18 @@ const handleSubmit = async () => {
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input class="form-control" v-model="order.status"
-                                                        id="inputLastName" type="text"
-                                                        readonly />
+                                                        id="inputLastName" type="text" readonly />
                                                     <label for="inputLastName">Status:</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                                    <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputFirstName"
-                                                        v-model="order.link" 
-                                                        type="text" readonly/>
-                                                        <label for="inputFirstName">Link:</label>
-                                                    </div>
-                                                </div>
+                                            <div class="form-floating mb-3 mb-md-0">
+                                                <input class="form-control" id="inputFirstName" v-model="order.link"
+                                                    type="text" readonly />
+                                                <label for="inputFirstName">Link:</label>
+                                            </div>
+                                        </div>
                                         <div class="mt-4 mb-0">
                                             <div class="d-grid"><button class="btn btn-primary btn-block">Update
                                                     Order</button></div>
