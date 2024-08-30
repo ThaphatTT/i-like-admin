@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
-// import moment from 'moment';
+import moment from 'moment';
 import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
 import sortDropDown from '@/views/components/sortDropDown.vue'
@@ -20,8 +20,14 @@ onMounted(() => {
 
 const fetchOrderData = async () => {
     try {
-        const response = await api.getOrders();
+        let response = await api.getOrders();
         order.value = response.data;
+            for (let index = 0; index < response.data.length; index++) {
+                let element = response.data[index];
+                const userId = await api.getUsers(element.attributes.userId)
+                order.value[index].attributes.userId = userId.data.username
+            }
+            
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -117,8 +123,7 @@ const filterOrderSuceessed = async () => {
 const filterOrderSort = async () => {
     try {
         const response = await api.sortOrders();
-        order.value = response.data
-        console.log(order.value);
+        order.value = response.data;
 
     } catch (error) {
         console.log(error);
@@ -229,13 +234,13 @@ const searchUser = async (data) => {
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
-                                        <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
+                                        <td>{{ item.attributes?.userId|| 'No user' }}</td>
                                         <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss')
                                             }}</td>
                                         <td>{{ item.attributes.price }}</td>
                                         <td>
                                             <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"
-                                                :customerOrder="item.attributes.user?.data?.attributes?.username || 'No user'" />
+                                                :customerOrder="item.attributes.userId || 'No user'" />
                                         </td>
                                         <td>{{ item.attributes.status }}</td>
                                         <td>

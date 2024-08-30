@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, ref } from 'vue';
 import api from '@/vender/api';
-// import moment from 'moment';
+import moment from 'moment';
 const props = defineProps({
   dataText: {
     type: String,
@@ -24,8 +24,8 @@ const carts = ref([]);
 
 const queryCarts = async () => {
   try {
-    const response = await api.queryCarts();
-    carts.value = response.data.filter(cart => cart.attributes.order.data && cart.attributes.order.data.id === props.orderId)
+    const response = await api.queryCarts(props.orderId);
+    carts.value = response.data
   } catch (error) {
     console.error('Error fetching carts:', error);
   }

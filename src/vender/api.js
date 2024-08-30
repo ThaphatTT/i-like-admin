@@ -186,13 +186,13 @@ const api = {
   },
   getOrders() {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/orders?populate=*`, {
+      axios.get(`${url}/orders`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         }
       }).then(response => {
-        resolve(response.data);
+        resolve(response.data)
       }).catch(error => {
         reject(error);
       })
@@ -268,15 +268,29 @@ const api = {
       })
     })
   },
-  queryCarts(){
+  queryCarts(id){
     return new Promise((resolve, reject)=>{
-      axios.get(`${url}/carts?populate=*`, {
+      axios.get(`${url}/carts?populate=*&filters[orderId][$eq]=${id}`, {
         headers:{
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       }).then((response)=>{  
         resolve(response.data);
+      }).catch((error)=>{
+        reject(error);
+      })
+    })
+  },
+  getUsers(id){
+    return new Promise((resolve, reject)=>{
+      axios.get(`${url}/users/${id}`, {
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then((response)=>{  
+        resolve(response);
       }).catch((error)=>{
         reject(error);
       })
