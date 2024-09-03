@@ -78,6 +78,14 @@ const queryCarts = async () => {
                     </div>
                     <div class="col-3 text-end">
                       <strong>
+                        Amount:
+                      </strong>
+                    </div>
+                    <div class="col-7">
+                      <p>{{ subItem.attributes.amount }}</p>
+                    </div>
+                    <div class="col-3 text-end">
+                      <strong>
                         Service:
                       </strong>
                     </div>
