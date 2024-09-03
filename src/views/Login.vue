@@ -1,10 +1,8 @@
 <script setup>
-import axios from 'axios';
 import { reactive } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
 import Swal from 'sweetalert2';
-import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 const userData = reactive({
     email: '',
@@ -19,6 +17,7 @@ const handleSubmit = async () => {
     try {
         const response = await api.login(loginData)
         localStorage.setItem('token', response.jwt);
+        localStorage.setItem('username', response.user.username);
         Swal.fire({
             position: "center",
             icon: "success",

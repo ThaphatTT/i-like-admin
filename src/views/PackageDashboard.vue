@@ -174,9 +174,6 @@ const searchUser = async (data) => {
                         <li class="breadcrumb-item active">Package</li>
                     </ol>
                     <div class="row align-items-start">
-                        <div class="col-9">
-                            <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
-                        </div>
                         <div class="col">
                             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
                                 @submit.prevent="searchUser(userData)">
@@ -191,18 +188,6 @@ const searchUser = async (data) => {
                         </div>
                     </div>
                     <div class="row align-items-start mt-2 mb-2">
-                        <div class="col-3">
-                            <div class="row">
-                                <div class="col-auto">
-                                    <RouterLink to="/Orders-Dashboard/list" class="btn btn-primary btn-block">List
-                                    </RouterLink>
-                                </div>
-                                <div class="col-auto">
-                                    <RouterLink to="/Orders-Dashboard/create" class="btn btn-primary btn-block">
-                                        Create</RouterLink>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col">
                             <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'กำลังดำเนินการ'"
                                 :dataText2="'เสร็จสิ้น'" :dataText3="'newest order'"

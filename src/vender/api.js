@@ -3,8 +3,6 @@ import axios from 'axios';
 const url = 'http://localhost:1337/api'
 
 const api = {
-  // Missing Registration API
-
   login(data) {
     return new Promise((resolve, reject) => {
       axios.post(`${url}/auth/local`, data)

@@ -86,11 +86,6 @@ const deleteItem = async (id) => {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Products</li>
                     </ol>
-                    <div class="row">
-                        <div>
-                            <ButtonLink buttonText="Go to Dashboard" buttonClass="btn btn-success" to="/dashboard" />
-                        </div>
-                    </div>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
@@ -99,14 +94,6 @@ const deleteItem = async (id) => {
                         <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
-                                    <td>
-                                        <RouterLink to="/Products-Dashboard/create" class="btn btn-primary btn-block">
-                                            Create</RouterLink>
-                                    </td>
-                                    <td>
-                                        <RouterLink to="/Product-Dashboard/list" class="btn btn-primary btn-block">List
-                                        </RouterLink>
-                                    </td>
                                     <tr>
                                         <th>Name</th>
                                         <th class="text-center">Type</th>
