@@ -17,7 +17,7 @@ const props = defineProps({
   },
   customerOrder: {
     type: String,
-    default: `customer`
+    default: 'customer'
   }
 })
 const carts = ref([]);

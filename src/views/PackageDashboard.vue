@@ -1,166 +1,177 @@
-<script setup>
+<script>
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
-// import moment from 'moment';
+import moment from 'moment';
 import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
 import sortDropDown from '@/views/components/sortDropDown.vue'
 import Pagination from './components/Pagination.vue';
 
-const order = ref([]);
-const itemsInPage = 25;
-const currentPage = ref(1);
+import Loading from '@/components/Loading.vue';
 
-onMounted(() => {
-    fetchOrderData()
-})
-
-const fetchOrderData = async () => {
-    try {
-        const response = await api.getOrders();
-        order.value = response.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
-
-const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+export default {
+    components: {
+        SideNavbar,
+        ButtonLink,
+        subList,
+        sortDropDown,
+        Pagination,
+        RouterLink,
+        Loading,
     },
-    buttonsStyling: false
-});
-
-const handleUpdateSubmit = async (id) => {
-    const updatedOrder = {
-        data: {
-            status: "เสร็จสิ้น"
+    data() {
+        return {
+        order: [],
+        itemsInPage: 25,
+        currentPage: 1,
+        isLoading: true,
+        selectedValue: '',
+        userData: '',
+        };
+    },
+    computed: {
+        paginatedOrders() {
+        const start = (this.currentPage - 1) * this.itemsInPage;
+        return this.order.slice(start, start + this.itemsInPage);
+        },
+        totalPages() {
+        return Math.ceil(this.order.length / this.itemsInPage);
+        },
+    },
+    methods: {
+        formatDate(date) {
+            return moment(date).format('YYYY-MM-DD HH:mm:ss');
+        },
+        async fetchOrderData() {
+        try {
+            const response = await api.getOrders();
+            this.order = response.data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-    }
-    swalWithBootstrapButtons.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Update it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+        },
+        async handleUpdateSubmit(id) {
+        const updatedOrder = {
+            data: {
+            status: 'เสร็จสิ้น',
+            },
+        };
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Update it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
             try {
                 const response = await api.getOrder(id);
-                const checkStatus = response.data.attributes.status
-                if (checkStatus == "กำลังดำเนินการ") {
-                    await api.updateOrders(id, updatedOrder);
-                    swalWithBootstrapButtons.fire({
-                        title: "Updated!",
-                        text: "Your order has been updated.",
-                        icon: "success"
-                    });
-                    fetchOrderData()
-                } else {
-                    swalWithBootstrapButtons.fire({
-                        title: "Error!",
-                        text: "This's item cancled or updated",
-                        icon: "error"
-                    });
-                }
-
-            } catch (error) {
-                console.error('Error updated data:', error);
+                const checkStatus = response.data.attributes.status;
+                if (checkStatus === 'กำลังดำเนินการ') {
+                await api.updateOrders(id, updatedOrder);
                 swalWithBootstrapButtons.fire({
-                    title: "Error!",
-                    text: "There was a problem updating the item.",
-                    icon: "error"
+                    title: 'Updated!',
+                    text: 'Your order has been updated.',
+                    icon: 'success',
+                });
+                this.fetchOrderData();
+                } else {
+                swalWithBootstrapButtons.fire({
+                    title: 'Error!',
+                    text: "This item's already canceled or updated",
+                    icon: 'error',
+                });
+                }
+            } catch (error) {
+                console.error('Error updating data:', error);
+                swalWithBootstrapButtons.fire({
+                title: 'Error!',
+                text: 'There was a problem updating the item.',
+                icon: 'error',
                 });
             }
-        } else if (
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
             swalWithBootstrapButtons.fire({
-                title: "Cancelled",
-                text: "Your imaginary item is safe :)",
-                icon: "error"
+                title: 'Cancelled',
+                text: 'Your imaginary item is safe :)',
+                icon: 'error',
             });
+            }
+        });
+        },
+        handleUpdateSelection(value) {
+        this.selectedValue = value;
+        },
+        async filterOrderWaiting() {
+        try {
+            const response = await api.getOrders();
+            this.order = response.data.filter((order) => order.attributes.status === 'กำลังดำเนินการ');
+        } catch (error) {
+            console.log(error);
         }
-    });
+        },
+        async filterOrderSuceessed() {
+        try {
+            const response = await api.getOrders();
+            this.order = response.data.filter((order) => order.attributes.status === 'เสร็จสิ้น');
+        } catch (error) {
+            console.log(error);
+        }
+        },
+        async filterOrderSort() {
+        try {
+            const response = await api.sortOrders();
+            this.order = response.data;
+            console.log(this.order);
+        } catch (error) {
+            console.log(error);
+        }
+        },
+        handleDropDown(data) {
+        switch (data) {
+            case 'กำลังดำเนินการ':
+            this.filterOrderWaiting();
+            break;
+            case 'เสร็จสิ้น':
+            this.filterOrderSuceessed();
+            break;
+            case 'newest order':
+            this.filterOrderSort();
+            break;
+        }
+        },
+        handlePageChange(data) {
+        this.currentPage = data;
+        },
+        async searchUser(data) {
+        try {
+            const response = await api.getOrders();
+            this.order = response.data.filter((order) => order.attributes.user.data.attributes.username === data);
+            console.log(this.order);
+        } catch (error) {
+            console.log(error);
+        }
+        },
+    },
+    mounted() {
+        this.fetchOrderData().finally(() => {
+        this.isLoading = false;
+        });
+    },
 };
-
-const selectedValue = ref('');
-
-const handleUpdateSelection = (value) => {
-    selectedValue.value = value;
-};
-
-const filterOrderWaiting = async () => {
-    try {
-        const response = await api.getOrders();
-        order.value = response.data.filter(order => order.attributes.status == 'กำลังดำเนินการ')
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const filterOrderSuceessed = async () => {
-    try {
-        const response = await api.getOrders();
-        order.value = response.data.filter(order => order.attributes.status == 'เสร็จสิ้น')
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const filterOrderSort = async () => {
-    try {
-        const response = await api.sortOrders();
-        order.value = response.data
-        console.log(order.value);
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-const handleDropDown = (data) => {
-    switch (data) {
-        case "กำลังดำเนินการ": filterOrderWaiting();
-            break;
-        case "เสร็จสิ้น": filterOrderSuceessed();
-            break;
-        case "newest order": filterOrderSort();
-            break;
-    }
-}
-
-const paginatedOrders = computed(() => {
-    const start = (currentPage.value - 1) * itemsInPage;
-    return order.value.slice(start, start + itemsInPage);
-})
-
-const totalPages = computed(() => {
-    return Math.ceil(order.value.length / itemsInPage);
-})
-
-const handlePageChange = (data) => {
-    currentPage.value = data;
-}
-
-const userData = ref('');
-const searchUser = async (data) => {
-    try {
-        const response = await api.getOrders();
-        order.value = response.data.filter(order => order.attributes.user.data.attributes.username === data)
-        console.log(order.value);
-    } catch (error) {
-        console.log(error);
-
-    }
-}
 </script>
 
 <template>
@@ -199,8 +210,11 @@ const searchUser = async (data) => {
                             <i class="fas fa-table me-1"></i>
                             Package data
                         </div>
-
-                        <div class="card-body">
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading/>
+                        </div>
+                        <div v-else>
+                            <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <tr>
@@ -215,7 +229,7 @@ const searchUser = async (data) => {
                                 <tbody>
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
                                         <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
-                                        <td>{{ moment(item.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss')
+                                        <td>{{ formatDate(item.attributes.createdAt)
                                             }}</td>
                                         <td>{{ item.attributes.price }}</td>
                                         <td>
@@ -232,6 +246,7 @@ const searchUser = async (data) => {
                             </table>
                             <Pagination :total-pages="totalPages" :currentPage="currentPage"
                                 @page-change="handlePageChange" />
+                        </div>
                         </div>
                     </div>
                 </div>

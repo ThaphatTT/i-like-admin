@@ -1,7 +1,6 @@
-<script setup>
-import { defineProps } from 'vue';
+<script>
 import { RouterLink } from 'vue-router';
-
+import { defineProps, defineEmits } from 'vue';
 const props = defineProps({
   buttonText: {
     type: String,

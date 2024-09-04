@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
@@ -6,102 +6,110 @@ import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
-// import moment from 'moment';
+import moment from 'moment';
 import sortDropDown from './components/sortDropDown.vue';
 import Pagination from './components/Pagination.vue';
 
-const promotions = ref([]);
-const itemsInPage = 25;
-const currentPage = ref(1);
+import Loading from '@/components/Loading.vue';
 
-onMounted(() => {
-    fetchPromotionsData()
-})
-
-const fetchPromotionsData = async () => {
-    try {
-        const response = await api.getPromotions();
-        promotions.value = response.data;
-        console.log(promotions.value);
-
-
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
-
-
-
-const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+export default {
+    components:{
+        ButtonLink,
+        Loading,
+        SideNavbar,
     },
-    buttonsStyling: false
-});
+    data() {
+        return {
+        promotions: [],
+        itemsInPage: 25,
+        currentPage: 1,
+        isLoading: true,
+        };
+    },
+    computed: {
+        paginatedOrders() {
+        const start = (this.currentPage - 1) * this.itemsInPage;
+        return this.promotions.slice(start, start + this.itemsInPage);
+        },
+        totalPages() {
+        return Math.ceil(this.promotions.length / this.itemsInPage);
+        },
+    },
+    methods: {
+        async fetchPromotionsData() {
+        try {
+            const response = await api.getPromotions();
+            this.promotions = response.data;
+            console.log(this.promotions);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        },
+        async deleteItem(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
+        });
 
-const deleteItem = async (id) => {
-    swalWithBootstrapButtons.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
             try {
-                await api.deletePromotions(id)
+                await api.deletePromotions(id);
                 swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your item has been deleted.",
-                    icon: "success"
+                title: 'Deleted!',
+                text: 'Your item has been deleted.',
+                icon: 'success',
                 });
-                fetchPromotionsData();
-
+                this.fetchPromotionsData();
             } catch (error) {
                 console.error('Error deleting item:', error);
                 swalWithBootstrapButtons.fire({
-                    title: "Error!",
-                    text: "There was a problem deleting the item.",
-                    icon: "error"
+                title: 'Error!',
+                text: 'There was a problem deleting the item.',
+                icon: 'error',
                 });
             }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
             swalWithBootstrapButtons.fire({
-                title: "Cancelled",
-                text: "Your product is safe :)",
-                icon: "error"
+                title: 'Cancelled',
+                text: 'Your product is safe :)',
+                icon: 'error',
             });
+            }
+        });
+        },
+        changeLanguage(data) {
+        if (data === true) {
+            return 'เผยแพร่แล้ว';
+        } else if (data === false) {
+            return 'ยังไม่ได้เผยแพร่';
+        } else {
+            return 'ไม่พบข้อมูล';
         }
-    });
-}
-
-const changeLanguage = (data) => {
-    if (data == true) {
-        data = 'เผยแพร่แล้ว';
-        return data;
-    } else if (data == false) {
-        data = 'ยังไม่ได้เผยแพร่';
-        return data;
-    } else {
-        data = 'ไม่พบข้อมูล';
-        return data;
-    }
-}
-const paginatedOrders = computed(() => {
-    const start = (currentPage.value - 1) * itemsInPage;
-    return promotions.value.slice(start, start + itemsInPage);
-})
-
-const totalPages = computed(() => {
-    return Math.ceil(promotions.value.length / itemsInPage);
-})
-
-const handlePageChange = (data) => {
-    currentPage.value = data;
-}
+        },
+        handlePageChange(data) {
+        this.currentPage = data;
+        },
+    },
+    mounted() {
+        this.fetchPromotionsData()
+        .catch((error) => console.log(error))
+        .finally(() => {
+            this.isLoading = false;
+        });
+    },
+};
 </script>
 
 <template>
@@ -137,7 +145,11 @@ const handlePageChange = (data) => {
                             <i class="fas fa-table me-1"></i>
                             Promotion data
                         </div>
-                        <div class="card-body">
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading/>
+                        </div>
+                        <div v-else>
+                            <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <tr>
@@ -160,6 +172,7 @@ const handlePageChange = (data) => {
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
                         </div>
                         <Pagination :total-pages="totalPages" :currentPage="currentPage"
                             @page-change="handlePageChange" />

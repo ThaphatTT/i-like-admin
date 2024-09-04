@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import axios from 'axios';
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
@@ -7,73 +7,89 @@ import Swal from 'sweetalert2';
 import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 
-const products = ref([]);
+import Loading from '@/components/Loading.vue';
 
-onMounted(() => {
-    fetchProductData()
-})
-
-const fetchProductData = async () => {
-    try {
-        const response = await api.getProducts();
-        products.value = response.data;
-
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
-
-const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+export default {
+    components: {
+        SideNavbar,
+        RouterLink,
+        Loading,
     },
-    buttonsStyling: false
-});
+    data() {
+        return {
+        products: [],
+        isLoading: true,
+        };
+    },
+    methods: {
+        async fetchProductData() {
+        try {
+            const response = await api.getProducts();
+            this.products = response.data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        },
+        async deleteItem(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
+        });
 
-const deleteItem = async (id) => {
-    swalWithBootstrapButtons.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
             try {
                 const token = localStorage.getItem('token');
                 await axios.delete(`http://localhost:1337/api/products/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 });
 
                 swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your item has been deleted.",
-                    icon: "success"
+                title: 'Deleted!',
+                text: 'Your item has been deleted.',
+                icon: 'success',
                 });
-                fetchProductData();
+                this.fetchProductData();
             } catch (error) {
                 console.error('Error deleting item:', error);
 
                 swalWithBootstrapButtons.fire({
-                    title: "Error!",
-                    text: "There was a problem deleting the item.",
-                    icon: "error"
+                title: 'Error!',
+                text: 'There was a problem deleting the item.',
+                icon: 'error',
                 });
             }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
             swalWithBootstrapButtons.fire({
-                title: "Cancelled",
-                text: "Your product is safe :)",
-                icon: "error"
+                title: 'Cancelled',
+                text: 'Your product is safe :)',
+                icon: 'error',
             });
-        }
-    });
-}
+            }
+        });
+        },
+    },
+    mounted() {
+        this.fetchProductData()
+        .catch((error) => console.log(error))
+        .finally(() => {
+            this.isLoading = false;
+        });
+    },
+};
 </script>
 
 <template>
@@ -91,7 +107,11 @@ const deleteItem = async (id) => {
                             <i class="fas fa-table me-1"></i>
                             DataTable Example
                         </div>
-                        <div class="card-body">
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading/>
+                        </div>
+                        <div v-else>
+                            <div class="card-body">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <tr>
@@ -121,6 +141,7 @@ const deleteItem = async (id) => {
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
                         </div>
                     </div>
                 </div>
