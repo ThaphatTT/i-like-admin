@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
-import ButtonLink from './components/ButtonLink.vue';
+import BlogCreate from '@/views/components/blogCreate.vue';
 import api from '@/vender/api'
 
 const blogs = ref([]);
@@ -83,6 +83,11 @@ const deleteItem = async (id) => {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Blog</li>
                     </ol>
+                    <div class="d-flex align-items-end flex-column mt-2 mb-2">
+                        <div class="col">
+                            <BlogCreate/>
+                        </div>
+                    </div>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
