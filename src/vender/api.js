@@ -198,9 +198,9 @@ const api = {
       })
     })
   },
-  sortOrders() {
+  sortOrders(data) {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/orders?sort=createdAt:desc&populate=*`, {
+      axios.get(`${url}/orders?sort=createdAt:desc&populate=*&pagination[page]=${data}&pagination[pageSize]=10`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

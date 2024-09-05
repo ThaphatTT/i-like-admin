@@ -43,6 +43,10 @@ export default {
         formatDate(date) {
             return moment(date).format('YYYY-MM-DD HH:mm:ss');
         },
+        async handlePageChange(data) {
+            this.currentPage = data;
+            await this.fetchOrderData(data);
+        },
         async fetchOrderData(page = this.currentPage) {
         try {
             let response = await api.getOrders(page);
@@ -57,25 +61,68 @@ export default {
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally{
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Fetch data successed!",
-                showConfirmButton: false,
-                timer: 1000
-            });
+            
         }
         },
-        async handlePageChange(data) {
-            this.currentPage = data;
-            await this.fetchOrderData(data);
+        async filterOrderWaiting(page = this.currentPage) {
+        try {
+            this.isLoading = true
+            const response = await api.getOrders(page);
+            this.order = response.data.filter(order => order.attributes.status === 'กำลังดำเนินการ');
+            for (let index = 0; index < this.order.length; index++) {
+                let element = this.order[index];        
+                const userId = await api.getUsers(element.attributes.userId);
+                this.order[index].attributes.userId = userId.data.username;
+            }
+            this.itemsInPage = response.meta.pagination.pageSize
+            this.totalPages = response.meta.pagination.pageCount;
+        } catch (error) {
+            console.log(error);
+        } finally{
+            this.isLoading = false
+        }
+        },
+        async filterOrderSuceessed(page = this.currentPage) {
+        try {
+            this.isLoading = true
+            const response = await api.getOrders(page);
+            this.order = response.data.filter(order => order.attributes.status === 'เสร็จสิ้น');
+            for (let index = 0; index < this.order.length; index++) {
+                const element = this.order[index];
+                const userId = await api.getUsers(element.attributes.userId);
+                this.order[index].attributes.userId = userId.data.username;
+            }
+            this.itemsInPage = response.meta.pagination.pageSize
+            this.totalPages = response.meta.pagination.pageCount;
+        } catch (error) {
+            console.log(error);
+        } finally{
+            this.isLoading = false
+        }
+        },
+        async filterOrderSort(page = this.currentPage) {
+        try {
+            this.isLoading = true
+            const response = await api.sortOrders(page);
+            this.order = response.data;
+            for (let index = 0; index < this.order.length; index++) {
+                const element = this.order[index];
+                const userId = await api.getUsers(element.attributes.userId);
+                this.order[index].attributes.userId = userId.data.username;
+            }
+        } catch (error) {
+            console.log(error);
+        }  finally{
+            this.isLoading = false
+        }
         },
         async handleUpdateSubmit(id) {
         const updatedOrder = {
             data: {
-            status: "สถานะทั้งหมด"
+            status: "เสร็จสิ้น"
             }
         };
+        
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
             confirmButton: "btn btn-success",
@@ -130,75 +177,7 @@ export default {
         });
         },
         handleUpdateSelection(value) {
-        this.selectedValue = value;
-        },
-        async filterOrderWaiting() {
-        try {
-            const response = await api.getOrders();
-            const ordersInProgress = response.data.filter(order => order.attributes.status === 'กำลังดำเนินการ');
-
-            for (let index = 0; index < ordersInProgress.length; index++) {
-            let element = ordersInProgress[index];   
-            const userId = await api.getUsers(element.attributes.userId);
-            ordersInProgress[index].attributes.userId = userId.data.username;
-            }
-            this.order = ordersInProgress;
-        } catch (error) {
-            console.log(error);
-        } finally{
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Fetch data successed!",
-                showConfirmButton: false,
-                timer: 1000
-            });
-        }
-        },
-        async filterOrderSuceessed() {
-        try {
-            const response = await api.getOrders();
-            const ordersInProgress = response.data.filter(order => order.attributes.status === 'เสร็จสิ้น');
-
-            for (let index = 0; index < ordersInProgress.length; index++) {
-                const element = ordersInProgress[index];
-                const userId = await api.getUsers(element.attributes.userId);
-                ordersInProgress[index].attributes.userId = userId.data.username;
-            }
-            this.order = ordersInProgress;
-        } catch (error) {
-            console.log(error);
-        } finally{
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Fetch data successed!",
-                showConfirmButton: false,
-                timer: 1000
-            });
-        }
-        },
-        async filterOrderSort() {
-        try {
-            const response = await api.sortOrders();
-            const ordersInProgress = response.data;
-            for (let index = 0; index < ordersInProgress.length; index++) {
-                const element = ordersInProgress[index];
-                const userId = await api.getUsers(element.attributes.userId);
-                ordersInProgress[index].attributes.userId = userId.data.username;
-            }
-            this.order = ordersInProgress;
-        } catch (error) {
-            console.log(error);
-        } finally{
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Fetch data successed!",
-                showConfirmButton: false,
-                timer: 1000
-            });
-        }
+            this.selectedValue = value;
         },
         handleDropDown(data) {
         switch (data) {
@@ -216,29 +195,27 @@ export default {
                 break;
         }
         },
-        async searchUser(data) {
-        try {
-            let orders = [];
-            const response = await api.getOrders();
-            orders = response.data;
-            for (let index = 0; index < response.data.length; index++) {
-            let element = response.data[index];
-            const userId = await api.getUsers(element.attributes.userId);
-            orders[index].attributes.userId = userId.data.username;
+        async searchUser(data, page = this.currentPage) {
+            try {
+                this.isLoading = true
+                let orders = [];
+                const response = await api.getOrders(page);
+                orders = response.data;
+                console.log(orders);
+                
+                for (let index = 0; index < response.data.length; index++) {
+                let element = response.data[index];
+                const userId = await api.getUsers(element.attributes.userId);
+                orders[index].attributes.userId = userId.data.username;
+                }
+                this.order = orders.filter(user => user.attributes.userId === data);
+            } catch (error) {
+                console.log(error);
+            } finally{
+                this.isLoading = false
             }
-            this.order = orders.filter(user => user.attributes.userId === data);
-        } catch (error) {
-            console.log(error);
-        }
         }
     },
-    computed: {
-        paginatedOrders() {
-        const start = (this.currentPage - 1) * this.itemsInPage;
-        const end = start + this.itemsInPage;
-        return this.order.slice(start, end);
-    },
-    }
 };
 </script>
 
@@ -297,7 +274,7 @@ export default {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in paginatedOrders" :key="index">
+                                    <tr v-for="(item, index) in order" :key="index">
                                         <td class="text-center">{{ item?.id|| 'Not found Order ID' }}</td>
                                         <td class="text-center">{{ item.attributes?.userId|| 'Not found user' }}</td>
                                         <td class="text-center">{{ formatDate(item.attributes.createdAt)
