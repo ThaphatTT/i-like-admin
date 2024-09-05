@@ -1,45 +1,34 @@
-<script setup>
-import { defineProps, defineEmits } from 'vue';
-const props = defineProps ({
-  dataText1: {
-    type: String,
+<script>
+export default {
+  props: {
+    dataText1: String,
+    dataText2: String,
+    dataText3: String,
+    dataText4: String,
+    dataText5: String
   },
-  dataText2:{
-    type: String,
-  },
-  dataText3:{
-    type: String,
-  },
-  dataText4:{
-    type: String,
-  },
-  dataText5:{
-    type: String,
-  },
-})
-const emit = defineEmits(['updateSelection']);
-
-const handleSelectionChange = (event) => {
-  emit('updateSelection', event.target.value);
-};
-
-const getOptions = () => {
-  const options = [];
-  if (props.dataText1) options.push(props.dataText1);
-  if (props.dataText2) options.push(props.dataText2);
-  if (props.dataText3) options.push(props.dataText3);
-  if (props.dataText4) options.push(props.dataText4);
-  if (props.dataText5) option.push(props.dataText5);
-  return options;
+  emits: ['updateSelection'],
+  methods: {
+    handleSelectionChange(event) {
+      this.$emit('updateSelection', event.target.value);
+    },
+    getOptions() {
+      const options = [];
+      if (this.dataText1) options.push(this.dataText1);
+      if (this.dataText2) options.push(this.dataText2);
+      if (this.dataText3) options.push(this.dataText3);
+      if (this.dataText4) options.push(this.dataText4);
+      if (this.dataText5) options.push(this.dataText5);
+      return options;
+    }
+  }
 };
 </script>
 
 <template>
-    <div class="d-flex justify-content-end">
-      <select class="form-select form-select-sm w-25 algin" id="cars" @change="handleSelectionChange">
-        <option v-for="(option, index) in getOptions()" :key="index" :value="option">{{ option }}</option>
-      </select>
-    </div>
+  <div class="d-flex justify-content-end">
+    <select class="form-select form-select-sm w-25 align" id="cars" @change="handleSelectionChange">
+      <option v-for="(option, index) in getOptions()" :key="index" :value="option">{{ option }}</option>
+    </select>
+  </div>
 </template>
-
-

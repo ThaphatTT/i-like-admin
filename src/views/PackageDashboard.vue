@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 import moment from 'moment';
 import subList from '@/views/components/subList.vue'
@@ -15,7 +14,6 @@ import Loading from '@/components/Loading.vue';
 export default {
     components: {
         SideNavbar,
-        ButtonLink,
         subList,
         sortDropDown,
         Pagination,

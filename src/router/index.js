@@ -8,22 +8,17 @@ import ProductsDashboard from '@/views/ProductsDashboard.vue'
 import { auth } from '@/auth/auth'
 
 import EditBlog from "@/views/BlogEdit.vue";
-import CreateBlog from "@/views/BlogCreate.vue";
 import PromotionsEdit from "@/views/PromotionsEdit.vue";
 import PromotionsCreate from "@/views/PromotionsCreate.vue";
 import ProductsCreate from "@/views/ProductsCreate.vue";
 import ProductsEdit from "@/views/ProductsEdit.vue";
 
-import BlogList from "@/views/BlogList.vue";
 import BlogView from "@/views/BlogView.vue";
-import PromotionsList from "@/views/PromotionsList.vue";
 import PromotionsView from "@/views/PromotionsView.vue";
-import ProductsList from "@/views/ProductsList.vue";
 import ProductsView from "@/views/ProductsView.vue";
 import OrderDashboard from "@/views/OrderDashboard.vue";
 import OrderCreate from "@/views/OrderCreate.vue";
 import OrderEdit from "@/views/OrderEdit.vue";
-import OrderList from "@/views/OrderList.vue";
 import OrderView from "@/views/OrderView.vue";
 
 import Dashboard from "@/views/Dashboard.vue";
@@ -84,14 +79,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/Blog-Dashboard/create',
-      name: 'blog-create',
-      component: CreateBlog,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
       path: '/Promotions-Dashboard/edit/:id',
       name: 'promotion-edit',
       component: PromotionsEdit,
@@ -124,14 +111,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/Blog-Dashboard/list',
-      name: 'blog-list',
-      component: BlogList,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
       path: '/Blog-Dashboard/view/:id',
       name: 'blog-view',
       component: BlogView,
@@ -140,25 +119,9 @@ const router = createRouter({
       }
     },
     {
-      path: '/Promotions-Dashboard/list',
-      name: 'promotions-list',
-      component: PromotionsList,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
       path: '/Promotions-Dashboard/view/:id',
       name: 'promotions-view',
       component: PromotionsView,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
-      path: '/Product-Dashboard/list',
-      name: 'product-list',
-      component: ProductsList,
       meta:{
         middleware: auth
       }
@@ -191,14 +154,6 @@ const router = createRouter({
       path: '/Orders-Dashboard/create',
       name: 'order-create',
       component: OrderCreate,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
-      path: '/Orders-Dashboard/list',
-      name: 'order-list',
-      component: OrderList,
       meta:{
         middleware: auth
       }

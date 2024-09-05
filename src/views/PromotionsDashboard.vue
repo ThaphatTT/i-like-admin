@@ -4,7 +4,6 @@ import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
-import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 import moment from 'moment';
 import sortDropDown from './components/sortDropDown.vue';
@@ -14,7 +13,6 @@ import Loading from '@/components/Loading.vue';
 
 export default {
     components:{
-        ButtonLink,
         Loading,
         SideNavbar,
     },

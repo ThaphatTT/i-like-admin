@@ -1,8 +1,9 @@
 <script>
 import { RouterLink } from 'vue-router';
-import { defineProps, defineEmits } from 'vue';
-const props = defineProps({
-  buttonText: {
+
+export default{
+  props:{
+    buttonText: {
     type: String,
     default: 'Button'
   },
@@ -14,7 +15,8 @@ const props = defineProps({
     type: [String, Object],
     required: true
   }
-});
+  }
+}
 </script>
 
 <template>

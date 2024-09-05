@@ -1,36 +1,56 @@
-<script setup>
-import { defineProps, ref } from 'vue';
+<script>
 import api from '@/vender/api';
 import moment from 'moment';
-const props = defineProps({
-  dataText: {
-    type: String,
-    default: 'some data'
-  },
-  orderId: {
-    type: String,
-    default: 'orderId'
-  },
-  index: {
-    type: Number,
-    required: true
-  },
-  customerOrder: {
-    type: String,
-    default: 'customer'
-  }
-})
-const carts = ref([]);
+import { ref } from 'vue';
 
-const queryCarts = async () => {
-  try {
-    const response = await api.queryCarts(props.orderId);
-    carts.value = response.data
-  } catch (error) {
-    console.error('Error fetching carts:', error);
+export default {
+  props: {
+    dataText: {
+      type: String,
+      default: 'some data'
+    },
+    orderId: {
+      type: String,
+      default: 'orderId'
+    },
+    index: {
+      type: Number,
+      required: true
+    },
+    customerOrder: {
+      type: String,
+      default: 'customer'
+    }
+  },
+  data() {
+    return {
+      carts: ref([])
+    };
+  },
+  methods: {
+    formatDate(date){
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
+    async queryCarts() {
+      try {
+        const response = await api.queryCarts(this.orderId);
+        this.carts = response.data;
+      } catch (error) {
+        console.error('Error fetching carts:', error);
+      }
+    }
+  },
+  computed: {
+    modalId() {
+      return 'exampleModal-' + this.index;
+    },
+    accordionId() {
+      return 'accordionExample-' + this.index;
+    }
   }
 };
 </script>
+
 
 <template>
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + index"
@@ -43,7 +63,7 @@ const queryCarts = async () => {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">This's {{ props.customerOrder }} order</h5>
+          <h5 class="modal-title" id="exampleModalLabel">This's {{ customerOrder }} order</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -53,7 +73,7 @@ const queryCarts = async () => {
                 <button class="accordion-button" type="button" :data-bs-toggle="'collapse'"
                   :data-bs-target="'#collapse-' + index + '-' + subIndex" aria-expanded="true"
                   :aria-controls="'collapse-' + index + '-' + subIndex">
-                  <p>{{ subItem.attributes.itemName }}</p>
+                  <p>{{subIndex + 1}}. {{ subItem.attributes.itemName }}</p>
                 </button>
               </h2>
               <div :id="'collapse-' + index + '-' + subIndex" class="accordion-collapse collapse"
@@ -98,7 +118,7 @@ const queryCarts = async () => {
                       </strong>
                     </div>
                     <div class="col-7">
-                      <p>{{ moment(subItem.attributes.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</p>
+                      <p>{{ formatDate(subItem.attributes.createdAt) }}</p>
                     </div>
                     <div class="col-3 text-end">
                       <strong>

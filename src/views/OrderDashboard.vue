@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 import moment from 'moment';
 import subList from '@/views/components/subList.vue'
@@ -15,19 +14,20 @@ import Loading from '@/components/Loading.vue';
 export default {
     components:{
         subList,
-        ButtonLink,
         sortDropDown,
         Loading,
         SideNavbar,
+        Pagination
     },
     data() {
         return {
         order: [],
-        itemsInPage: 25,
+        itemsInPage: 0,
         currentPage: 1,
+        totalPages: 0,
         isLoading: true,
         selectedValue: '',
-        userData: ''
+        userData: '',
         };
     },
     async mounted() {
@@ -43,24 +43,37 @@ export default {
         formatDate(date) {
             return moment(date).format('YYYY-MM-DD HH:mm:ss');
         },
-        async fetchOrderData() {
+        async fetchOrderData(page = this.currentPage) {
         try {
-            let response = await api.getOrders();
+            let response = await api.getOrders(page);
             this.order = response.data;
             for (let index = 0; index < response.data.length; index++) {
             let element = response.data[index];
             const userId = await api.getUsers(element.attributes.userId);
             this.order[index].attributes.userId = userId.data.username;
             }
-            console.log(this.order);
+            this.itemsInPage = response.meta.pagination.pageSize
+            this.totalPages = response.meta.pagination.pageCount;
         } catch (error) {
             console.error('Error fetching data:', error);
+        } finally{
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Fetch data successed!",
+                showConfirmButton: false,
+                timer: 1000
+            });
         }
+        },
+        async handlePageChange(data) {
+            this.currentPage = data;
+            await this.fetchOrderData(data);
         },
         async handleUpdateSubmit(id) {
         const updatedOrder = {
             data: {
-            status: "เสร็จสิ้น"
+            status: "สถานะทั้งหมด"
             }
         };
         const swalWithBootstrapButtons = Swal.mixin({
@@ -122,46 +135,90 @@ export default {
         async filterOrderWaiting() {
         try {
             const response = await api.getOrders();
-            this.order = response.data.filter(order => order.attributes.status === 'กำลังดำเนินการ');
+            const ordersInProgress = response.data.filter(order => order.attributes.status === 'กำลังดำเนินการ');
+
+            for (let index = 0; index < ordersInProgress.length; index++) {
+            let element = ordersInProgress[index];   
+            const userId = await api.getUsers(element.attributes.userId);
+            ordersInProgress[index].attributes.userId = userId.data.username;
+            }
+            this.order = ordersInProgress;
         } catch (error) {
             console.log(error);
+        } finally{
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Fetch data successed!",
+                showConfirmButton: false,
+                timer: 1000
+            });
         }
         },
         async filterOrderSuceessed() {
         try {
             const response = await api.getOrders();
-            this.order = response.data.filter(order => order.attributes.status === 'เสร็จสิ้น');
+            const ordersInProgress = response.data.filter(order => order.attributes.status === 'เสร็จสิ้น');
+
+            for (let index = 0; index < ordersInProgress.length; index++) {
+                const element = ordersInProgress[index];
+                const userId = await api.getUsers(element.attributes.userId);
+                ordersInProgress[index].attributes.userId = userId.data.username;
+            }
+            this.order = ordersInProgress;
         } catch (error) {
             console.log(error);
+        } finally{
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Fetch data successed!",
+                showConfirmButton: false,
+                timer: 1000
+            });
         }
         },
         async filterOrderSort() {
         try {
             const response = await api.sortOrders();
-            this.order = response.data;
+            const ordersInProgress = response.data;
+            for (let index = 0; index < ordersInProgress.length; index++) {
+                const element = ordersInProgress[index];
+                const userId = await api.getUsers(element.attributes.userId);
+                ordersInProgress[index].attributes.userId = userId.data.username;
+            }
+            this.order = ordersInProgress;
         } catch (error) {
             console.log(error);
+        } finally{
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Fetch data successed!",
+                showConfirmButton: false,
+                timer: 1000
+            });
         }
         },
         handleDropDown(data) {
         switch (data) {
+            case "สถานะทั้งหมด" :
+                this.fetchOrderData();
+                break;
             case "กำลังดำเนินการ":
-            this.filterOrderWaiting();
-            break;
+                this.filterOrderWaiting();
+                break;
             case "เสร็จสิ้น":
-            this.filterOrderSuceessed();
-            break;
+                this.filterOrderSuceessed();
+                break;
             case "newest order":
-            this.filterOrderSort();
-            break;
+                this.filterOrderSort();
+                break;
         }
-        },
-        handlePageChange(data) {
-        this.currentPage = data;
         },
         async searchUser(data) {
         try {
-            const orders = [];
+            let orders = [];
             const response = await api.getOrders();
             orders = response.data;
             for (let index = 0; index < response.data.length; index++) {
@@ -178,11 +235,9 @@ export default {
     computed: {
         paginatedOrders() {
         const start = (this.currentPage - 1) * this.itemsInPage;
-        return this.order.slice(start, start + this.itemsInPage);
-        },
-        totalPages() {
-        return Math.ceil(this.order.length / this.itemsInPage);
-        }
+        const end = start + this.itemsInPage;
+        return this.order.slice(start, end);
+    },
     }
 };
 </script>
@@ -213,9 +268,10 @@ export default {
                     </div>
                     <div class="row align-items-start mt-2 mb-2">
                         <div class="col">
-                            <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'กำลังดำเนินการ'"
-                                :dataText2="'เสร็จสิ้น'" :dataText3="'newest order'"
-                                @click="handleDropDown(selectedValue)" />
+                            <sortDropDown @updateSelection="handleUpdateSelection"
+                            :dataText1="'สถานะทั้งหมด'" :dataText2="'กำลังดำเนินการ'"
+                                :dataText3="'เสร็จสิ้น'" :dataText4="'newest order'"
+                                @change="handleDropDown(selectedValue)" />
                         </div>
                     </div>
                     <div class="card mb-4">
@@ -230,34 +286,39 @@ export default {
                             <table class="table table-striped table-hover table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>OrderID</th>
                                         <th>UserName</th>
                                         <th class="text-center">Date</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Sub list</th>
                                         <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
+                                        <th
+                                        class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in paginatedOrders" :key="index">
-                                        <td>{{ item.attributes?.userId|| 'No user' }}</td>
-                                        <td>{{ formatDate(item.attributes.createdAt)
+                                        <td class="text-center">{{ item?.id|| 'Not found Order ID' }}</td>
+                                        <td class="text-center">{{ item.attributes?.userId|| 'Not found user' }}</td>
+                                        <td class="text-center">{{ formatDate(item.attributes.createdAt)
                                             }}</td>
-                                        <td>{{ item.attributes.price }}</td>
-                                        <td>
+                                        <td class="text-center">{{ item.attributes.price }}</td>
+                                        <td class="text-center">
                                             <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"
                                                 :customerOrder="item.attributes.userId || 'No user'" />
                                         </td>
-                                        <td>{{ item.attributes.status }}</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-block"
+                                        <td class="text-center">{{ item.attributes.status }}</td>
+                                        <td class="text-center">
+                                            <button v-if="item.attributes.status !== 'เสร็จสิ้น'" class="btn btn-primary btn-block"
                                                 @click="handleUpdateSubmit(item.id)">Update</button>
+
+                                            <p v-else class="">...</p>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                                @page-change="handlePageChange" />
+                            <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange" />
+
                         </div>
                     </div>
                 </div>

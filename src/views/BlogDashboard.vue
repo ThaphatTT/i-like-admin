@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
+import BlogCreate from '@/views/components/blogCreate.vue'
 import Swal from 'sweetalert2';
 import api from '@/vender/api'
 
@@ -12,7 +13,7 @@ export default {
     components: {
         Loading,
         SideNavbar,
-        Loading,
+        BlogCreate
     },
     data() {
         return {

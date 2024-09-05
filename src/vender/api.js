@@ -182,14 +182,16 @@ const api = {
       })
     })
   },
-  getOrders() {
+  getOrders(data) {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/orders`, {
+      axios.get(`${url}/orders?pagination[page]=${data}&pagination[pageSize]=10`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         }
       }).then(response => {
+        console.log(response);
+        
         resolve(response.data)
       }).catch(error => {
         reject(error);

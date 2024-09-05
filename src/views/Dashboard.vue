@@ -4,7 +4,6 @@ import {ref, onMounted} from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
-import ButtonLink from './components/ButtonLink.vue';
 import api from '@/vender/api'
 
 const isSidebarToggled = ref(false)
