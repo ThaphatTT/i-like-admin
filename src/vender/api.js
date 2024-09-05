@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:1337/api'
+const url = 'http://localhost:1338/api'
 
 const api = {
   login(data) {
@@ -126,9 +126,17 @@ const api = {
       })
     })
   },
-  getProducts() {
+  getProducts(page, pageSize, filter, search) {
+    let filtering = '';
+    let query = '';
+    if (filter && filter != 'ทั้งหมด') {
+      filtering = `&filters[platform][$eq]=${filter}`;
+    }
+    if (search) {
+      query = `&filters[details][$contains]=${search}`;
+    }
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/products`, {
+      axios.get(`${url}/products?pagination[page]=${page}&pagination[pageSize]=${pageSize}${filtering}${query}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -190,8 +198,6 @@ const api = {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         }
       }).then(response => {
-        console.log(response);
-        
         resolve(response.data)
       }).catch(error => {
         reject(error);
@@ -268,30 +274,30 @@ const api = {
       })
     })
   },
-  queryCarts(id){
-    return new Promise((resolve, reject)=>{
+  queryCarts(id) {
+    return new Promise((resolve, reject) => {
       axios.get(`${url}/carts?populate=*&filters[orderId][$eq]=${id}`, {
-        headers:{
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      }).then((response)=>{  
+      }).then((response) => {
         resolve(response.data);
-      }).catch((error)=>{
+      }).catch((error) => {
         reject(error);
       })
     })
   },
-  getUsers(id){
-    return new Promise((resolve, reject)=>{
+  getUsers(id) {
+    return new Promise((resolve, reject) => {
       axios.get(`${url}/users/${id}`, {
-        headers:{
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      }).then((response)=>{  
+      }).then((response) => {
         resolve(response);
-      }).catch((error)=>{
+      }).catch((error) => {
         reject(error);
       })
     })

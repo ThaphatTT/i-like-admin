@@ -28,7 +28,7 @@ export default {
     };
   },
   methods: {
-    formatDate(date){
+    formatDate(date) {
       return moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     async queryCarts() {
@@ -60,82 +60,76 @@ export default {
 
   <div class="modal fade" :id="'exampleModal-' + index" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Centered and larger modal -->
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">This's {{ customerOrder }} order</h5>
+          <h5 class="modal-title" id="exampleModalLabel">This is {{ customerOrder }}'s order</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="accordion" :id="'accordionExample-' + index">
             <div v-for="(subItem, subIndex) in carts" :key="subIndex" class="accordion-item">
               <h2 class="accordion-header" :id="'heading-' + index + '-' + subIndex">
-                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'"
-                  :data-bs-target="'#collapse-' + index + '-' + subIndex" aria-expanded="true"
+                <button class="accordion-button collapsed" type="button" :data-bs-toggle="'collapse'"
+                  :data-bs-target="'#collapse-' + index + '-' + subIndex" aria-expanded="false"
                   :aria-controls="'collapse-' + index + '-' + subIndex">
-                  <p>{{subIndex + 1}}. {{ subItem.attributes.itemName }}</p>
+                  <p class="mb-0">{{ subIndex + 1 }}. {{ subItem.attributes.itemName }}</p>
                 </button>
               </h2>
               <div :id="'collapse-' + index + '-' + subIndex" class="accordion-collapse collapse"
                 :aria-labelledby="'heading-' + index + '-' + subIndex" :data-bs-parent="'#accordionExample-' + index">
                 <div class="accordion-body">
-                  <div class="row">
-                    <div class="col-3 text-end">
-                      <strong>
-                        Platform:
-                      </strong>
+                  <div class="row g-3"> <!-- Added g-3 for better spacing -->
+
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Platform:</strong>
+                        <p class="ms-2">{{ subItem.attributes.platform }}</p>
+                      </div>
                     </div>
-                    <div class="col-2">
-                      <p>{{ subItem.attributes.platform }}</p>
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Type:</strong>
+                        <p class="ms-2">{{ subItem.attributes.type }}</p>
+                      </div>
                     </div>
-                    <div class="col-3 text-end">
-                      <strong>
-                        Type:
-                      </strong>
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Amount:</strong>
+                        <p class="ms-2">{{ subItem.attributes.amount }}</p>
+                      </div>
                     </div>
-                    <div class="col-3">
-                      <p>{{ subItem.attributes.type }}</p>
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Quantity:</strong>
+                        <p class="ms-2">{{ subItem.attributes.quantity }}</p>
+                      </div>
                     </div>
-                    <div class="col-3 text-end">
-                      <strong>
-                        Amount:
-                      </strong>
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Service:</strong>
+                        <p class="ms-2">{{ subItem.attributes.service }}</p>
+                      </div>
                     </div>
-                    <div class="col-7">
-                      <p>{{ subItem.attributes.amount }}</p>
+                    <div class="col-12 col-md-6 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Created:</strong>
+                        <p class="ms-2">{{ formatDate(subItem.attributes.createdAt) }}</p>
+                      </div>
                     </div>
-                    <div class="col-3 text-end">
-                      <strong>
-                        Service:
-                      </strong>
+                    <div class="col-12 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Link:</strong>
+                        <a :href="subItem.attributes.link" class="text-break ms-2">{{ subItem.attributes.link }}</a>
+                      </div>
                     </div>
-                    <div class="col-7">
-                      <p>{{ subItem.attributes.service }}</p>
+                    <div class="col-12 border-bottom pb-2">
+                      <div class="d-flex justify-content-between">
+                        <strong>Comment:</strong>
+                        <p class="text-break ms-2">{{ subItem.attributes.comments }}</p>
+                      </div>
                     </div>
-                    <div class="col-3 text-end">
-                      <strong>
-                        Created:
-                      </strong>
-                    </div>
-                    <div class="col-7">
-                      <p>{{ formatDate(subItem.attributes.createdAt) }}</p>
-                    </div>
-                    <div class="col-3 text-end">
-                      <strong>
-                        Link:
-                      </strong>
-                    </div>
-                    <div class="col-8">
-                      <a href>{{ subItem.attributes.link }}</a>
-                    </div>
-                    <div class="col-4">
-                      <strong>
-                        Comment:
-                      </strong>
-                    </div>
-                    <div class="col-8">
-                      <a>{{ subItem.attributes.comments }}</a>
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -143,6 +137,7 @@ export default {
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
