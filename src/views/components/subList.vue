@@ -73,7 +73,7 @@ export default {
                 <button class="accordion-button collapsed" type="button" :data-bs-toggle="'collapse'"
                   :data-bs-target="'#collapse-' + index + '-' + subIndex" aria-expanded="false"
                   :aria-controls="'collapse-' + index + '-' + subIndex">
-                  <p class="mb-0">{{ subIndex + 1 }}. {{ subItem.attributes.itemName }}</p>
+                  <p class="mb-0 text-primary">{{ subIndex + 1 }}. {{ subItem.attributes.itemName }}</p>
                 </button>
               </h2>
               <div :id="'collapse-' + index + '-' + subIndex" class="accordion-collapse collapse"
@@ -96,22 +96,18 @@ export default {
                     <div class="col-12 col-md-6 border-bottom pb-2">
                       <div class="d-flex justify-content-between">
                         <strong>Amount:</strong>
-                        <p class="ms-2">{{ subItem.attributes.amount }}</p>
+                        <p class="ms-2">{{ subItem.attributes.amount * subItem.attributes.quantity }}</p>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6 border-bottom pb-2">
-                      <div class="d-flex justify-content-between">
-                        <strong>Quantity:</strong>
-                        <p class="ms-2">{{ subItem.attributes.quantity }}</p>
-                      </div>
-                    </div>
+
+
                     <div class="col-12 col-md-6 border-bottom pb-2">
                       <div class="d-flex justify-content-between">
                         <strong>Service:</strong>
                         <p class="ms-2">{{ subItem.attributes.service }}</p>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6 border-bottom pb-2">
+                    <div class="col-12 border-bottom pb-2">
                       <div class="d-flex justify-content-between">
                         <strong>Created:</strong>
                         <p class="ms-2">{{ formatDate(subItem.attributes.createdAt) }}</p>

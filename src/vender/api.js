@@ -17,7 +17,7 @@ const api = {
   },
   getBlogs() {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/blogs`, {
+      axios.get(`${url}/blogs?sort[0]=id:desc`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -73,7 +73,7 @@ const api = {
   },
   getPromotions() {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/promotions`, {
+      axios.get(`${url}/promotions?sort[0]=id:desc`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -137,7 +137,7 @@ const api = {
       query = `&filters[details][$contains]=${search}`;
     }
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/products?pagination[page]=${page}&pagination[pageSize]=${pageSize}${filtering}${query}`, {
+      axios.get(`${url}/products?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}${filtering}${query}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -193,7 +193,7 @@ const api = {
   },
   getOrders(data) {
     return new Promise((resolve, reject) => {
-      axios.get(`${url}/orders?pagination[page]=${data}&pagination[pageSize]=10`, {
+      axios.get(`${url}/orders?sort[0]=id:desc&pagination[page]=${data}&pagination[pageSize]=10`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
