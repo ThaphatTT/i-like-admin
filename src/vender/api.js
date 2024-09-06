@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const url = 'http://localhost:1338/api'
-const url = 'http://27.254.134.141/:1338/api'
+const url = 'http://27.254.134.141:1338/api'
 
 const api = {
   login(data) {
