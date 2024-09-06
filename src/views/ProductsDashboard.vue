@@ -45,7 +45,7 @@
                                             <th class="text-center">Type</th>
                                             <th class="text-center">Amount</th>
                                             <th class="text-center">Price</th>
-                                            <th class="text-center">Actions</th>
+                                            <!-- <th class="text-center">Actions</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -60,14 +60,14 @@
                                             <td class="text-center">{{ item.attributes.type }}</td>
                                             <td class="text-center">{{ item.attributes.amount }} </td>
                                             <td class="text-center">{{ item.attributes.price }} baht</td>
-                                            <td class="text-center">
+                                            <!-- <td class="text-center">
                                                 <RouterLink :to="'/Products-Dashboard/edit/' + item.id"
                                                     class="btn btn-primary btn-block me-2">Edit</RouterLink>
                                                 <RouterLink :to="'/Products-Dashboard/view/' + item.id"
                                                     class="btn btn-primary btn-block me-2">View</RouterLink>
                                                 <button class="btn btn-primary btn-block"
                                                     @click="deleteItem(item.id)">Delete</button>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </tbody>
                                 </table>
@@ -137,7 +137,10 @@ export default {
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
-                this.isLoading = false;
+                setTimeout(() => {
+                    this.isLoading = false;
+
+                }, 250);
             }
         },
         async searchAndFilter() {
