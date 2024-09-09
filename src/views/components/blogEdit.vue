@@ -4,16 +4,22 @@ import "dropzone/dist/dropzone.css";
 import Swal from 'sweetalert2';
 import api from '@/vender/api.js'
 export default {
+  props : {
+    blogId : {
+      type : String,
+      default : ''
+    }
+  },
   data() {
     return {
-      paragraphs: [{ id: 1, content: '', image: ''}],
+      paragraphs: [],
       BlogThumbnail: null,
       BlogImagecover: null,
       blog:{
         Topic: '',
         Description: '',
       },
-      prefix: "http://localhost:1337"
+      prefix: "http://localhost:1337",
     };
   },
   methods: {
@@ -30,19 +36,19 @@ export default {
       event.preventDefault();
       this.paragraphs.splice(index, 1);
     },
-
     initializeDropzones() {
-      this.paragraphs.forEach((paragraph, index) => {
-        this.createDropzoneForParagraph(index, paragraph);
+      this.$nextTick(() => {
+        this.paragraphs.forEach((paragraph, index) => {
+          this.createDropzoneForParagraph(index, paragraph);
+        });
       });
     },
-
     createDropzoneForParagraph(index, paragraph) {
-      const paragraphId = `paragraph-${index + 1}`;
-      const formElement = document.getElementById(paragraphId);
-      console.log(paragraph);
-
-      if (formElement) {
+      const paragraphId = `paragraph-${index + 2}`;
+      const formElement = document.getElementById(paragraphId);  
+      console.log(paragraphId);
+      console.log(formElement);
+      if (formElement && !formElement.dropzone) {
         const dropzoneInstance = new Dropzone(`#${paragraphId}`, {
           url: "#",
           maxFiles: 1,
@@ -66,126 +72,103 @@ export default {
             icon: "error",
           });
         });
+      } else {
+        console.error("Dropzone element not found or already initialized");
       }
     },
-    async createBlog(blog, paragraphs) {
-    Swal.fire({
-      title: 'กำลังโหลด...',
-      text: 'กรุณารอสักครู่',
-      icon: 'info',
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      willOpen: () => {
-        Swal.showLoading();
+    destroyDropzone(paragraphId) {
+      const existingDropzone = Dropzone.forElement(`#${paragraphId}`);
+      console.log(existingDropzone);
+      
+      if (existingDropzone) {
+        existingDropzone.destroy();
       }
-    });
-    try {
-      const thumbnail = new FormData();
-      thumbnail.append('files', this.BlogThumbnail.files[0]);
-      const uploadThumbnail = await api.upload(thumbnail);
-
-      const imageCover = new FormData();
-      imageCover.append('files', this.BlogImagecover.files[0]);
-      const uploadImagecover = await api.upload(imageCover);
-
-      const createBlog = await api.createBlogs({
-        topic: blog.Topic,
-        details: blog.Description,
-        coverImage: uploadThumbnail[0].id,
-        headerImage: uploadImagecover[0].id,
-      });
-      this.updateBlogImageURL(createBlog.data.id, uploadThumbnail[0].id, uploadImagecover[0].id);
-      for (let index = 0; index < this.paragraphs.length; index++) {
-        const paragraphImg = new FormData();
-        paragraphImg.append('files', this.paragraphs[index].image);
-        const uploadParagraph = await api.upload(paragraphImg);
-        const createParagraph = await api.createParagraphs({
-          blogId: createBlog.data.id.toString(),
-          details: this.paragraphs[index].content,
-          image: uploadParagraph[0].id,
+    },
+    async getBlogData(id){
+      const blog = await api.getBlogId(id);
+      this.blog.Topic = blog.data.attributes.topic;
+      this.blog.Description = blog.data.attributes.details;
+      const paragraph = await api.getParagraph();
+      let paragraphBlog = paragraph.data.filter(blogId => blogId.attributes.blogId == blog.data.id)
+      for (let index = 0; index < paragraphBlog.length; index++) {
+        this.paragraphs.push(
+          {
+            id: index + 1, 
+            content: paragraphBlog[index].attributes.details, 
+            image: paragraphBlog[index].attributes.img
+          }
+        )
+      }
+      this.$nextTick(() => {
+        this.initializeDropzones();
+      });  
+    },
+    removeImage(event, index) {  
+      event.preventDefault();
+      if (this.paragraphs[index]) {
+        this.paragraphs[index].image = null;
+        this.$nextTick(() => {
+          this.destroyDropzone(`paragraph-${index + 2}`);
+          this.createDropzoneForParagraph(index, this.paragraphs[index]); 
         });
-        this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
+      } else {
+        console.error("Invalid index:", index);
       }
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'การทำงานเสร็จสิ้น',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      window.location.reload();
-    } catch (error) {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: error.message,
-        showConfirmButton: true
-      });
     }
-  },
-    async updateBlogImageURL(idBlog, idThumbnail, idCoverImage){
-      const thumbnail = await api.getImage(idThumbnail);
-      const coverImage = await api.getImage(idCoverImage);
-      const updateBlog = await api.updateBlogs(idBlog, {
-        data:{
-          coverImg: this.prefix + thumbnail.data.url,
-          headerImg: this.prefix + coverImage.data.url,
-        }
-      });
-    },
-    async updateParagraphs(idParagraph, idParagraphImage){
-      const paragraph = await api.getImage(idParagraphImage)
-      const updateParagraphs = await api.updateParagraphs(idParagraph, {
-        data:{
-          img : this.prefix + paragraph.data.url
-        }
-      })
-    }
+
   },
   mounted() {
-    this.BlogThumbnail = new Dropzone("#Thumbnail", {
-      url: "/",
-      maxFiles: 1,
-      maxFilesize: 1,
-      acceptedFiles: "image/*",
-    });
-
-    this.BlogThumbnail.on("maxfilesexceeded", file => {
-      this.BlogThumbnail.removeFile(file);
-      Swal.fire({
-        title: "Maximum file",
-        text: "You can only upload up to 1 file.",
-        icon: "error"
+    this.$nextTick(() => {
+    const dropzoneElement = document.querySelector(`#ThumbnailUpdate${this.blogId}`);
+    if (dropzoneElement) {
+      this.BlogThumbnail = new Dropzone(`#ThumbnailUpdate${this.blogId}`, {
+        url: "/",
+        maxFiles: 1,
+        maxFilesize: 1,
+        acceptedFiles: "image/*",
       });
-    });
 
-    this.BlogImagecover = new Dropzone("#Imagecover", {
-      url: "/",
-      maxFiles: 1,
-      maxFilesize: 1,
-      acceptedFiles: "image/*",
-    });
-
-    this.BlogImagecover.on("maxfilesexceeded", file => {
-      this.BlogImagecover.removeFile(file);
-      Swal.fire({
-        title: "Maximum file",
-        text: "You can only upload up to 1 file.",
-        icon: "error"
+      this.BlogThumbnail.on("maxfilesexceeded", file => {
+        this.BlogThumbnail.removeFile(file);
+        Swal.fire({
+          title: "Maximum file",
+          text: "You can only upload up to 1 file.",
+          icon: "error"
+        });
       });
+
+      this.BlogImagecover = new Dropzone(`#ImagecoverUpdate${this.blogId}`, {
+        url: "/",
+        maxFiles: 1,
+        maxFilesize: 1,
+        acceptedFiles: "image/*",
+      });
+
+      this.BlogImagecover.on("maxfilesexceeded", file => {
+        this.BlogImagecover.removeFile(file);
+        Swal.fire({
+          title: "Maximum file",
+          text: "You can only upload up to 1 file.",
+          icon: "error"
+        });
+      });
+
+      
+      } else {
+        console.error("Dropzone element not found");
+      }
     });
-    this.initializeDropzones()
-  }
-};
+    this.getBlogData(this.blogId);
+    }
+  };
 </script>
 
 <template>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Add
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#staticBackdropUpdate'+ this.blogId ">
+    Edit
   </button>
 
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" :id="'staticBackdropUpdate' + this.blogId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -197,7 +180,9 @@ export default {
             <h6 class="text-black-50 d-inline">Thumbnail
             <p class="text-danger d-inline">*</p>
             <div class="mb-3">
-              <form class="dropzone text-center" id="Thumbnail"></form>
+              <form v-if="this.blogId" class="dropzone text-center" :id="'ThumbnailUpdate' + blogId">
+                
+              </form>
             </div>
           </h6>
           </div>
@@ -211,7 +196,7 @@ export default {
             <h6 class="text-black-50 d-inline">Image cover
             <p class="text-danger d-inline">*</p>
             <div class="mb-3">
-              <form class="dropzone text-center" id="Imagecover"></form>
+              <form v-if="this.blogId" class="dropzone text-center" :id="'ImagecoverUpdate' + this.blogId"></form>
             </div>
           </h6>
           </div>
@@ -232,8 +217,17 @@ export default {
                   <p class="text-danger d-inline">*</p>
                 </h6>
                 <div class="mb-3">
-                    <form class="dropzone text-center" :id="'paragraph-' + parseInt(index + 1)"></form>
+                  <div v-if="paragraph.image">
+                  <div class="d-block text-center mx-auto">
+                    <img class="img-fluid" :src="paragraph.image">
                   </div>
+                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-warning" @click="removeImage($event, index)">Remove</button>
+                  </div>
+                </div>
+                <form v-else class="dropzone text-center" :id="'paragraph-' + parseInt(index + 2)">
+                </form>
+              </div>
               </div>
               <div>
                 <h6 class="text-black-50 d-inline">Paragraph
@@ -255,7 +249,7 @@ export default {
         </form>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="createBlog(blog,paragraphs)">Save</button>
+          <button type="button" class="btn btn-primary" @click="">Save</button>
         </div>
       </div>
     </div>

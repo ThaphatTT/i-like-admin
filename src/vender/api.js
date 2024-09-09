@@ -33,6 +33,23 @@ const api = {
         });
     });
   },
+  getBlogId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/blogs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
   deleteBlogs(id) {
     return new Promise((resolve, reject) => {
       axios
@@ -449,6 +466,23 @@ const api = {
         })
         .then((response) => {
           resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getParagraph() {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/paragraphs?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
         })
         .catch((error) => {
           reject(error);

@@ -1,19 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
-import BlogDashboard from '@/views/BlogDashboard.vue'
-import PromotionsDashboard from '@/views/PromotionsDashboard.vue'
-import ProductsDashboard from '@/views/ProductsDashboard.vue'
-import { auth } from '@/auth/auth'
+import Login from "@/views/Login.vue";
+import Register from "@/views/Register.vue";
+import BlogDashboard from "@/views/BlogDashboard.vue";
+import PromotionsDashboard from "@/views/PromotionsDashboard.vue";
+import ProductsDashboard from "@/views/ProductsDashboard.vue";
+import { auth } from "@/auth/auth";
 
-import EditBlog from "@/views/BlogEdit.vue";
 import PromotionsEdit from "@/views/PromotionsEdit.vue";
 import PromotionsCreate from "@/views/PromotionsCreate.vue";
 import ProductsCreate from "@/views/ProductsCreate.vue";
 import ProductsEdit from "@/views/ProductsEdit.vue";
 
-import BlogView from "@/views/BlogView.vue";
 import PromotionsView from "@/views/PromotionsView.vue";
 import ProductsView from "@/views/ProductsView.vue";
 import OrderDashboard from "@/views/OrderDashboard.vue";
@@ -26,164 +24,148 @@ import Dashboard from "@/views/Dashboard.vue";
 import PackageDashboard from "@/views/PackageDashboard.vue";
 
 const router = createRouter({
-  history : createWebHistory(import.meta.env.BASE_URL),
-  routes:[
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
     {
-      path: '/',
-      name: 'dashboard-home',
+      path: "/",
+      name: "dashboard-home",
       component: BlogDashboard,
-      meta:{
+      meta: {
         middleware: auth,
-      }
+      },
     },
     {
-      path: '/signin',
-      name: 'sign-in',
-      component: Login
+      path: "/signin",
+      name: "sign-in",
+      component: Login,
     },
     {
-      path: '/signup',
-      name: 'sign-up',
-      component: Register
+      path: "/signup",
+      name: "sign-up",
+      component: Register,
     },
     {
-      path: '/Blog-Dashboard',
-      name: 'dashboard-blog',
+      path: "/Blog-Dashboard",
+      name: "dashboard-blog",
       component: BlogDashboard,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Promotions-Dashboard',
-      name: 'dashboard-Promotion',
+      path: "/Promotions-Dashboard",
+      name: "dashboard-Promotion",
       component: PromotionsDashboard,
-      meta:{
-        middleware:auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Products-Dashboard',
-      name: 'dashboard-products',
+      path: "/Products-Dashboard",
+      name: "dashboard-products",
       component: ProductsDashboard,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Blog-Dashboard/edit/:id',
-      name: 'blog-edit',
-      component: EditBlog,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
-      path: '/Promotions-Dashboard/edit/:id',
-      name: 'promotion-edit',
+      path: "/Promotions-Dashboard/edit/:id",
+      name: "promotion-edit",
       component: PromotionsEdit,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Promotions-Dashboard/create',
-      name: 'promotion-create',
+      path: "/Promotions-Dashboard/create",
+      name: "promotion-create",
       component: PromotionsCreate,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Products-Dashboard/edit/:id',
-      name: 'product-edit',
+      path: "/Products-Dashboard/edit/:id",
+      name: "product-edit",
       component: ProductsEdit,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Products-Dashboard/create',
-      name: 'product-create',
+      path: "/Products-Dashboard/create",
+      name: "product-create",
       component: ProductsCreate,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Blog-Dashboard/view/:id',
-      name: 'blog-view',
-      component: BlogView,
-      meta:{
-        middleware: auth
-      }
-    },
-    {
-      path: '/Promotions-Dashboard/view/:id',
-      name: 'promotions-view',
+      path: "/Promotions-Dashboard/view/:id",
+      name: "promotions-view",
       component: PromotionsView,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Products-Dashboard/view/:id',
-      name: 'product-view',
+      path: "/Products-Dashboard/view/:id",
+      name: "product-view",
       component: ProductsView,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Orders-Dashboard',
-      name: 'order-blog',
+      path: "/Orders-Dashboard",
+      name: "order-blog",
       component: OrderDashboard,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Orders-Dashboard/edit/:id',
-      name: 'order-edit',
+      path: "/Orders-Dashboard/edit/:id",
+      name: "order-edit",
       component: OrderEdit,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Orders-Dashboard/create',
-      name: 'order-create',
+      path: "/Orders-Dashboard/create",
+      name: "order-create",
       component: OrderCreate,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Orders-Dashboard/view/:id',
-      name: 'order-view',
+      path: "/Orders-Dashboard/view/:id",
+      name: "order-view",
       component: OrderView,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Dashboard',
-      name: 'main-dashboard',
+      path: "/Dashboard",
+      name: "main-dashboard",
       component: Dashboard,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
     {
-      path: '/Packages-Dashboard',
-      name: 'package-dashboard',
+      path: "/Packages-Dashboard",
+      name: "package-dashboard",
       component: PackageDashboard,
-      meta:{
-        middleware: auth
-      }
+      meta: {
+        middleware: auth,
+      },
     },
-  ]
-})
+  ],
+});
 
 router.beforeEach((to, from, next) => {
   if (to.meta.middleware) {

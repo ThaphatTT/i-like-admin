@@ -1,7 +1,4 @@
 <script>
-import axios from 'axios';
-import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
 import BlogCreate from '@/views/components/blogCreate.vue'
 import Swal from 'sweetalert2';
@@ -9,11 +6,14 @@ import api from '@/vender/api'
 
 import Loading from '@/components/Loading.vue';
 
+import blogEdit from '@/views/components/blogEdit.vue';
+
 export default {
     components: {
         Loading,
         SideNavbar,
-        BlogCreate
+        BlogCreate,
+        blogEdit
     },
     data() {
         return {
@@ -125,8 +125,7 @@ export default {
                                         <td>{{ item.attributes.topic }}</td>
                                         <td>{{ item.attributes.description }}</td>
                                         <td>
-                                            <RouterLink :to="'/Blog-Dashboard/edit/' + item.id"
-                                                class="btn btn-primary btn-block">Edit</RouterLink>
+                                            <blogEdit :blogId="item.id || 'not found'"/>
                                         </td>
                                         <td><button class="btn btn-primary btn-block"
                                                 @click="deleteItem(item.id)">Delete</button></td>
