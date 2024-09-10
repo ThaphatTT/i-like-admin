@@ -36,7 +36,7 @@ const api = {
   getBlogId(id) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${url}/blogs/${id}`, {
+        .get(`${url}/blogs/${id}?populate=*`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -455,6 +455,29 @@ const api = {
         });
     });
   },
+  getUpload(data) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: `${url}/files`,
+        data: data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          console.error(
+            "Error uploading file:",
+            error.response ? error.response.data : error.message
+          );
+          reject(error);
+        });
+    });
+  },
   getImage(id) {
     return new Promise((resolve, reject) => {
       axios
@@ -476,6 +499,40 @@ const api = {
     return new Promise((resolve, reject) => {
       axios
         .get(`${url}/paragraphs?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  updateBlog(id, data) {
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${url}/blogs/${id}`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  deleteParagraph(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(`${url}/paragraphs/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
