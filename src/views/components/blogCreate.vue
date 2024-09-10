@@ -112,8 +112,9 @@ export default {
         title: 'การทำงานเสร็จสิ้น',
         showConfirmButton: false,
         timer: 1500
-      });
-      window.location.reload();
+      }).then(()=>{
+        window.location.reload()
+      })
     } catch (error) {
       Swal.fire({
         position: 'center',
@@ -141,7 +142,8 @@ export default {
           img : this.prefix + paragraph.data.url
         }
       })
-    }
+      console.log('update',updateParagraphs);
+    },
   },
   mounted() {
     this.BlogThumbnail = new Dropzone("#Thumbnail", {
@@ -255,7 +257,7 @@ export default {
         </form>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="createBlog(blog,paragraphs)">Save</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="createBlog(blog,paragraphs)">Save</button>
         </div>
       </div>
     </div>
