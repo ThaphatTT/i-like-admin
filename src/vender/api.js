@@ -455,12 +455,33 @@ const api = {
         });
     });
   },
-  getUpload(data) {
+  getUpload(id) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: `${url}/files/${id}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          console.error(
+            "Error uploading file:",
+            error.response ? error.response.data : error.message
+          );
+          reject(error);
+        });
+    });
+  },
+  getUploads() {
     return new Promise((resolve, reject) => {
       axios({
         method: "get",
         url: `${url}/files`,
-        data: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
@@ -533,6 +554,23 @@ const api = {
     return new Promise((resolve, reject) => {
       axios
         .delete(`${url}/paragraphs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  deleteImg(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(`${url}/upload/files/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

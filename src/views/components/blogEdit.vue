@@ -84,6 +84,12 @@ export default {
       event.preventDefault();
       switch (data){
         case "BlogThumbnail":
+        const deleteImg1 = await api.deleteImg(this.blog.coverImgId)
+        const updateBlogThumbnail = await api.updateBlogs(this.blogId,{
+          data:{
+            coverImg : null,
+          }
+        })
           this.BlogThumbnail = null
           this.dropZone.BlogThumbnail = true
           await this.$nextTick();
@@ -103,6 +109,12 @@ export default {
           });
         break;
         case "BlogImagecover" : 
+          const deleteImg2 = await api.deleteImg(this.blog.headerImgId)
+          const updateBlogHeader = await api.updateBlogs(this.blogId,{
+          data:{
+            headerImg : null
+          }
+        })
           this.BlogImagecover = null
           this.dropZone.BlogImagecover = true
           await this.$nextTick();
@@ -165,15 +177,24 @@ export default {
             uploadImagecover = await api.upload(imageCover);
         }
         const updateBlog = await api.updateBlog(blogId, {
+          data: {
             topic: this.blog.Topic,
             details: this.blog.Description,
-            coverImage: {
-              id : this.dropZone.BlogThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId
-            },
-            headerImage:{
-              id : this.dropZone.BlogImagecover ? uploadImagecover[0].id : this.blog.headerImgId
-            }
-        });
+            // coverImage: this.dropZone.BlogThumbnail ? [uploadThumbnail[0].id] : [this.blog.coverImgId],
+            // headerImage: this.dropZone.BlogImagecover ? [uploadImagecover[0].id] : [this.blog.headerImgId]
+          }
+            
+        }).then(() =>{
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: "สำเร็จ",
+            showConfirmButton: false
+          }).then(() =>{
+            window.location.reload();
+          })
+        })
         console.log("createBlog",updateBlog);
       } catch (error) {
         Swal.fire({
@@ -184,7 +205,6 @@ export default {
           showConfirmButton: true
         });
         console.log(error);
-        
       }
     },
     async deleteDataParagraph(index){
