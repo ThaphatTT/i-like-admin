@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       paragraphs: [],
+      paragraphsconst: [],
       BlogThumbnail: null,
       BlogImagecover: null,
       blog:{
@@ -25,6 +26,7 @@ export default {
         BlogThumbnail: false,
         BlogImagecover: false,
         paragraphs: [],
+        paragraphRemove: false,
       },
       prefix: "http://localhost:1337",
     };
@@ -33,7 +35,21 @@ export default {
     addParagraph(event) {
       event.preventDefault();
       const newId = this.paragraphs.length ? this.paragraphs[this.paragraphs.length - 1].id + 1 : 1;
-      this.paragraphs.push({ id: newId, content: '', image: '' });
+      this.paragraphs.push(
+        { 
+          id: newId, 
+          content: null, 
+          image: this.paragraphs.image ? this.paragraphs.image : null, 
+          dropzoneId: `DropzoneParagraph${newId}`, 
+          orderId: null, 
+          imageId: null, 
+          paragraphId: null
+        });
+      this.$nextTick(() => {
+        this.createDropzoneForParagraph(this.paragraphs.length - 1);
+      });
+      console.log(this.paragraphs);
+      
     },
     deleteParagraph(event, index) {
       event.preventDefault();
@@ -58,14 +74,56 @@ export default {
       });
     },
     async getBlogData(id){
-      const blog = await api.getBlogId(id);
+      const blog = await api.getBlogId(id);   
+      this.paragraphs = [];
       this.BlogThumbnail = blog.data.attributes.coverImg;
       this.BlogImagecover = blog.data.attributes.headerImg
       this.blog.Topic = blog.data.attributes.topic;
       this.blog.Description = blog.data.attributes.details;
-      this.blog.coverImgId = blog.data.attributes.coverImage.data[0].id
-      this.blog.headerImgId = blog.data.attributes.headerImage.data[0].id
-      
+      this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0) 
+  ? blog.data.attributes.coverImage.data[0].id 
+  : null
+      this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0) 
+  ? blog.data.attributes.headerImage.data[0].id 
+  : null
+      if(!this.BlogThumbnail){
+        this.BlogThumbnail = null
+        this.dropZone.BlogThumbnail = true
+        await this.$nextTick();
+        this.BlogThumbnail = new Dropzone(`#ThumbnailUpdate${this.blogId}`, {
+          url: "/",
+          maxFiles: 1,
+          maxFilesize: 1,
+          acceptedFiles: "image/*",
+        });
+        this.BlogThumbnail.on("maxfilesexceeded", file => {
+          this.BlogThumbnail.removeFile(file);
+          Swal.fire({
+            title: "Maximum file",
+            text: "You can only upload up to 1 file.",
+            icon: "error"
+          });
+        });
+      }
+      if(!this.BlogImagecover){
+        this.BlogImagecover = null
+        this.dropZone.BlogImagecover = true
+        await this.$nextTick();
+        this.BlogImagecover = new Dropzone(`#imageCoverUpdate${this.blogId}`, {
+          url: "/",
+          maxFiles: 1,
+          maxFilesize: 1,
+          acceptedFiles: "image/*",
+        });
+        this.BlogImagecover.on("maxfilesexceeded", file => {
+          this.BlogImagecover.removeFile(file);
+          Swal.fire({
+            title: "Maximum file",
+            text: "You can only upload up to 1 file.",
+            icon: "error"
+          });
+        });
+      }
       const paragraph = await api.getParagraph();
       let paragraphBlog = paragraph.data.filter(blogId => blogId.attributes.blogId == blog.data.id)
       for (let index = 0; index < paragraphBlog.length; index++) {
@@ -73,12 +131,22 @@ export default {
           {
             id: index + 1, 
             content: paragraphBlog[index].attributes.details, 
-            image: paragraphBlog[index].attributes.img,
+            image: paragraphBlog[index]?.attributes?.img || null,
             dropzoneId: `DropzoneParagraph${index + 1}`,
-            orderId: paragraphBlog[index].attributes.blogId
+            orderId: paragraphBlog[index].attributes.blogId,
+            imageId: (paragraphBlog[index]?.attributes?.image?.data && paragraphBlog[index].attributes.image.data.length > 0)
+            ? paragraphBlog[index].attributes.image.data[0].id : null,
+            paragraphId : paragraphBlog[index].id
           }
         )
-      }
+        await this.$nextTick();
+        if(!this.paragraphs.image){
+          this.createDropzoneForParagraph(index);
+        }
+        this.paragraphsconst.push({
+          id: index + 1
+        })
+      }  
     },
     async removeImage(event, index, data) {  
       event.preventDefault();
@@ -114,7 +182,7 @@ export default {
           data:{
             headerImg : null
           }
-        })
+          })
           this.BlogImagecover = null
           this.dropZone.BlogImagecover = true
           await this.$nextTick();
@@ -133,23 +201,39 @@ export default {
             });
           });
         break;
-        case "paragraphs" : 
+        case "paragraphs" :
+          const deleteImg3 = await api.deleteImg(this.paragraphs[index].imageId)
+          const updateParagraph = await api.updateParagraphs(this.paragraphs[index].paragraphId,{
+          data:{
+            img : null,
+          }
+          })
           this.paragraphs[index].image = null;
           await this.$nextTick();
           this.createDropzoneForParagraph(index);
-        break;
-      }
+          this.dropZone.paragraphRemove = true;
+          break;
+        }
     },
     createDropzoneForParagraph(index) {
       const paragraph = this.paragraphs[index];
       const dropzoneElement = document.getElementById(paragraph.dropzoneId);
       if (dropzoneElement) {
         new Dropzone(dropzoneElement, {
-          url: "/",
+          url: "#",
           maxFiles: 1,
           maxFilesize: 1,
           acceptedFiles: "image/*",
+          init: function() {
+            this.on('addedfile', (file) => {
+              paragraph.image = file;
+            });
+            this.on('error', (file, response) => {
+              console.error(response);
+            });
+          }
         });
+        this.dropZone.paragraphRemove = true
       }
     },
     async updateBlog(blogId){
@@ -180,22 +264,62 @@ export default {
           data: {
             topic: this.blog.Topic,
             details: this.blog.Description,
-            // coverImage: this.dropZone.BlogThumbnail ? [uploadThumbnail[0].id] : [this.blog.coverImgId],
-            // headerImage: this.dropZone.BlogImagecover ? [uploadImagecover[0].id] : [this.blog.headerImgId]
+            coverImage: this.dropZone.BlogThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId,
+            headerImage: this.dropZone.BlogImagecover ? uploadImagecover[0].id : this.blog.headerImgId
           }
-            
-        }).then(() =>{
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'สำเร็จ',
-            text: "สำเร็จ",
-            showConfirmButton: false
-          }).then(() =>{
-            window.location.reload();
-          })
         })
-        console.log("createBlog",updateBlog);
+        this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId 
+        this.uploadImagecover = uploadImagecover ? uploadImagecover[0].id : this.blog.headerImgId
+        // console.log(updateBlog);
+        // console.log(this.uploadThumbnail);
+        // console.log(this.uploadImagecover);
+        this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)
+        // console.log(this.paragraphs);
+        for (let index = 0; index < this.paragraphs.length; index++) {
+          // if(this.paragraphs[index].coverImage === null && this.paragraphs[index].headerImage === null){
+          // console.log('index',index ,':', this.paragraphs[index]);
+          
+            let uploadParagraph;
+            let paragraphImg = new FormData();
+            paragraphImg.append('files', this.paragraphs[index].image);
+            uploadParagraph = await api.upload(paragraphImg);
+            console.log(this.paragraphsconst);
+            // for (let j = 0; j < this.paragraphsconst.length; j++) {
+            //   if(this.paragraphsconst[j].length < this.paragraphs[index].length){
+            //     console.log('yo');
+                
+            //     if(this.paragraphsconst[j].id != this.paragraphs[index].id){
+            //       console.log('create', this.paragraphs[index].id);
+            //       paragraphImg.append('files', this.paragraphs[index].image);
+            //       uploadParagraph = await api.upload(paragraphImg);
+            //       const createParagraph = await api.createParagraphs({
+            //         blogId: createBlog.data.id.toString(),
+            //         details: this.paragraphs[index].content,
+            //         image: uploadParagraph[0].id,
+            //       });
+            //       this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
+            //     }
+            //   }
+            // }
+            let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
+            paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
+            uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
+            console.log('uploadParagraph',uploadParagraph);
+            console.log('paragraphId',paragraphId.data.id);
+            
+            this.updateParagraphs(paragraphId.data.id, uploadParagraph)
+          // }
+        }
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'การทำงานเสร็จสิ้น',
+          showConfirmButton: false,
+          // timer: 1500
+        })
+        // .then(()=>{
+        //   window.location.reload();
+        // })
       } catch (error) {
         Swal.fire({
           position: 'center',
@@ -205,6 +329,31 @@ export default {
           showConfirmButton: true
         });
         console.log(error);
+      }
+    },
+    async updateBlogImageURL(idBlog, idThumbnail, idCoverImage){
+      const thumbnail = await api.getImage(idThumbnail);
+      const coverImage = await api.getImage(idCoverImage);
+      const updateBlog = await api.updateBlogs(idBlog, {
+        data:{
+          coverImg: thumbnail.data.url ? this.prefix + thumbnail.data.url : this.BlogThumbnail,
+          headerImg: coverImage.data.url ? this.prefix + coverImage.data.url : this.BlogImagecover,
+        }
+      });
+    },
+    async updateParagraphs(idParagraph, idParagraphImage) {
+      try {
+        const paragraph = await api.getImage(idParagraphImage);
+        const imageUrl = paragraph.data.url ? this.prefix + paragraph.data.url : this.paragraphs.image;
+        const updateParagraphs = await api.updateParagraphs(idParagraph, {
+          data: {
+            img: imageUrl,
+            image: idParagraphImage ? idParagraphImage : this.paragraphs.imageId
+          }
+        });
+        console.log("Updated Paragraph:", updateParagraphs);
+      } catch (error) {
+        console.error("Error updating paragraphs:", error);
       }
     },
     async deleteDataParagraph(index){
@@ -261,7 +410,7 @@ export default {
             <h6 class="text-black-50 d-inline">Image cover
             <p class="text-danger d-inline">*</p>
             <div class="mb-3">
-              <div v-if="BlogImagecover && !dropZone.BlogImagecover" >
+              <div v-if="BlogImagecover && !dropZone.BlogImagecover">
                 <div class="d-block text-center mx-auto">
                   <img class="img-fluid" :src="BlogImagecover">
                 </div>
@@ -291,7 +440,7 @@ export default {
                   <p class="text-danger d-inline">*</p>
                 </h6>
                 <div class="mb-3">
-                  <div v-if="paragraph.image">
+                  <div v-if="paragraph.image && !dropZone.paragraphRemove">
                     <div class="d-block text-center mx-auto">
                       <img class="img-fluid" :src="paragraph.image">
                     </div>
@@ -322,7 +471,7 @@ export default {
             </div>
         </form>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="getBlogData(this.blogId)">Close</button>
           <button type="button" class="btn btn-primary" @click="updateBlog(this.blogId)">Update</button>
         </div>
       </div>

@@ -584,6 +584,23 @@ const api = {
         });
     });
   },
+  getParagraphId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/paragraphs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
 
 export default api;

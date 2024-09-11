@@ -80,8 +80,8 @@ export default {
     try {
       const thumbnail = new FormData();
       thumbnail.append('files', this.BlogThumbnail.files[0]);
+      
       const uploadThumbnail = await api.upload(thumbnail);
-
       const imageCover = new FormData();
       imageCover.append('files', this.BlogImagecover.files[0]);
       const uploadImagecover = await api.upload(imageCover);
@@ -92,8 +92,6 @@ export default {
         coverImage: uploadThumbnail[0].id,
         headerImage: uploadImagecover[0].id,
       });
-      console.log("createBlog",createBlog);
-      
       this.updateBlogImageURL(createBlog.data.id, uploadThumbnail[0].id, uploadImagecover[0].id);
       for (let index = 0; index < this.paragraphs.length; index++) {
         const paragraphImg = new FormData();
@@ -111,7 +109,7 @@ export default {
         icon: 'success',
         title: 'การทำงานเสร็จสิ้น',
         showConfirmButton: false,
-        timer: 4000
+        timer: 1500
       }).then(()=>{
         window.location.reload();
       })
@@ -137,15 +135,11 @@ export default {
     },
     async updateParagraphs(idParagraph, idParagraphImage){
       const paragraph = await api.getImage(idParagraphImage)
-      console.log('updateParagraphs', paragraph);
-      console.log('idParagraph', idParagraph);
-      
       const updateParagraphs = await api.updateParagraphs(idParagraph, {
         data:{
           img : this.prefix + paragraph.data.url
         }
       })
-      console.log('update',updateParagraphs);
     },
   },
   mounted() {
