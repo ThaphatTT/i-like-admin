@@ -27,6 +27,8 @@ export default {
         BlogImagecover: false,
         paragraphs: [],
         paragraphRemove: false,
+        addFileParagraph : false,
+        addImage : false
       },
       prefix: "http://localhost:1337",
     };
@@ -39,7 +41,7 @@ export default {
         { 
           id: newId, 
           content: null, 
-          image: this.paragraphs.image ? this.paragraphs.image : null, 
+          image: null, 
           dropzoneId: `DropzoneParagraph${newId}`, 
           orderId: null, 
           imageId: null, 
@@ -74,79 +76,85 @@ export default {
       });
     },
     async getBlogData(id){
-      const blog = await api.getBlogId(id);   
-      this.paragraphs = [];
-      this.BlogThumbnail = blog.data.attributes.coverImg;
-      this.BlogImagecover = blog.data.attributes.headerImg
-      this.blog.Topic = blog.data.attributes.topic;
-      this.blog.Description = blog.data.attributes.details;
-      this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0) 
-  ? blog.data.attributes.coverImage.data[0].id 
-  : null
-      this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0) 
-  ? blog.data.attributes.headerImage.data[0].id 
-  : null
-      if(!this.BlogThumbnail){
-        this.BlogThumbnail = null
-        this.dropZone.BlogThumbnail = true
-        await this.$nextTick();
-        this.BlogThumbnail = new Dropzone(`#ThumbnailUpdate${this.blogId}`, {
-          url: "/",
-          maxFiles: 1,
-          maxFilesize: 1,
-          acceptedFiles: "image/*",
-        });
-        this.BlogThumbnail.on("maxfilesexceeded", file => {
-          this.BlogThumbnail.removeFile(file);
-          Swal.fire({
-            title: "Maximum file",
-            text: "You can only upload up to 1 file.",
-            icon: "error"
+      try {
+        const blog = await api.getBlogId(id);   
+        this.paragraphs = [];
+        this.BlogThumbnail = blog.data.attributes.coverImg;
+        this.BlogImagecover = blog.data.attributes.headerImg
+        this.blog.Topic = blog.data.attributes.topic;
+        this.blog.Description = blog.data.attributes.details;
+        this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0) 
+    ? blog.data.attributes.coverImage.data[0].id 
+    : null
+        this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0) 
+    ? blog.data.attributes.headerImage.data[0].id 
+    : null
+        if(!this.BlogThumbnail){
+          this.BlogThumbnail = null
+          this.dropZone.BlogThumbnail = true
+          await this.$nextTick();
+          this.BlogThumbnail = new Dropzone(`#ThumbnailUpdate${this.blogId}`, {
+            url: "/",
+            maxFiles: 1,
+            maxFilesize: 1,
+            acceptedFiles: "image/*",
           });
-        });
-      }
-      if(!this.BlogImagecover){
-        this.BlogImagecover = null
-        this.dropZone.BlogImagecover = true
-        await this.$nextTick();
-        this.BlogImagecover = new Dropzone(`#imageCoverUpdate${this.blogId}`, {
-          url: "/",
-          maxFiles: 1,
-          maxFilesize: 1,
-          acceptedFiles: "image/*",
-        });
-        this.BlogImagecover.on("maxfilesexceeded", file => {
-          this.BlogImagecover.removeFile(file);
-          Swal.fire({
-            title: "Maximum file",
-            text: "You can only upload up to 1 file.",
-            icon: "error"
+          this.BlogThumbnail.on("maxfilesexceeded", file => {
+            this.BlogThumbnail.removeFile(file);
+            Swal.fire({
+              title: "Maximum file",
+              text: "You can only upload up to 1 file.",
+              icon: "error"
+            });
           });
-        });
-      }
-      const paragraph = await api.getParagraph();
-      let paragraphBlog = paragraph.data.filter(blogId => blogId.attributes.blogId == blog.data.id)
-      for (let index = 0; index < paragraphBlog.length; index++) {
-        this.paragraphs.push(
-          {
-            id: index + 1, 
-            content: paragraphBlog[index].attributes.details, 
-            image: paragraphBlog[index]?.attributes?.img || null,
-            dropzoneId: `DropzoneParagraph${index + 1}`,
-            orderId: paragraphBlog[index].attributes.blogId,
-            imageId: (paragraphBlog[index]?.attributes?.image?.data && paragraphBlog[index].attributes.image.data.length > 0)
-            ? paragraphBlog[index].attributes.image.data[0].id : null,
-            paragraphId : paragraphBlog[index].id
-          }
-        )
-        await this.$nextTick();
-        if(!this.paragraphs.image){
-          this.createDropzoneForParagraph(index);
         }
-        this.paragraphsconst.push({
-          id: index + 1
-        })
-      }  
+        if(!this.BlogImagecover){
+          this.BlogImagecover = null
+          this.dropZone.BlogImagecover = true
+          await this.$nextTick();
+          this.BlogImagecover = new Dropzone(`#imageCoverUpdate${this.blogId}`, {
+            url: "/",
+            maxFiles: 1,
+            maxFilesize: 1,
+            acceptedFiles: "image/*",
+          });
+          this.BlogImagecover.on("maxfilesexceeded", file => {
+            this.BlogImagecover.removeFile(file);
+            Swal.fire({
+              title: "Maximum file",
+              text: "You can only upload up to 1 file.",
+              icon: "error"
+            });
+          });
+        }
+        const paragraph = await api.getParagraph();
+        let paragraphBlog = paragraph.data.filter(blogId => blogId.attributes.blogId == blog.data.id)
+        for (let index = 0; index < paragraphBlog.length; index++) {
+          this.paragraphs.push(
+            {
+              id: index + 1, 
+              content: paragraphBlog[index].attributes.details, 
+              image: paragraphBlog[index]?.attributes?.img || null,
+              dropzoneId: `DropzoneParagraph${index + 1}`,
+              orderId: paragraphBlog[index].attributes.blogId,
+              imageId: (paragraphBlog[index]?.attributes?.image?.data && paragraphBlog[index].attributes.image.data.length > 0)
+              ? paragraphBlog[index].attributes.image.data[0].id : null,
+              paragraphId : paragraphBlog[index].id
+            }
+          )
+          await this.$nextTick();
+          if(!this.paragraphs.image){
+            this.createDropzoneForParagraph(index);
+          }
+          this.paragraphsconst.push({
+            id: index + 1
+          })
+        } 
+      } catch (error) {
+        
+      } finally {
+        this.fetchSuccess = true
+      }
     },
     async removeImage(event, index, data) {  
       event.preventDefault();
@@ -218,6 +226,7 @@ export default {
     createDropzoneForParagraph(index) {
       const paragraph = this.paragraphs[index];
       const dropzoneElement = document.getElementById(paragraph.dropzoneId);
+      
       if (dropzoneElement) {
         new Dropzone(dropzoneElement, {
           url: "#",
@@ -234,6 +243,7 @@ export default {
           }
         });
         this.dropZone.paragraphRemove = true
+        this.dropZone.addImage = true
       }
     },
     async updateBlog(blogId){
@@ -270,45 +280,43 @@ export default {
         })
         this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId 
         this.uploadImagecover = uploadImagecover ? uploadImagecover[0].id : this.blog.headerImgId
-        // console.log(updateBlog);
-        // console.log(this.uploadThumbnail);
-        // console.log(this.uploadImagecover);
         this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)
-        // console.log(this.paragraphs);
+        console.log(this.paragraphs);
+        
         for (let index = 0; index < this.paragraphs.length; index++) {
-          // if(this.paragraphs[index].coverImage === null && this.paragraphs[index].headerImage === null){
-          // console.log('index',index ,':', this.paragraphs[index]);
-          
-            let uploadParagraph;
-            let paragraphImg = new FormData();
-            paragraphImg.append('files', this.paragraphs[index].image);
-            uploadParagraph = await api.upload(paragraphImg);
-            console.log(this.paragraphsconst);
-            // for (let j = 0; j < this.paragraphsconst.length; j++) {
-            //   if(this.paragraphsconst[j].length < this.paragraphs[index].length){
-            //     console.log('yo');
-                
-            //     if(this.paragraphsconst[j].id != this.paragraphs[index].id){
-            //       console.log('create', this.paragraphs[index].id);
-            //       paragraphImg.append('files', this.paragraphs[index].image);
-            //       uploadParagraph = await api.upload(paragraphImg);
-            //       const createParagraph = await api.createParagraphs({
-            //         blogId: createBlog.data.id.toString(),
-            //         details: this.paragraphs[index].content,
-            //         image: uploadParagraph[0].id,
-            //       });
-            //       this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
-            //     }
-            //   }
-            // }
-            let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
-            paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
-            uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
-            console.log('uploadParagraph',uploadParagraph);
-            console.log('paragraphId',paragraphId.data.id);
-            
-            this.updateParagraphs(paragraphId.data.id, uploadParagraph)
-          // }
+          const element1 = this.paragraphs[index]
+          if(!element1.imageId){
+            let stateCreate = false;
+          let uploadParagraph;
+          let paragraphImg = new FormData();
+          paragraphImg.append('files', this.paragraphs[index].image);
+          uploadParagraph = await api.upload(paragraphImg);
+            for (let j = 0; j < this.paragraphsconst.length; j++) {
+              const element2 = this.paragraphsconst[j]
+              if(element1 <= element2){
+                if(element1.id != element2.id){
+                  paragraphImg.append('files', this.paragraphs[index].image);
+                  uploadParagraph = await api.upload(paragraphImg);
+                  const createParagraph = await api.createParagraphs({
+                    blogId: blogId.toString(),
+                    details: this.paragraphs[index].content,
+                    image: uploadParagraph[0].id,
+                  });
+                  this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
+                  stateCreate = true;
+                }
+              }
+            }
+            if(!stateCreate){
+              let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
+              paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
+              uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
+              console.log('uploadParagraph',uploadParagraph);
+              console.log('paragraphId',paragraphId.data.id);
+              
+              this.updateParagraphs(paragraphId.data.id, uploadParagraph);
+            }
+          }
         }
         Swal.fire({
           position: 'center',
@@ -362,7 +370,7 @@ export default {
       console.log('filterIdParagraph',filterIdParagraph);
       
       const deleteDataParagraph = await api.deleteParagraph(filterIdParagraph[0].id)
-    }
+    },
   },
   mounted() {
     this.getBlogData(this.blogId);
@@ -440,7 +448,16 @@ export default {
                   <p class="text-danger d-inline">*</p>
                 </h6>
                 <div class="mb-3">
+                  <div v-if="d"></div>
                   <div v-if="paragraph.image && !dropZone.paragraphRemove">
+                    <div class="d-block text-center mx-auto">
+                      <img class="img-fluid" :src="paragraph.image">
+                    </div>
+                    <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                      <button class="btn btn-warning" @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                    </div>
+                  </div>
+                  <div v-else-if="paragraph.image && paragraph.imageId">
                     <div class="d-block text-center mx-auto">
                       <img class="img-fluid" :src="paragraph.image">
                     </div>
