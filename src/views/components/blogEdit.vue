@@ -50,8 +50,6 @@ export default {
       this.$nextTick(() => {
         this.createDropzoneForParagraph(this.paragraphs.length - 1);
       });
-      console.log(this.paragraphs);
-      
     },
     deleteParagraph(event, index) {
       event.preventDefault();
@@ -280,9 +278,7 @@ export default {
         })
         this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId 
         this.uploadImagecover = uploadImagecover ? uploadImagecover[0].id : this.blog.headerImgId
-        this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)
-        console.log(this.paragraphs);
-        
+        this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)     
         for (let index = 0; index < this.paragraphs.length; index++) {
           const element1 = this.paragraphs[index]
           if(!element1.imageId){
@@ -310,10 +306,7 @@ export default {
             if(!stateCreate){
               let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
               paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
-              uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
-              console.log('uploadParagraph',uploadParagraph);
-              console.log('paragraphId',paragraphId.data.id);
-              
+              uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId    
               this.updateParagraphs(paragraphId.data.id, uploadParagraph);
             }
           }
@@ -323,11 +316,11 @@ export default {
           icon: 'success',
           title: 'การทำงานเสร็จสิ้น',
           showConfirmButton: false,
-          // timer: 1500
+          timer: 1500
         })
-        // .then(()=>{
-        //   window.location.reload();
-        // })
+        .then(()=>{
+          window.location.reload();
+        })
       } catch (error) {
         Swal.fire({
           position: 'center',
@@ -359,7 +352,6 @@ export default {
             image: idParagraphImage ? idParagraphImage : this.paragraphs.imageId
           }
         });
-        console.log("Updated Paragraph:", updateParagraphs);
       } catch (error) {
         console.error("Error updating paragraphs:", error);
       }
@@ -367,8 +359,6 @@ export default {
     async deleteDataParagraph(index){
       const getParagraph = await api.getParagraph()
       const filterIdParagraph = getParagraph.data.filter(paragraph => paragraph.attributes.img == index.image)
-      console.log('filterIdParagraph',filterIdParagraph);
-      
       const deleteDataParagraph = await api.deleteParagraph(filterIdParagraph[0].id)
     },
   },
