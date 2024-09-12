@@ -369,7 +369,7 @@ export default {
 </script>
 
 <template>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#staticBackdropUpdate'+ this.blogId ">
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" :data-bs-target="'#staticBackdropUpdate'+ this.blogId ">
     Edit
   </button>
 
@@ -378,7 +378,7 @@ export default {
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Add a new blog</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="getBlogData(this.blogId)"></button>
         </div>
         <div class="modal-body">
           <div>
@@ -438,7 +438,6 @@ export default {
                   <p class="text-danger d-inline">*</p>
                 </h6>
                 <div class="mb-3">
-                  <div v-if="d"></div>
                   <div v-if="paragraph.image && !dropZone.paragraphRemove">
                     <div class="d-block text-center mx-auto">
                       <img class="img-fluid" :src="paragraph.image">

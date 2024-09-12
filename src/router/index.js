@@ -23,6 +23,8 @@ import Dashboard from "@/views/Dashboard.vue";
 
 import PackageDashboard from "@/views/PackageDashboard.vue";
 
+import BlogView from "@/views/BlogView.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -160,6 +162,14 @@ const router = createRouter({
       path: "/Packages-Dashboard",
       name: "package-dashboard",
       component: PackageDashboard,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/Blog-Dashboard/view/:id",
+      name: "blog-view",
+      component: BlogView,
       meta: {
         middleware: auth,
       },

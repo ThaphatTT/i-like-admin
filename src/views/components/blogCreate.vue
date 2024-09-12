@@ -91,6 +91,7 @@ export default {
         details: blog.Description,
         coverImage: uploadThumbnail[0].id,
         headerImage: uploadImagecover[0].id,
+        publish: false
       });
       this.updateBlogImageURL(createBlog.data.id, uploadThumbnail[0].id, uploadImagecover[0].id);
       for (let index = 0; index < this.paragraphs.length; index++) {
