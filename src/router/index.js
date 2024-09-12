@@ -9,8 +9,8 @@ import { auth } from "@/auth/auth";
 
 import PromotionsEdit from "@/views/PromotionsEdit.vue";
 import PromotionsCreate from "@/views/PromotionsCreate.vue";
-import ProductsCreate from "@/views/ProductsCreate.vue";
-import ProductsEdit from "@/views/ProductsEdit.vue";
+import ProductsCreate from "@/views/components/ProductsCreate.vue";
+import ProductsEdit from "@/views/components/ProductsEdit.vue";
 
 import PromotionsView from "@/views/PromotionsView.vue";
 import ProductsView from "@/views/ProductsView.vue";
