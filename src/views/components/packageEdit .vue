@@ -1,7 +1,7 @@
 <script>
-import api from '@/vender/api';
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
+import api from '@/vender/api';
 import Swal from 'sweetalert2';
 import Loading from '@/components/Loading.vue';
 
@@ -21,6 +21,7 @@ export default {
             package: {},
             dropzoneInstance: null,
             PackageCoverImage: null,
+            prefix: 'http://localhost:1337'
         };
     },
     async created() {
@@ -28,12 +29,6 @@ export default {
             this.isLoading = true;
             // Fetch the package details first
             await this.getPackageId(this.packageId);
-
-            // Initialize Dropzone if no cover image exists
-            if (!this.PackageCoverImage) {
-                await this.$nextTick();
-                this.initDropzone();
-            }
         } catch (error) {
             console.error('Error during initialization:', error.message);
         } finally {
@@ -46,44 +41,30 @@ export default {
             try {
                 const response = await api.getPackageId(id);
                 this.package = response.data;
-                this.PackageCoverImage = this.package.attributes.coverImg; // Fetch cover image if available
-
-                if (!this.PackageCoverImage) {
-                    this.initDropzone(); // Initialize Dropzone if no cover image
-                }
+                this.PackageCoverImage = this.package.attributes.coverImg;
             } catch (error) {
                 console.error('Error fetching package data:', error);
             }
         },
 
-        // Initialize Dropzone for image upload
+        // Initialize Dropzone for image upload after the modal is fully shown
         initDropzone() {
-            const dropzoneElement = document.getElementById('coverImageDropzone');
+            const dropzoneElement = document.getElementById(`coverImageDropzone${this.packageId}`);
 
             if (dropzoneElement) {
                 this.dropzoneInstance = new Dropzone(dropzoneElement, {
-                    url: '/upload', // Replace with your image upload URL
+                    url: '#', // Replace with your actual image upload URL
                     maxFiles: 1,
                     maxFilesize: 2, // Maximum file size in MB
                     acceptedFiles: 'image/*',
-                    init: function () {
-                        this.on("maxfilesexceeded", function (file) {
-                            this.removeFile(file); // Remove if more than one file is uploaded
-                            Swal.fire({
-                                title: "Maximum file limit",
-                                text: "Only one image can be uploaded",
-                                icon: "error"
-                            });
-                        });
-
-                        this.on('success', (file, response) => {
-                            // Handle successful upload
-                            this.PackageCoverImage = response.filePath; // Update with the uploaded image path
-                        });
-                        this.on('error', (file, response) => {
-                            Swal.fire('Error', 'Image upload failed', 'error');
-                        });
-                    }.bind(this), // Ensure 'this' context is maintained
+                });
+                this.dropzoneInstance.on("maxfilesexceeded", file => {
+                    this.dropzoneInstance.removeFile(file);
+                    Swal.fire({
+                        title: "Maximum file",
+                        text: "You can only upload up to 1 file.",
+                        icon: "error"
+                    });
                 });
             }
         },
@@ -98,7 +79,7 @@ export default {
                     const imageCover = new FormData();
                     imageCover.append('files', this.dropzoneInstance.files[0]);
                     const uploadResponse = await api.upload(imageCover);
-                    uploadImagecover = uploadResponse.data[0].id; // Uploaded image ID
+                    uploadImagecover = uploadResponse // Uploaded image ID
                 }
 
                 const updatedData = {
@@ -110,7 +91,8 @@ export default {
                     type: this.package.attributes.type,
                     platform: this.package.attributes.platform,
                     service: this.package.attributes.service,
-                    coverImg: uploadImagecover ? uploadImagecover : this.PackageCoverImage?.id, // Use new or existing image
+                    img: uploadImagecover[0].id ? uploadImagecover[0].id : this.PackageCoverImage?.id, // Use new or existing image
+                    coverImg: this.prefix + uploadImagecover[0].url
                 };
 
                 await api.updatePackage(packageId, { data: updatedData });
@@ -122,7 +104,7 @@ export default {
                     showConfirmButton: false,
                     timer: 2000,
                 }).then(() => {
-                    window.location.reload(); // Reload page after success
+                    // window.location.reload(); // Reload page after success
                 });
 
             } catch (error) {
@@ -141,19 +123,31 @@ export default {
         // Remove the current image and initialize Dropzone
         async removeImage() {
             try {
-                const deleteResponse = await api.deleteImg(this.package.attributes.coverImg.id);
-                if (deleteResponse.status === 200) {
+                const deleteResponse = await api.deleteImg(this.package.attributes.img.data[0].id).then(async res => {
                     await api.updatePackage(this.packageId, {
                         data: { coverImg: null }
+                    }).then(async res => {
+                        this.PackageCoverImage = null; // Clear cover image
+                        await this.$nextTick();
+                        this.initDropzone(); // Re-initialize Dropzone for new upload
+
                     });
-                    this.PackageCoverImage = null; // Clear cover image
-                    this.initDropzone(); // Re-initialize Dropzone for new upload
-                }
+                });
+
             } catch (error) {
                 console.error('Error removing image:', error);
             }
         },
     },
+
+    mounted() {
+        // Ensure Dropzone is initialized after the modal is fully shown
+        document.getElementById(`editProduct${this.packageId}`).addEventListener('shown.bs.modal', () => {
+            if (!this.PackageCoverImage) {
+                this.initDropzone(); // Initialize Dropzone when the modal is opened
+            }
+        });
+    }
 };
 </script>
 
@@ -180,11 +174,11 @@ export default {
                 <div v-else class="modal-body">
                     <!-- Cover Image Section -->
                     <div>
-                        <h6 class="text-black-50 d-inline">Cover Image {{ packageId }}
+                        <h6 class="text-black-50 d-inline">Cover Image
                             <p class="text-danger d-inline">*</p>
                         </h6>
                         <div class="mb-3">
-                            <div v-if="PackageCoverImage">
+                            <div v-if="PackageCoverImage !== null">
                                 <div class="d-block text-center mx-auto">
                                     <img class="img-fluid" :src="PackageCoverImage" alt="Cover Image" />
                                 </div>
@@ -194,10 +188,8 @@ export default {
                             </div>
 
                             <!-- Dropzone to Upload New Image -->
-                            <form ref="myDropzone" id="dropzoneForm" class="dropzone">
-                                <div class="dz-message">
-                                    Drag and drop a file here or click
-                                </div>
+                            <form v-else :id="'coverImageDropzone' + packageId" class="dropzone text-center">
+
                             </form>
                         </div>
                     </div>
