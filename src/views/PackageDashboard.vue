@@ -23,12 +23,12 @@ export default {
     },
     data() {
         return {
-        package: [],
-        itemsPerPage: 10,
-        currentPage: 1,
-        totalPages: 0,
-        isLoading: true,
-        packageData: null,
+            package: [],
+            itemsPerPage: 10,
+            currentPage: 1,
+            totalPages: 0,
+            isLoading: true,
+            packageData: null,
         };
     },
     methods: {
@@ -64,7 +64,7 @@ export default {
     },
     mounted() {
         this.fetchPackageData().finally(() => {
-        this.isLoading = false;
+            this.isLoading = false;
         });
     },
 };
@@ -93,8 +93,8 @@ export default {
                                 </div>
                             </form>
                         </div>
-                        <div class = col>
-                            <packgeCreate/>
+                        <div class=col>
+                            <packgeCreate />
                         </div>
                     </div>
                     <div class="card mb-4 mt-2 mb-2">
@@ -103,46 +103,46 @@ export default {
                             Package data
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">
-                            <Loading/>
+                            <Loading />
                         </div>
                         <div v-else>
                             <div class="card-body">
-                            <table class="table table-striped table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>UserName</th>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(item, index) in package" :key="index">
-                                        <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
-                                        <td>{{ formatDate(item.attributes.createdAt)
-                                            }}</td>
-                                        <td>{{ item.attributes.price }}</td>
-                                        <td>{{ item.attributes.status }}</td>
-                                        <td>
-                                            <div class="row row-cols-auto justify-content-center">
-                                                <div class="col">
-                                                    <packageEdit :packageId="item.id"/>
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>UserName</th>
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Price</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in package" :key="index">
+                                            <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
+                                            <td>{{ formatDate(item.attributes.createdAt)
+                                                }}</td>
+                                            <td>{{ item.attributes.price }}</td>
+                                            <td>{{ item.attributes.status }}</td>
+                                            <td>
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col">
+                                                        <packageEdit :packageId="item.id" />
+                                                    </div>
+                                                    <div class="col">
+
+                                                    </div>
+                                                    <div class="col">
+
+                                                    </div>
                                                 </div>
-                                                <div class="col">
-                                                    
-                                                </div>
-                                                <div class="col">
-                                                    
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                                @page-change="handlePageChange" />
-                        </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                                    @page-change="handlePageChange" />
+                            </div>
                         </div>
                     </div>
                 </div>
