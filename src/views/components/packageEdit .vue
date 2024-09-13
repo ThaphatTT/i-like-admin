@@ -104,7 +104,7 @@ export default {
                     showConfirmButton: false,
                     timer: 2000,
                 }).then(() => {
-                    // window.location.reload(); // Reload page after success
+                    window.location.reload(); // Reload page after success
                 });
 
             } catch (error) {
