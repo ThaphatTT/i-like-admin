@@ -47,6 +47,7 @@
                                             <th class="text-center">Type</th>
                                             <th class="text-center">Amount</th>
                                             <th class="text-center">Price</th>
+                                            <th class="text-center">Status</th>
                                             <th class="text-center">Actions</th>
                                         </tr>
                                     </thead>
@@ -62,8 +63,31 @@
                                             <td class="text-center">{{ item.attributes.type }}</td>
                                             <td class="text-center">{{ item.attributes.amount }} </td>
                                             <td class="text-center">{{ item.attributes.price }} baht</td>
+                                            <td>
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div v-if="item.attributes.isPublish" class="col">
+                                                            <button type="button" class="btn btn-success" @click="statePublish(item.id, false)">Active</button>
+                                                        </div>
+                                                        <div v-else class="col">
+                                                            <button type="button" class="btn btn-danger" @click="statePublish(item.id, true)">Inactive</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td class="text-center">
-                                                <ProductsEdit :productId="item.id"/>
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col">
+                                                        <ProductsEdit :productId="item.id"/>
+                                                    </div>
+                                                    <div class="col">
+                                                        <button class="btn btn-danger btn-block"
+                                                        @click="deleteItem(item.id)">Delete</button>
+                                                    </div>
+                                                    <div class="col">
+                                                        <ProductsView :productId="item.id"/>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -92,8 +116,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue';
 import Swal from 'sweetalert2';
@@ -103,6 +125,7 @@ import Filter from '@/views/components/Filtering.vue';
 import Loading from '@/components/Loading.vue';
 import ProductsCreate from './components/ProductsCreate.vue';
 import ProductsEdit from './components/ProductsEdit.vue';
+import ProductsView from './components/ProductsView.vue';
 export default {
     components: {
         SideNavbar,
@@ -111,12 +134,13 @@ export default {
         Pagination,
         Filter,
         ProductsCreate,
-        ProductsEdit
+        ProductsEdit,
+        ProductsView
     },
     data() {
         return {
             productName: '',
-            selectedFilter: 'ทั้งหมด', // Default to 'All'
+            selectedFilter: 'ทั้งหมด',
             products: [],
             isLoading: true,
             currentPage: 1,
@@ -126,8 +150,6 @@ export default {
     },
     async mounted() {
         await this.fetchProductData();
-        console.log(this.products);
-        
     },
     methods: {
         async fetchProductData(page = this.currentPage) {
@@ -146,21 +168,73 @@ export default {
             }
         },
         async searchAndFilter() {
-            // Called when performing a search or applying a filter
-            this.currentPage = 1; // Reset to the first page
+            this.currentPage = 1;
             await this.fetchProductData();
         },
         handleFilterSelection(filter) {
             this.selectedFilter = filter;
-            this.searchAndFilter(); // Perform both search and filter together
+            this.searchAndFilter();
         },
         async handlePageChange(page) {
             this.currentPage = page;
             await this.fetchProductData();
         },
+        async statePublish (blogId, status){
+            try {
+                const updateStatePublish = await api.updateProducts(blogId,{
+                    data : {
+                        isPublish : status
+                    }
+                }).then(()=>{
+                    this.fetchProductData()
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async deleteItem(id) {
-            // Your delete logic...
-        }
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger',
+                },
+                buttonsStyling: false,
+            });
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                try {
+                    await api.deleteProducts(`${id}`);
+                    swalWithBootstrapButtons.fire({
+                    title: 'Deleted!',
+                    text: 'Your file has been deleted.',
+                    icon: 'success',
+                    });
+                    this.fetchProductData();
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    swalWithBootstrapButtons.fire({
+                    title: 'Error!',
+                    text: 'There was a problem deleting the item.',
+                    icon: 'error',
+                    });
+                }
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Cancelled',
+                    text: 'Your file is safe :)',
+                    icon: 'error',
+                });
+                }
+            });
+        },
     }
 };
 </script>

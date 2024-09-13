@@ -78,12 +78,12 @@ export default {
             </div>
             <div class="modal-body">
                 <div>
-                    <div class="fw-bold mb-1">Details</div>
+                    <div class="fw-bold mb-1  text-start">Details</div>
                         <input v-model="product.details" class="form-control" id="inputLastName" type="text" placeholder="Please, Input a product details." />
                 </div>
                 <div class="row mb-3 mt-3">
                     <div class="col-md-6">
-                        <div class="fw-bold mb-1">Link</div>
+                        <div class="fw-bold mb-1 text-star">Link</div>
                             <input v-model="product.link" class="form-control" id="inputLastName" type="text" placeholder="Please, Input a customer link." />
                     </div>
                     <div class="col-md-6">
