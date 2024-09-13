@@ -618,6 +618,77 @@ const api = {
         });
     });
   },
+  getPackages(page, pageSize) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `${url}/packages?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getPackageId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/packages/${id}?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  createPackage(data) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${url}/packages`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  updatePackage(id, data) {
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${url}/packages/${id}`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
 
 export default api;

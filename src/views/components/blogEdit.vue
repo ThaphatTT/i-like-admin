@@ -78,6 +78,8 @@ export default {
         const blog = await api.getBlogId(id);   
         this.paragraphs = [];
         this.BlogThumbnail = blog.data.attributes.coverImg;
+        console.log(this.BlogThumbnail);
+        console.log(blog);
         this.BlogImagecover = blog.data.attributes.headerImg
         this.blog.Topic = blog.data.attributes.topic;
         this.blog.Description = blog.data.attributes.details;
