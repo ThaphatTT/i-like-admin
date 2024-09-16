@@ -11,6 +11,8 @@ import Loading from '@/components/Loading.vue';
 import packgeCreate from './components/packgeCreate.vue';
 import packageEdit from './components/packageEdit .vue';
 
+import packageView from './components/packageView.vue'
+
 export default {
     components: {
         SideNavbar,
@@ -19,7 +21,8 @@ export default {
         RouterLink,
         Loading,
         packgeCreate,
-        packageEdit
+        packageEdit,
+        packageView
     },
     data() {
         return {
@@ -61,6 +64,20 @@ export default {
         //         console.log(error);
         //     }
         // },
+        async statePublish (packageId, status){
+            try {
+                const updateStatePublish = await api.updatePackage(packageId,{
+                data : {
+                    isPublish : status
+                }
+            }).then(()=>{
+                this.fetchPackageData()
+            })
+            } catch (error) {
+                console.log(error);
+                
+            }
+        }
     },
     mounted() {
         this.fetchPackageData().finally(() => {
@@ -126,11 +143,23 @@ export default {
                                             <td>{{ item.attributes.status }}</td>
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div v-if="item.attributes.isPublish" class="col">
+                                                            <button type="button" class="btn btn-success" @click="statePublish(item.id, false)">Active</button>
+                                                        </div>
+                                                        <div v-else class="col">
+                                                            <button type="button" class="btn btn-danger" @click="statePublish(item.id, true)">Inactive</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="row row-cols-auto justify-content-center">
                                                     <div class="col">
                                                         <packageEdit :packageId="item.id" />
                                                     </div>
                                                     <div class="col">
-
+                                                        <packageView :packageId="item.id"/>
                                                     </div>
                                                     <div class="col">
 

@@ -46,7 +46,6 @@ export default {
                 console.error('Error fetching package data:', error);
             }
         },
-
         // Initialize Dropzone for image upload after the modal is fully shown
         initDropzone() {
             const dropzoneElement = document.getElementById(`coverImageDropzone${this.packageId}`);
@@ -91,8 +90,8 @@ export default {
                     type: this.package.attributes.type,
                     platform: this.package.attributes.platform,
                     service: this.package.attributes.service,
-                    img: uploadImagecover[0].id ? uploadImagecover[0].id : this.PackageCoverImage?.id, // Use new or existing image
-                    coverImg: this.prefix + uploadImagecover[0].url
+                    img: uploadImagecover ? uploadImagecover[0].id : this.package.attributes.img.data[0].id, // Use new or existing image
+                    coverImg: uploadImagecover ? this.prefix + uploadImagecover[0].url : this.PackageCoverImage
                 };
 
                 await api.updatePackage(packageId, { data: updatedData });
@@ -115,6 +114,8 @@ export default {
                     showConfirmButton: false,
                     timer: 2000,
                 });
+                console.log(error);
+                
             } finally {
                 this.isLoading = false;
             }

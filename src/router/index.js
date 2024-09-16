@@ -23,7 +23,7 @@ import Dashboard from "@/views/Dashboard.vue";
 
 import PackageDashboard from "@/views/PackageDashboard.vue";
 
-import BlogView from "@/views/BlogView.vue";
+import BlogView from "@/views/components/BlogView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
