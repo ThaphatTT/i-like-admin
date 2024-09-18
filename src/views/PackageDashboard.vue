@@ -77,7 +77,51 @@ export default {
                 console.log(error);
                 
             }
-        }
+        },
+        async deleteItem(id) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger',
+                },
+                buttonsStyling: false,
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                try {
+                    await api.deletePackage(`${id}`);
+                    swalWithBootstrapButtons.fire({
+                    title: 'Deleted!',
+                    text: 'Your file has been deleted.',
+                    icon: 'success',
+                    });
+                    this.fetchPackageData();
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    swalWithBootstrapButtons.fire({
+                    title: 'Error!',
+                    text: 'There was a problem deleting the item.',
+                    icon: 'error',
+                    });
+                }
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Cancelled',
+                    text: 'Your file is safe :)',
+                    icon: 'error',
+                });
+                }
+            });
+        },
     },
     mounted() {
         this.fetchPackageData().finally(() => {
@@ -162,7 +206,8 @@ export default {
                                                         <packageView :packageId="item.id"/>
                                                     </div>
                                                     <div class="col">
-
+                                                        <button class="btn btn-danger btn-block"
+                                                    @click="deleteItem(item.id)">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

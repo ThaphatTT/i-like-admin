@@ -24,6 +24,8 @@ import Dashboard from "@/views/Dashboard.vue";
 import PackageDashboard from "@/views/PackageDashboard.vue";
 
 import BlogView from "@/views/components/BlogView.vue";
+import TicketDashboard from "@/views/TicketDashboard.vue";
+import ticketView from "@/views/components/ticketView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -170,6 +172,22 @@ const router = createRouter({
       path: "/Blog-Dashboard/view/:id",
       name: "blog-view",
       component: BlogView,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/Ticket-Dashboard",
+      name: "ticket-dashboard",
+      component: TicketDashboard,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/Ticket-Dashboard/view/:id",
+      name: "ticket-view",
+      component: ticketView,
       meta: {
         middleware: auth,
       },

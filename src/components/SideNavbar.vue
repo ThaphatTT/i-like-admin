@@ -28,6 +28,10 @@ const getUser = localStorage.getItem('username');
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Order
                     </RouterLink>
+                    <RouterLink class="nav-link" to="/Ticket-Dashboard">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Ticket
+                    </RouterLink>
 
                     <div class="sb-sidenav-menu-heading">Pricing</div>
                     <RouterLink class="nav-link" to="/Products-Dashboard">

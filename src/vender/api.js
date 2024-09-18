@@ -689,6 +689,94 @@ const api = {
         });
     });
   },
+  deletePackage(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(`${url}/packages/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getPromotionId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/promotions/${id}?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getTickets(page, pageSize) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `${url}/tickets?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getTicketId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/tickets/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  updateTicket(id, data) {
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${url}/tickets/${id}`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
 
 export default api;
