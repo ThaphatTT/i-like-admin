@@ -4,7 +4,7 @@ import Loading from '@/components/Loading.vue';
 export default {
     props:{
         packageId:{
-            type: String,
+            type: Number,
             required: true,
         }
     },
@@ -30,8 +30,6 @@ export default {
         async getPackageId(){
             const packageData = await api.getPackageId(this.packageId)
             this.package = packageData.data
-            console.log(this.package);
-            
         }
     }
 };

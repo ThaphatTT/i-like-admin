@@ -17,21 +17,23 @@ export default {
         promotionCreate,
         promotionEdit,
         promotionView,
+        Pagination,
     },
     data() {
         return {
         promotions: [],
-        itemsInPage: 25,
         currentPage: 1,
+        itemsPerPage: 10,
+        totalPages: 0,
         isLoading: true,
         };
     },
     methods: {
-        async fetchPromotionsData() {
+        async fetchPromotionsData(page = this.currentPage) {
         try {
-            const response = await api.getPromotions();
+            const response = await api.getPromotions(page, this.itemsPerPage);
             this.promotions = response.data;
-            console.log(this.promotions);
+            this.totalPages = response.meta.pagination.pageCount;
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -89,8 +91,9 @@ export default {
             return 'ไม่พบข้อมูล';
         }
         },
-        handlePageChange(data) {
-        this.currentPage = data;
+        async handlePageChange(page) {
+            this.currentPage = page;
+            await this.fetchPromotionsData();
         },
         async statePublish (promotionId, status){
             try {

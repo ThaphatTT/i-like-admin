@@ -8,17 +8,22 @@ import Loading from '@/components/Loading.vue';
 
 import blogEdit from '@/views/components/blogEdit.vue';
 
+import Pagination from './components/Pagination.vue';
 export default {
     components: {
         Loading,
         SideNavbar,
         BlogCreate,
-        blogEdit
+        blogEdit,
+        Pagination
     },
     data() {
         return {
         blogs: [],
         isLoading: true,
+        itemsInPage: 10,
+        currentPage: 1,
+        totalPages: 0,
         };
     },
     async mounted() {
@@ -31,9 +36,10 @@ export default {
         }
     },
     methods: {
-        async fetchBlogData() {
+        async fetchBlogData(page = this.currentPage) {
         try {
-            const response = await api.getBlogs();
+            const response = await api.getBlogs(page, this.itemsInPage);
+            this.totalPages = response.meta.pagination.pageCount;
             this.blogs = response.data;
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -96,7 +102,11 @@ export default {
                 console.log(error);
                 
             }
-        }
+        },
+        async handlePageChange(page) {
+            this.currentPage = page;
+            await this.fetchBlogData();
+        },
     },
 };
 </script>
@@ -171,6 +181,8 @@ export default {
                             </table>
                         </div>
                         </div>
+                        <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                            @page-change="handlePageChange" />
                     </div>
                 </div>
             </main>

@@ -32,7 +32,7 @@
                                             'twitter',
                                             'youtube',
                                             'shopee',
-                                            'tiktok',]" />
+                                            'tiktok',]"  @updateSelection="handleFilterSelection"/>
                                 </div>
                             </div>
                         </div>

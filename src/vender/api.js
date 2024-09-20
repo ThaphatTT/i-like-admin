@@ -16,15 +16,18 @@ const api = {
         });
     });
   },
-  getBlogs() {
+  getBlogs(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${url}/blogs?sort[0]=id:desc`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        .get(
+          `${url}/blogs?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
         .then((response) => {
           resolve(response.data);
         })
@@ -105,15 +108,18 @@ const api = {
         });
     });
   },
-  getPromotions() {
+  getPromotions(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${url}/promotions?sort[0]=id:desc`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        .get(
+          `${url}/promotions?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
         .then((response) => {
           resolve(response.data);
         })

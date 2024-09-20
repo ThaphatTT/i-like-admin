@@ -41,7 +41,6 @@ export default {
                 const response = await api.getPromotionId(id);
                 this.promotion = response.data;
                 this.promotionCoverImage = this.promotion.attributes.coverImg;
-                console.log(this.promotion);
             } catch (error) {
                 console.error('Error fetching package data:', error);
             }

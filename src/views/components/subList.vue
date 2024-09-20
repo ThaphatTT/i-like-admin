@@ -10,7 +10,7 @@ export default {
       default: 'some data'
     },
     orderId: {
-      type: String,
+      type: Number,
       default: 'orderId'
     },
     index: {

@@ -4,7 +4,7 @@ import Loading from '@/components/Loading.vue';
 export default {
     props:{
         promotionId:{
-            type: String,
+            type: Number,
             required: true,
         }
     },

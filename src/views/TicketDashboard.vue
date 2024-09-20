@@ -151,7 +151,7 @@ export default {
                           <div class="col-md-12">
                             <Filtering :optionsData="[
                                     'ทั้งหมด',
-                                    ]" @updateSelection="handleFilterSelection" />
+                                    ]" @updateSelection="handleSelectionChange" />
                           </div>
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">

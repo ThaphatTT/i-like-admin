@@ -4,7 +4,7 @@ import Loading from '@/components/Loading.vue';
 export default {
     props:{
         productId:{
-            type: String,
+            type: Number,
             required: true,
         }
     },
@@ -29,7 +29,6 @@ export default {
         async getProductId(){
             const getProductId = await api.getProductId(this.productId)
             this.product = getProductId.data
-            console.log(this.product);
             
         }
     }
