@@ -76,15 +76,15 @@
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col">
+                                                <div class="d-flex justify-content-center flex-wrap col-auto">
+                                                    <div class="m-1">
                                                         <ProductsEdit :productId="item.id"/>
                                                     </div>
-                                                    <div class="col">
+                                                    <div class="m-1">
                                                         <button class="btn btn-danger btn-block"
                                                         @click="deleteItem(item.id)">Delete</button>
                                                     </div>
-                                                    <div class="col">
+                                                    <div class="m-1">
                                                         <ProductsView :productId="item.id"/>
                                                     </div>
                                                 </div>

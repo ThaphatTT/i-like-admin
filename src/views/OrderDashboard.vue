@@ -245,31 +245,26 @@ export default {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Order</li>
                     </ol>
-                    <div class="row align-items-start">
-                        <div class="col">
-                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
-                                @submit.prevent="searchUser(userData)">
-                                <div class="input-group">
-                                    <input v-model="userData" class="form-control" type="text"
-                                        placeholder="Search for user..." aria-label="Search for..."
-                                        aria-describedby="btnNavbarSearch" />
-                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
-                                            class="fas fa-search"></i></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="row align-items-start mt-2 mb-2">
-                        <div class="col">
-                            <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'สถานะทั้งหมด'"
-                                :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'" :dataText4="'newest order'"
-                                @change="handleDropDown(selectedValue)" />
-                        </div>
-                    </div>
                     <div class="card mb-4">
                         <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            Order data
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                        @submit.prevent="">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" placeholder="Search for ?..."
+                                                aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col row align-items-start mt-2 mb-2">
+                                    <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'สถานะทั้งหมด'"
+                                :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'" :dataText4="'newest order'"
+                                @change="handleDropDown(selectedValue)" />
+                                </div>
+                            </div>
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">
                             <Loading />

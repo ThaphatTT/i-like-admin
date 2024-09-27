@@ -141,9 +141,11 @@ export default {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Package</li>
                     </ol>
-                    <div class="row row-cols-auto align-items-start">
-                        <div class="col">
-                            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                    <div class="card mb-4 mt-2 mb-2">
+                        <div class="card-header">
+                            <div class="row justify-content-between">
+                                <div class="col-auto">
+                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
                                 @submit.prevent="searchUser(userData)">
                                 <div class="input-group">
                                     <input v-model="packageData" class="form-control" type="text"
@@ -153,15 +155,11 @@ export default {
                                             class="fas fa-search"></i></button>
                                 </div>
                             </form>
-                        </div>
-                        <div class=col>
-                            <packgeCreate />
-                        </div>
-                    </div>
-                    <div class="card mb-4 mt-2 mb-2">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            Package data
+                                </div>
+                                <div class="col-auto">
+                                    <packgeCreate />
+                                </div>
+                            </div>
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">
                             <Loading />
