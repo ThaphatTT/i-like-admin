@@ -121,15 +121,15 @@ export default {
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Blog</li>
                     </ol>
-                    <div class="d-flex align-items-end flex-column mt-2 mb-2">
-                        <div class="col">
-                            <BlogCreate/>
-                        </div>
-                    </div>
                     <div class="card mb-4">
                         <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            DataTable Example
+                            <div class="row justify-content-between">
+                                <div class="col-auto">
+                                </div>
+                                <div class="col-auto">
+                                    <BlogCreate/>
+                                </div>
+                            </div>
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">
                             <Loading/>
