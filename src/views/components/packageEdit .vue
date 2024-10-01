@@ -21,7 +21,7 @@ export default {
             package: {},
             dropzoneInstance: null,
             PackageCoverImage: null,
-            prefix: 'http://localhost:1337'
+            prefix: 'http://localhost:1337' // http://27.254.134.141:1338/
         };
     },
     async created() {
@@ -115,7 +115,7 @@ export default {
                     timer: 2000,
                 });
                 console.log(error);
-                
+
             } finally {
                 this.isLoading = false;
             }

@@ -4,10 +4,10 @@ import "dropzone/dist/dropzone.css";
 import Swal from 'sweetalert2';
 import api from '@/vender/api.js'
 export default {
-  props : {
-    blogId : {
-      type : Number,
-      default : ''
+  props: {
+    blogId: {
+      type: Number,
+      default: ''
     }
   },
   data() {
@@ -16,21 +16,21 @@ export default {
       paragraphsconst: [],
       BlogThumbnail: null,
       BlogImagecover: null,
-      blog:{
+      blog: {
         Topic: '',
         Description: '',
         coverImgId: '',
         headerImgId: '',
       },
-      dropZone:{
+      dropZone: {
         BlogThumbnail: false,
         BlogImagecover: false,
         paragraphs: [],
         paragraphRemove: false,
-        addFileParagraph : false,
-        addImage : false
+        addFileParagraph: false,
+        addImage: false
       },
-      prefix: "http://localhost:1337",
+      prefix: "http://localhost:1337", // http://27.254.134.141:1338/
     };
   },
   methods: {
@@ -38,13 +38,13 @@ export default {
       event.preventDefault();
       const newId = this.paragraphs.length ? this.paragraphs[this.paragraphs.length - 1].id + 1 : 1;
       this.paragraphs.push(
-        { 
-          id: newId, 
-          content: null, 
-          image: null, 
-          dropzoneId: `DropzoneParagraph${newId}`, 
-          orderId: null, 
-          imageId: null, 
+        {
+          id: newId,
+          content: null,
+          image: null,
+          dropzoneId: `DropzoneParagraph${newId}`,
+          orderId: null,
+          imageId: null,
           paragraphId: null
         });
       this.$nextTick(() => {
@@ -73,21 +73,21 @@ export default {
         }
       });
     },
-    async getBlogData(id){
+    async getBlogData(id) {
       try {
-        const blog = await api.getBlogId(id);   
+        const blog = await api.getBlogId(id);
         this.paragraphs = [];
         this.BlogThumbnail = blog.data.attributes.coverImg;
         this.BlogImagecover = blog.data.attributes.headerImg
         this.blog.Topic = blog.data.attributes.topic;
         this.blog.Description = blog.data.attributes.details;
-        this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0) 
-    ? blog.data.attributes.coverImage.data[0].id 
-    : null
-        this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0) 
-    ? blog.data.attributes.headerImage.data[0].id 
-    : null
-        if(!this.BlogThumbnail){
+        this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0)
+          ? blog.data.attributes.coverImage.data[0].id
+          : null
+        this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0)
+          ? blog.data.attributes.headerImage.data[0].id
+          : null
+        if (!this.BlogThumbnail) {
           this.BlogThumbnail = null
           this.dropZone.BlogThumbnail = true
           await this.$nextTick();
@@ -106,7 +106,7 @@ export default {
             });
           });
         }
-        if(!this.BlogImagecover){
+        if (!this.BlogImagecover) {
           this.BlogImagecover = null
           this.dropZone.BlogImagecover = true
           await this.$nextTick();
@@ -130,40 +130,40 @@ export default {
         for (let index = 0; index < paragraphBlog.length; index++) {
           this.paragraphs.push(
             {
-              id: index + 1, 
-              content: paragraphBlog[index].attributes.details, 
+              id: index + 1,
+              content: paragraphBlog[index].attributes.details,
               image: paragraphBlog[index]?.attributes?.img || null,
               dropzoneId: `DropzoneParagraph${index + 1}`,
               orderId: paragraphBlog[index].attributes.blogId,
               imageId: (paragraphBlog[index]?.attributes?.image?.data && paragraphBlog[index].attributes.image.data.length > 0)
-              ? paragraphBlog[index].attributes.image.data[0].id : null,
-              paragraphId : paragraphBlog[index].id
+                ? paragraphBlog[index].attributes.image.data[0].id : null,
+              paragraphId: paragraphBlog[index].id
             }
           )
           await this.$nextTick();
-          if(!this.paragraphs.image){
+          if (!this.paragraphs.image) {
             this.createDropzoneForParagraph(index);
           }
           this.paragraphsconst.push({
             id: index + 1
           })
-        } 
+        }
       } catch (error) {
-        
+
       } finally {
         this.fetchSuccess = true
       }
     },
-    async removeImage(event, index, data) {  
+    async removeImage(event, index, data) {
       event.preventDefault();
-      switch (data){
+      switch (data) {
         case "BlogThumbnail":
-        const deleteImg1 = await api.deleteImg(this.blog.coverImgId)
-        const updateBlogThumbnail = await api.updateBlogs(this.blogId,{
-          data:{
-            coverImg : null,
-          }
-        })
+          const deleteImg1 = await api.deleteImg(this.blog.coverImgId)
+          const updateBlogThumbnail = await api.updateBlogs(this.blogId, {
+            data: {
+              coverImg: null,
+            }
+          })
           this.BlogThumbnail = null
           this.dropZone.BlogThumbnail = true
           await this.$nextTick();
@@ -181,13 +181,13 @@ export default {
               icon: "error"
             });
           });
-        break;
-        case "BlogImagecover" : 
+          break;
+        case "BlogImagecover":
           const deleteImg2 = await api.deleteImg(this.blog.headerImgId)
-          const updateBlogHeader = await api.updateBlogs(this.blogId,{
-          data:{
-            headerImg : null
-          }
+          const updateBlogHeader = await api.updateBlogs(this.blogId, {
+            data: {
+              headerImg: null
+            }
           })
           this.BlogImagecover = null
           this.dropZone.BlogImagecover = true
@@ -206,32 +206,32 @@ export default {
               icon: "error"
             });
           });
-        break;
-        case "paragraphs" :
+          break;
+        case "paragraphs":
           const deleteImg3 = await api.deleteImg(this.paragraphs[index].imageId)
-          const updateParagraph = await api.updateParagraphs(this.paragraphs[index].paragraphId,{
-          data:{
-            img : null,
-          }
+          const updateParagraph = await api.updateParagraphs(this.paragraphs[index].paragraphId, {
+            data: {
+              img: null,
+            }
           })
           this.paragraphs[index].image = null;
           await this.$nextTick();
           this.createDropzoneForParagraph(index);
           this.dropZone.paragraphRemove = true;
           break;
-        }
+      }
     },
     createDropzoneForParagraph(index) {
       const paragraph = this.paragraphs[index];
       const dropzoneElement = document.getElementById(paragraph.dropzoneId);
-      
+
       if (dropzoneElement) {
         new Dropzone(dropzoneElement, {
           url: "#",
           maxFiles: 1,
           maxFilesize: 1,
           acceptedFiles: "image/*",
-          init: function() {
+          init: function () {
             this.on('addedfile', (file) => {
               paragraph.image = file;
             });
@@ -244,7 +244,7 @@ export default {
         this.dropZone.addImage = true
       }
     },
-    async updateBlog(blogId){
+    async updateBlog(blogId) {
       Swal.fire({
         title: 'กำลังโหลด...',
         text: 'กรุณารอสักครู่',
@@ -259,14 +259,14 @@ export default {
         let uploadThumbnail;
         let uploadImagecover;
         if (this.dropZone.BlogThumbnail) {
-            const thumbnail = new FormData();
-            thumbnail.append('files', this.BlogThumbnail.files[0]);
-            uploadThumbnail = await api.upload(thumbnail);
+          const thumbnail = new FormData();
+          thumbnail.append('files', this.BlogThumbnail.files[0]);
+          uploadThumbnail = await api.upload(thumbnail);
         }
         if (this.dropZone.BlogImagecover) {
-            const imageCover = new FormData();
-            imageCover.append('files', this.BlogImagecover.files[0]);
-            uploadImagecover = await api.upload(imageCover);
+          const imageCover = new FormData();
+          imageCover.append('files', this.BlogImagecover.files[0]);
+          uploadImagecover = await api.upload(imageCover);
         }
         const updateBlog = await api.updateBlog(blogId, {
           data: {
@@ -276,21 +276,21 @@ export default {
             headerImage: this.dropZone.BlogImagecover ? uploadImagecover[0].id : this.blog.headerImgId
           }
         })
-        this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId 
+        this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId
         this.uploadImagecover = uploadImagecover ? uploadImagecover[0].id : this.blog.headerImgId
-        this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)     
+        this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)
         for (let index = 0; index < this.paragraphs.length; index++) {
           const element1 = this.paragraphs[index]
-          if(!element1.imageId){
+          if (!element1.imageId) {
             let stateCreate = false;
-          let uploadParagraph;
-          let paragraphImg = new FormData();
-          paragraphImg.append('files', this.paragraphs[index].image);
-          uploadParagraph = await api.upload(paragraphImg);
+            let uploadParagraph;
+            let paragraphImg = new FormData();
+            paragraphImg.append('files', this.paragraphs[index].image);
+            uploadParagraph = await api.upload(paragraphImg);
             for (let j = 0; j < this.paragraphsconst.length; j++) {
               const element2 = this.paragraphsconst[j]
-              if(element1 <= element2){
-                if(element1.id != element2.id){
+              if (element1 <= element2) {
+                if (element1.id != element2.id) {
                   paragraphImg.append('files', this.paragraphs[index].image);
                   uploadParagraph = await api.upload(paragraphImg);
                   const createParagraph = await api.createParagraphs({
@@ -303,10 +303,10 @@ export default {
                 }
               }
             }
-            if(!stateCreate){
+            if (!stateCreate) {
               let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
               paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
-              uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId    
+              uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
               this.updateParagraphs(paragraphId.data.id, uploadParagraph);
             }
           }
@@ -318,9 +318,9 @@ export default {
           showConfirmButton: false,
           timer: 1500
         })
-        .then(()=>{
-          window.location.reload();
-        })
+          .then(() => {
+            window.location.reload();
+          })
       } catch (error) {
         Swal.fire({
           position: 'center',
@@ -332,11 +332,11 @@ export default {
         console.log(error);
       }
     },
-    async updateBlogImageURL(idBlog, idThumbnail, idCoverImage){
+    async updateBlogImageURL(idBlog, idThumbnail, idCoverImage) {
       const thumbnail = await api.getImage(idThumbnail);
       const coverImage = await api.getImage(idCoverImage);
       const updateBlog = await api.updateBlogs(idBlog, {
-        data:{
+        data: {
           coverImg: thumbnail.data.url ? this.prefix + thumbnail.data.url : this.BlogThumbnail,
           headerImg: coverImage.data.url ? this.prefix + coverImage.data.url : this.BlogImagecover,
         }
@@ -356,7 +356,7 @@ export default {
         console.error("Error updating paragraphs:", error);
       }
     },
-    async deleteDataParagraph(index){
+    async deleteDataParagraph(index) {
       const getParagraph = await api.getParagraph()
       const filterIdParagraph = getParagraph.data.filter(paragraph => paragraph.attributes.img == index.image)
       const deleteDataParagraph = await api.deleteParagraph(filterIdParagraph[0].id)
@@ -364,120 +364,131 @@ export default {
   },
   mounted() {
     this.getBlogData(this.blogId);
-    }
-  };
+  }
+};
 </script>
 
 <template>
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" :data-bs-target="'#staticBackdropUpdate'+ this.blogId ">
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+    :data-bs-target="'#staticBackdropUpdate' + this.blogId">
     Edit
   </button>
 
-  <div class="modal fade" :id="'staticBackdropUpdate' + this.blogId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" :id="'staticBackdropUpdate' + this.blogId" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Add a new blog</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="getBlogData(this.blogId)"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            @click="getBlogData(this.blogId)"></button>
         </div>
         <div class="modal-body">
           <div>
             <h6 class="text-black-50 d-inline">Thumbnail
-            <p class="text-danger d-inline">*</p>
-            <div class="mb-3">
-              <div v-if="BlogThumbnail && !dropZone.BlogThumbnail" >
-                <div class="d-block text-center mx-auto">
-                  <img class="img-fluid" :src="BlogThumbnail">
+              <p class="text-danger d-inline">*</p>
+              <div class="mb-3">
+                <div v-if="BlogThumbnail && !dropZone.BlogThumbnail">
+                  <div class="d-block text-center mx-auto">
+                    <img class="img-fluid" :src="BlogThumbnail">
+                  </div>
+                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-warning" @click="removeImage($event, index, 'BlogThumbnail')">Remove</button>
+                  </div>
                 </div>
-                <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                  <button class="btn btn-warning" @click="removeImage($event, index, 'BlogThumbnail')">Remove</button>
-                </div>
+                <form v-else class="dropzone text-center" :id="'ThumbnailUpdate' + blogId">
+                </form>
               </div>
-              <form v-else class="dropzone text-center" :id="'ThumbnailUpdate' + blogId">
-              </form>
-            </div>
-          </h6>
+            </h6>
           </div>
           <div>
             <h6 class="text-black-50 d-inline">Topic
-            <p class="text-danger d-inline">*</p>
-            <input class="form-control mb-3" type="text" placeholder="Please, Input your topic." aria-label="default input example" v-model="blog.Topic">
-          </h6>
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your topic."
+                aria-label="default input example" v-model="blog.Topic">
+            </h6>
           </div>
           <div>
             <h6 class="text-black-50 d-inline">Image cover
-            <p class="text-danger d-inline">*</p>
-            <div class="mb-3">
-              <div v-if="BlogImagecover && !dropZone.BlogImagecover">
-                <div class="d-block text-center mx-auto">
-                  <img class="img-fluid" :src="BlogImagecover">
+              <p class="text-danger d-inline">*</p>
+              <div class="mb-3">
+                <div v-if="BlogImagecover && !dropZone.BlogImagecover">
+                  <div class="d-block text-center mx-auto">
+                    <img class="img-fluid" :src="BlogImagecover">
+                  </div>
+                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-warning"
+                      @click="removeImage($event, index, 'BlogImagecover')">Remove</button>
+                  </div>
                 </div>
-                <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                  <button class="btn btn-warning" @click="removeImage($event, index, 'BlogImagecover')">Remove</button>
-                </div>
+                <form v-else class="dropzone text-center" :id="'imageCoverUpdate' + blogId">
+                </form>
               </div>
-              <form v-else class="dropzone text-center" :id="'imageCoverUpdate' + blogId">
-              </form>
-            </div>
-          </h6>
+            </h6>
           </div>
           <div>
             <h6 class="text-black-50 d-inline">Description
-            <p class="text-danger d-inline">*</p>
-            <input class="form-control mb-3" type="text" placeholder="Please, Input your description." aria-label="default input example" v-model="blog.Description">
-          </h6>
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
+                aria-label="default input example" v-model="blog.Description">
+            </h6>
           </div>
         </div>
         <form>
           <div class="modal-body mb-3">
-            <div  class="modal-body mb-3 bg-light rounded-1">
+            <div class="modal-body mb-3 bg-light rounded-1">
               <div v-for="(paragraph, index) in paragraphs" :key="paragraph.id">
-                <h4 class="text-black-50">Paragraph {{ index+1 }}</h4>
-              <div>
-                <h6 class="text-black-50 d-inline">Image
-                  <p class="text-danger d-inline">*</p>
-                </h6>
-                <div class="mb-3">
-                  <div v-if="paragraph.image && !dropZone.paragraphRemove">
-                    <div class="d-block text-center mx-auto">
-                      <img class="img-fluid" :src="paragraph.image">
+                <h4 class="text-black-50">Paragraph {{ index + 1 }}</h4>
+                <div>
+                  <h6 class="text-black-50 d-inline">Image
+                    <p class="text-danger d-inline">*</p>
+                  </h6>
+                  <div class="mb-3">
+                    <div v-if="paragraph.image && !dropZone.paragraphRemove">
+                      <div class="d-block text-center mx-auto">
+                        <img class="img-fluid" :src="paragraph.image">
+                      </div>
+                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                        <button class="btn btn-warning"
+                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                      </div>
                     </div>
-                    <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                      <button class="btn btn-warning" @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                    <div v-else-if="paragraph.image && paragraph.imageId">
+                      <div class="d-block text-center mx-auto">
+                        <img class="img-fluid" :src="paragraph.image">
+                      </div>
+                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                        <button class="btn btn-warning"
+                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                      </div>
                     </div>
+                    <form v-else class="dropzone text-center" :id="paragraph.dropzoneId">
+                    </form>
                   </div>
-                  <div v-else-if="paragraph.image && paragraph.imageId">
-                    <div class="d-block text-center mx-auto">
-                      <img class="img-fluid" :src="paragraph.image">
-                    </div>
-                    <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                      <button class="btn btn-warning" @click="removeImage($event, index, 'paragraphs')">Remove</button>
-                    </div>
-                  </div>
-                <form v-else class="dropzone text-center" :id="paragraph.dropzoneId">
-                </form>
-              </div>
-              </div>
-              <div>
-                <h6 class="text-black-50 d-inline">Paragraph
-                  <p class="text-danger d-inline">*</p>
-                </h6>
-                <div class="mb-3">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="paragraph.content"></textarea>
+                </div>
+                <div>
+                  <h6 class="text-black-50 d-inline">Paragraph
+                    <p class="text-danger d-inline">*</p>
+                  </h6>
+                  <div class="mb-3">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                      v-model="paragraph.content"></textarea>
                   </div>
                   <div class="d-flex justify-content-end mt-2 mb-2">
                     <button class="btn btn-danger" @click="deleteParagraph($event, index)">Delete</button>
                   </div>
-              </div>
+                </div>
               </div>
             </div>
             <div>
-              <button class="btn btn-outline-dark w-100 p-3 mt-2 mb-2" type="button" @click="addParagraph">Add Paragraph</button>
+              <button class="btn btn-outline-dark w-100 p-3 mt-2 mb-2" type="button" @click="addParagraph">Add
+                Paragraph</button>
             </div>
-            </div>
+          </div>
         </form>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="getBlogData(this.blogId)">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            @click="getBlogData(this.blogId)">Close</button>
           <button type="button" class="btn btn-primary" @click="updateBlog(this.blogId)">Update</button>
         </div>
       </div>

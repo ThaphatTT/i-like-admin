@@ -21,14 +21,14 @@ export default {
             promotion: {},
             dropzoneInstance: null,
             promotionCoverImage: null,
-            prefix: 'http://localhost:1337'
+            prefix: 'http://localhost:1337' // http://27.254.134.141:1338/
         };
     },
     async created() {
         try {
             this.isLoading = true;
             await this.getPromotionId(this.promotionId);
-            
+
         } catch (error) {
             console.error('Error during initialization:', error.message);
         } finally {
@@ -108,7 +108,7 @@ export default {
                     timer: 2000,
                 });
                 console.log(error);
-                
+
             } finally {
                 this.isLoading = false;
             }
