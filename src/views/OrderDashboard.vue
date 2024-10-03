@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vender/api'
+import api from '@/vendors/api'
 import moment from 'moment';
 import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
@@ -261,8 +261,8 @@ export default {
                                 </div>
                                 <div class="col row align-items-start mt-2 mb-2">
                                     <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'สถานะทั้งหมด'"
-                                :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'" :dataText4="'newest order'"
-                                @change="handleDropDown(selectedValue)" />
+                                        :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'"
+                                        :dataText4="'newest order'" @change="handleDropDown(selectedValue)" />
                                 </div>
                             </div>
                         </div>

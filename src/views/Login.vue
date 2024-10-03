@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 const router = useRouter();
 import Swal from 'sweetalert2';
-import api from '@/vender/api'
+import api from '@/vendors/api'
 const userData = reactive({
     email: '',
     password: ''

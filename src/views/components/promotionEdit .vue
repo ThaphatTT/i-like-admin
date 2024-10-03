@@ -1,7 +1,7 @@
 <script>
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
-import api from '@/vender/api';
+import api from '@/vendors/api';
 import Swal from 'sweetalert2';
 import Loading from '@/components/Loading.vue';
 
@@ -21,7 +21,7 @@ export default {
             promotion: {},
             dropzoneInstance: null,
             promotionCoverImage: null,
-            prefix: 'http://localhost:1337' // http://27.254.134.141:1338/
+            prefix: 'http://localhost:1337' // https://strapi.gainlike-service.com/
         };
     },
     async created() {

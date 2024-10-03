@@ -1,5 +1,5 @@
 <script>
-import api from '@/vender/api';
+import api from '@/vendors/api';
 import moment from 'moment';
 import { ref } from 'vue';
 

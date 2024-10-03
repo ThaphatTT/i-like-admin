@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import api from '@/vender/api'
+import api from '@/vendors/api'
 import Swal from 'sweetalert2';
 // import moment from 'moment';
 

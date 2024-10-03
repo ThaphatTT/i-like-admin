@@ -18,34 +18,45 @@ const getUser = localStorage.getItem('username');
                     <div class="sb-sidenav-menu-heading">Core</div>
                     <RouterLink class="nav-link" to="/Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Dashboard
+                        แดชบอร์ด
                     </RouterLink>
                     <RouterLink class="nav-link" to="/Blog-Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Blog
+                        บทความ
                     </RouterLink>
                     <RouterLink class="nav-link" to="/Orders-Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Order
-                    </RouterLink>
-                    <RouterLink class="nav-link" to="/Ticket-Dashboard">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Ticket
+                        รายการออเดอร์
                     </RouterLink>
 
-                    <div class="sb-sidenav-menu-heading">Pricing</div>
+                    <div class="sb-sidenav-menu-heading">บริการ</div>
                     <RouterLink class="nav-link" to="/Products-Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Products
+                        บริการ
                     </RouterLink>
                     <RouterLink class="nav-link" to="/Packages-Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Package
+                        แพ็คเกจ
                     </RouterLink>
                     <RouterLink class="nav-link" to="/Promotions-Dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Promotions
+                        โปรโมชั่น
                     </RouterLink>
+
+                    <div class="sb-sidenav-menu-heading">การจัดการ</div>
+                    <RouterLink class="nav-link" to="/Ticket-Dashboard">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        กิจกรรม
+                    </RouterLink>
+                    <RouterLink class="nav-link" to="/Ticket-Dashboard">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        ตั๋วแจ้งปัญหา
+                    </RouterLink>
+                    <RouterLink class="nav-link" to="/Ticket-Dashboard">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        ประวัติการเงิน
+                    </RouterLink>
+
 
                     <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                         data-bs-parent="#sidenavAccordion">

@@ -1,7 +1,7 @@
 <script>
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vender/api'
+import api from '@/vendors/api'
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import sortDropDown from '@/views/components/sortDropDown.vue'
@@ -64,25 +64,25 @@ export default {
         //         console.log(error);
         //     }
         // },
-        async statePublish (packageId, status){
+        async statePublish(packageId, status) {
             try {
-                const updateStatePublish = await api.updatePackage(packageId,{
-                data : {
-                    isPublish : status
-                }
-            }).then(()=>{
-                this.fetchPackageData()
-            })
+                const updateStatePublish = await api.updatePackage(packageId, {
+                    data: {
+                        isPublish: status
+                    }
+                }).then(() => {
+                    this.fetchPackageData()
+                })
             } catch (error) {
                 console.log(error);
-                
+
             }
         },
         async deleteItem(id) {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger',
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger',
                 },
                 buttonsStyling: false,
             });
@@ -97,28 +97,28 @@ export default {
                 reverseButtons: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                try {
-                    await api.deletePackage(`${id}`);
-                    swalWithBootstrapButtons.fire({
-                    title: 'Deleted!',
-                    text: 'Your file has been deleted.',
-                    icon: 'success',
-                    });
-                    this.fetchPackageData();
-                } catch (error) {
-                    console.error('Error deleting item:', error);
-                    swalWithBootstrapButtons.fire({
-                    title: 'Error!',
-                    text: 'There was a problem deleting the item.',
-                    icon: 'error',
-                    });
-                }
+                    try {
+                        await api.deletePackage(`${id}`);
+                        swalWithBootstrapButtons.fire({
+                            title: 'Deleted!',
+                            text: 'Your file has been deleted.',
+                            icon: 'success',
+                        });
+                        this.fetchPackageData();
+                    } catch (error) {
+                        console.error('Error deleting item:', error);
+                        swalWithBootstrapButtons.fire({
+                            title: 'Error!',
+                            text: 'There was a problem deleting the item.',
+                            icon: 'error',
+                        });
+                    }
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
-                    text: 'Your file is safe :)',
-                    icon: 'error',
-                });
+                    swalWithBootstrapButtons.fire({
+                        title: 'Cancelled',
+                        text: 'Your file is safe :)',
+                        icon: 'error',
+                    });
                 }
             });
         },
@@ -146,15 +146,15 @@ export default {
                             <div class="row justify-content-between">
                                 <div class="col-auto">
                                     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
-                                @submit.prevent="searchUser(userData)">
-                                <div class="input-group">
-                                    <input v-model="packageData" class="form-control" type="text"
-                                        placeholder="Search for ?..." aria-label="Search for..."
-                                        aria-describedby="btnNavbarSearch" />
-                                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
-                                            class="fas fa-search"></i></button>
-                                </div>
-                            </form>
+                                        @submit.prevent="searchUser(userData)">
+                                        <div class="input-group">
+                                            <input v-model="packageData" class="form-control" type="text"
+                                                placeholder="Search for ?..." aria-label="Search for..."
+                                                aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="col-auto">
                                     <packgeCreate />
@@ -187,10 +187,12 @@ export default {
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-auto">
                                                         <div v-if="item.attributes.isPublish" class="col">
-                                                            <button type="button" class="btn btn-success" @click="statePublish(item.id, false)">Active</button>
+                                                            <button type="button" class="btn btn-success"
+                                                                @click="statePublish(item.id, false)">Active</button>
                                                         </div>
                                                         <div v-else class="col">
-                                                            <button type="button" class="btn btn-danger" @click="statePublish(item.id, true)">Inactive</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                @click="statePublish(item.id, true)">Inactive</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -201,11 +203,11 @@ export default {
                                                         <packageEdit :packageId="item.id" />
                                                     </div>
                                                     <div class="col">
-                                                        <packageView :packageId="item.id"/>
+                                                        <packageView :packageId="item.id" />
                                                     </div>
                                                     <div class="col">
                                                         <button class="btn btn-danger btn-block"
-                                                    @click="deleteItem(item.id)">Delete</button>
+                                                            @click="deleteItem(item.id)">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

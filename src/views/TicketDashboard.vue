@@ -1,6 +1,6 @@
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vender/api'
+import api from '@/vendors/api'
 import Pagination from './components/Pagination.vue';
 
 import Loading from '@/components/Loading.vue';
@@ -8,7 +8,7 @@ import Filtering from '@/views/components/Filtering.vue';
 import Swal from 'sweetalert2';
 
 export default {
-    components:{
+    components: {
         Loading,
         SideNavbar,
         Filtering,
@@ -16,49 +16,49 @@ export default {
     },
     data() {
         return {
-        selectedFilter: 'ทั้งหมด',
-        tickets: [],
-        itemsInPage: 10,
-        currentPage: 1,
-        totalPages: 0,
-        isLoading: true,
+            selectedFilter: 'ทั้งหมด',
+            tickets: [],
+            itemsInPage: 10,
+            currentPage: 1,
+            totalPages: 0,
+            isLoading: true,
         };
     },
     methods: {
         async fetchTicketsData(page = this.currentPage, items = this.itemsInPage) {
-        try {
-            const response = await api.getTickets(page, items);
-            this.tickets = response.data;
-            this.totalPages = response.meta.pagination.pageCount;
-            console.log(this.tickets);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+            try {
+                const response = await api.getTickets(page, items);
+                this.tickets = response.data;
+                this.totalPages = response.meta.pagination.pageCount;
+                console.log(this.tickets);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         },
         changeLanguage(data) {
-        if (data === true) {
-            return 'เผยแพร่แล้ว';
-        } else if (data === false) {
-            return 'ยังไม่ได้เผยแพร่';
-        } else {
-            return 'ไม่พบข้อมูล';
-        }
+            if (data === true) {
+                return 'เผยแพร่แล้ว';
+            } else if (data === false) {
+                return 'ยังไม่ได้เผยแพร่';
+            } else {
+                return 'ไม่พบข้อมูล';
+            }
         },
         handlePageChange(data) {
-        this.currentPage = data;
+            this.currentPage = data;
         },
-        async statePublish (promotionId, status){
+        async statePublish(promotionId, status) {
             try {
-                const updateStatePublish = await api.updatePromotions(promotionId,{
-                data : {
-                    isPublish : status
-                }
-            }).then(()=>{
-                this.fetchTicketsData()
-            })
+                const updateStatePublish = await api.updatePromotions(promotionId, {
+                    data: {
+                        isPublish: status
+                    }
+                }).then(() => {
+                    this.fetchTicketsData()
+                })
             } catch (error) {
                 console.log(error);
-                
+
             }
         },
         async handlePageChange(page) {
@@ -128,10 +128,10 @@ export default {
     },
     async created() {
         await this.fetchTicketsData()
-        .catch((error) => console.log(error))
-        .finally(() => {
-            this.isLoading = false;
-        });
+            .catch((error) => console.log(error))
+            .finally(() => {
+                this.isLoading = false;
+            });
     },
 };
 </script>
@@ -148,47 +148,49 @@ export default {
                     </ol>
                     <div class="card mb-4">
                         <div class="card-header">
-                          <div class="col-md-12">
-                            <Filtering :optionsData="[
+                            <div class="col-md-12">
+                                <Filtering :optionsData="[
                                     'ทั้งหมด',
-                                    ]" @updateSelection="handleSelectionChange" />
-                          </div>
+                                ]" @updateSelection="handleSelectionChange" />
+                            </div>
                         </div>
                         <div v-if="isLoading" class="mt-2 mb-2">
-                            <Loading/>
+                            <Loading />
                         </div>
                         <div v-else>
                             <div class="card-body">
-                            <table class="table table-striped table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(item, index) in tickets" :key="index">
-                                        <td> {{ item.attributes.topic }}</td>
-                                        <td> {{ item.attributes.status }}</td>
-                                        <td class="text-center">
-                                            <div class="row row-cols-auto justify-content-center">
-                                              <div class="col-2">
-                                                <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
-                                              class="btn btn-info btn-block">View</RouterLink>
-                                              </div>
-                                              <div class="col-2">
-                                                  <button class="btn btn-primary btn-block" v-if="item.attributes.status !== 'เสร็จสิ้น'" @click="handleUpdateSubmit(item.id)">
-                                                    Update
-                                                  </button>
-                                                  <p v-else></p>
-                                              </div>
-                                          </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in tickets" :key="index">
+                                            <td> {{ item.attributes.topic }}</td>
+                                            <td> {{ item.attributes.status }}</td>
+                                            <td class="text-center">
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col-2">
+                                                        <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
+                                                            class="btn btn-info btn-block">View</RouterLink>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button class="btn btn-primary btn-block"
+                                                            v-if="item.attributes.status !== 'เสร็จสิ้น'"
+                                                            @click="handleUpdateSubmit(item.id)">
+                                                            Update
+                                                        </button>
+                                                        <p v-else></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <Pagination :total-pages="totalPages" :currentPage="currentPage"
                             @page-change="handlePageChange" />

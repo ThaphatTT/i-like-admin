@@ -1,16 +1,16 @@
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vender/api.js'
+import api from '@/vendors/api.js'
 import Loading from '@/components/Loading.vue';
 export default {
     components: {
         SideNavbar,
         Loading
     },
-    data(){
-        return{
-            ticketId : null,
-            ticket:{},
+    data() {
+        return {
+            ticketId: null,
+            ticket: {},
             isLoading: false,
         }
     },
@@ -25,7 +25,7 @@ export default {
         }
     },
     methods: {
-        async getTicketId(){
+        async getTicketId() {
             try {
                 const responseTicket = await api.getTicketId(this.ticketId);
                 this.ticket = responseTicket.data;
@@ -40,46 +40,49 @@ export default {
 
 <template>
     <div id="layoutSidenav">
-        <SideNavbar/>
+        <SideNavbar />
         <div v-if="!isLoading" class="mt-2 mb-2">
-            <Loading/>
+            <Loading />
         </div>
         <div v-else id="layoutSidenav_content">
-                <main>
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-7">
-                                <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Order {{  this.ticketId  }}: Ticket Details</h3></div>
-                                    <div class="card-body">
-                                        <form >
-                                            <div class="row mb-4">
-                                                <div class="d-block text-center mx-auto">
-                                                    <img class="img-fluid" :src="this.ticket.attributes.coverImg">
-                                                    <div class="form-floating mt-3 mb-md-0">
-                                                        <input class="form-control" id="inputFirstName" type="text"
-                                                        v-model="this.ticket.attributes.topic" readonly/>
-                                                        <label for="inputFirstName">Topic</label>
-                                                    </div>
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header">
+                                    <h3 class="text-center font-weight-light my-4">Order {{ this.ticketId }}: Ticket
+                                        Details</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row mb-4">
+                                            <div class="d-block text-center mx-auto">
+                                                <img class="img-fluid" :src="this.ticket.attributes.coverImg">
+                                                <div class="form-floating mt-3 mb-md-0">
+                                                    <input class="form-control" id="inputFirstName" type="text"
+                                                        v-model="this.ticket.attributes.topic" readonly />
+                                                    <label for="inputFirstName">Topic</label>
                                                 </div>
                                             </div>
-                                            <div class="row mb-4">
-                                                <div class="d-block text-center mx-auto">
-                                                    <div class="form-floating mt-3 mb-md-0">
-                                                        <textarea  class="form-control" id="inputFirstName" type="text"
+                                        </div>
+                                        <div class="row mb-4">
+                                            <div class="d-block text-center mx-auto">
+                                                <div class="form-floating mt-3 mb-md-0">
+                                                    <textarea class="form-control" id="inputFirstName" type="text"
                                                         v-model="this.ticket.attributes.details" readonly></textarea>
-                                                        <label for="inputFirstName">Details</label>
-                                                    </div>
+                                                    <label for="inputFirstName">Details</label>
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </main>
-                <div id="layoutSidenav_footer">
+                </div>
+            </main>
+            <div id="layoutSidenav_footer">
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -93,6 +96,6 @@ export default {
                     </div>
                 </footer>
             </div>
-            </div>
+        </div>
     </div>
 </template>

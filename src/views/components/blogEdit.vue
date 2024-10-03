@@ -2,7 +2,7 @@
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
 import Swal from 'sweetalert2';
-import api from '@/vender/api.js'
+import api from '@/vendors/api.js'
 export default {
   props: {
     blogId: {
@@ -30,7 +30,7 @@ export default {
         addFileParagraph: false,
         addImage: false
       },
-      prefix: "http://localhost:1337", // http://27.254.134.141:1338/
+      prefix: "http://localhost:1337", // https://strapi.gainlike-service.com/
     };
   },
   methods: {
