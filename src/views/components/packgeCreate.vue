@@ -19,7 +19,7 @@ export default {
         topic: null,
         img: null,
       },
-      prefix: "http://localhost:1337" // https://strapi.gainlike-service.com/
+      prefix: "https://strapi.gainlike-service.com/"
     };
   },
   methods: {

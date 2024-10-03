@@ -21,7 +21,7 @@ export default {
             promotion: {},
             dropzoneInstance: null,
             promotionCoverImage: null,
-            prefix: 'http://localhost:1337' // https://strapi.gainlike-service.com/
+            prefix: "https://strapi.gainlike-service.com/"
         };
     },
     async created() {
