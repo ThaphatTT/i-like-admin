@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy" : "ssh root@27.254.134.141 \"cd /home/admin/Assignment1 && git pull origin"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
