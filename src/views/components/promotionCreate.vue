@@ -13,7 +13,7 @@ export default {
         price: null,
         isPublish: false,
       },
-      prefix: "https://strapi.gainlike-service.com/"
+      prefix: "https://strapi.gainlike-service.com"
     };
   },
   methods: {

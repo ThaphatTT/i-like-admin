@@ -30,7 +30,7 @@ export default {
         addFileParagraph: false,
         addImage: false
       },
-      prefix: "https://strapi.gainlike-service.com/"
+      prefix: "https://strapi.gainlike-service.com"
     };
   },
   methods: {

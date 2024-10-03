@@ -13,7 +13,7 @@ export default {
         Topic: '',
         Description: '',
       },
-      prefix: "https://strapi.gainlike-service.com/"
+      prefix: "https://strapi.gainlike-service.com"
     };
   },
   methods: {
