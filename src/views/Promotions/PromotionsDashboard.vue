@@ -2,13 +2,13 @@
 import SideNavbar from '@/components/SideNavbar.vue'
 import Swal from 'sweetalert2';
 import api from '@/vendors/api'
-import Pagination from './components/Pagination.vue';
+import Pagination from '@/components/Pagination.vue';
 
 import Loading from '@/components/Loading.vue';
 
-import promotionCreate from './components/promotionCreate.vue';
-import promotionEdit from './components/promotionEdit .vue';
-import promotionView from './components/promotionView.vue';
+import promotionCreate from '@/components/Promotions/promotionCreate.vue';
+import promotionEdit from '@/components/Promotions/promotionEdit .vue';
+import promotionView from '@/components/Promotions/promotionView.vue';
 
 export default {
     components: {

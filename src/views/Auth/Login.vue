@@ -24,9 +24,8 @@ const handleSubmit = async () => {
             title: "Login suceessed",
             showConfirmButton: false,
             timer: 1000
-        }).then(async () => {
-            await router.push({ name: 'dashboard-home' });
-            window.location.reload();
+        }).then(() => {
+            router.push({ name: 'home' });
         })
 
     } catch (error) {

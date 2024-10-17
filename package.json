@@ -7,17 +7,19 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy" : "ssh root@27.254.134.141 \"cd /home/admin/Assignment1 && git pull origin \""
+    "deploy": "ssh root@27.254.134.141 \"cd /home/admin/Assignment1 && git pull origin \""
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@popperjs/core": "^2.11.8",
+    "@tinymce/tinymce-vue": "^6.0.1",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
     "dropzone": "^6.0.0-beta.2",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
-    "sweetalert2": "^11.12.4",
+    "sweetalert2": "^11.6.13",
+    "tinymce": "^7.4.1",
     "vue": "^3.4.29",
     "vue-router": "^4.4.3"
   },

@@ -1,15 +1,14 @@
 <script>
-import { ref, onMounted, computed } from 'vue'
-import { RouterLink } from 'vue-router';
-import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vendors/api'
 import moment from 'moment';
-import subList from '@/views/components/subList.vue'
 import Swal from 'sweetalert2';
-import sortDropDown from '@/views/components/sortDropDown.vue'
-import Pagination from './components/Pagination.vue';
-
+import api from '@/vendors/api';
+import { RouterLink } from 'vue-router';
+import subList from '@/components/subList.vue';
+import { ref, onMounted, computed } from 'vue';
 import Loading from '@/components/Loading.vue';
+import SideNavbar from '@/components/SideNavbar.vue';
+import Pagination from '@/components/Pagination.vue';
+import sortDropDown from '@/components/sortDropDown.vue';
 
 export default {
     components: {

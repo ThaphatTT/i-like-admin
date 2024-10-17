@@ -1,10 +1,10 @@
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
 import api from '@/vendors/api'
-import Pagination from './components/Pagination.vue';
+import Pagination from '@/components/Pagination.vue';
 
 import Loading from '@/components/Loading.vue';
-import Filtering from '@/views/components/Filtering.vue';
+import Filtering from '@/components/Filtering.vue';
 import Swal from 'sweetalert2';
 
 export default {
@@ -162,9 +162,11 @@ export default {
                                 <table class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>ชื่อผู้ใช้</th>
+                                            <th>หัวข้อ</th>
+                                            <th>สถานะ</th>
+                                            <th>ช่วงเวลา</th>
+                                            <th>จัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>

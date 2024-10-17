@@ -122,12 +122,12 @@ import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue';
 import Swal from 'sweetalert2';
 import api from '@/vendors/api';
-import Pagination from './components/Pagination.vue';
-import Filter from '@/views/components/Filtering.vue';
+import Pagination from '@/components/Pagination.vue';
+import Filter from '@/components/Filtering.vue';
 import Loading from '@/components/Loading.vue';
-import ProductsCreate from './components/ProductsCreate.vue';
-import ProductsEdit from './components/ProductsEdit.vue';
-import ProductsView from './components/ProductsView.vue';
+import ProductsCreate from '@/components/Products/ProductsCreate.vue';
+import ProductsEdit from '@/components/Products/ProductsEdit.vue';
+import ProductsView from '@/components/Products/ProductsView.vue';
 export default {
     components: {
         SideNavbar,

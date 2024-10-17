@@ -1,9 +1,156 @@
+<template>
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+    :data-bs-target="'#staticBackdropUpdate' + this.blogId">
+    Edit
+  </button>
+
+  <div class="modal fade" :id="'staticBackdropUpdate' + this.blogId" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Add a new blog</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            @click="getBlogData(this.blogId)"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <h6 class="text-black-50 d-inline">Thumbnail
+              <p class="text-danger d-inline">*</p>
+              <div class="mb-3">
+                <div v-if="BlogThumbnail && !dropZone.BlogThumbnail">
+                  <div class="d-block text-center mx-auto">
+                    <img class="img-fluid" :src="BlogThumbnail">
+                  </div>
+                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-warning" @click="removeImage($event, index, 'BlogThumbnail')">Remove</button>
+                  </div>
+                </div>
+                <form v-else class="dropzone text-center" :id="'ThumbnailUpdate' + blogId">
+                </form>
+              </div>
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Topic
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your topic."
+                aria-label="default input example" v-model="blog.Topic">
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Image cover
+              <p class="text-danger d-inline">*</p>
+              <div class="mb-3">
+                <div v-if="BlogImagecover && !dropZone.BlogImagecover">
+                  <div class="d-block text-center mx-auto">
+                    <img class="img-fluid" :src="BlogImagecover">
+                  </div>
+                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-warning"
+                      @click="removeImage($event, index, 'BlogImagecover')">Remove</button>
+                  </div>
+                </div>
+                <form v-else class="dropzone text-center" :id="'imageCoverUpdate' + blogId">
+                </form>
+              </div>
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Description
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
+                aria-label="default input example" v-model="blog.Description">
+            </h6>
+          </div>
+        </div>
+        <form>
+          <div class="modal-body mb-3">
+            <div class="modal-body mb-3 bg-light rounded-1">
+              <div v-for="(paragraph, index) in paragraphs" :key="paragraph.id">
+                <h4 class="text-black-50">Paragraph {{ index + 1 }}</h4>
+                <div>
+                  <h6 class="text-black-50 d-inline">Image
+                    <!-- <p class="text-danger d-inline">*</p> -->
+                  </h6>
+                  <div class="mb-3">
+                    <div v-if="paragraph.image && !dropZone.paragraphRemove">
+                      <div class="d-block text-center mx-auto">
+                        <img class="img-fluid" :src="paragraph.image">
+                      </div>
+                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                        <button class="btn btn-warning"
+                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                      </div>
+                    </div>
+                    <div v-else-if="paragraph.image && paragraph.imageId">
+                      <div class="d-block text-center mx-auto">
+                        <img class="img-fluid" :src="paragraph.image">
+                      </div>
+                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
+                        <button class="btn btn-warning"
+                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
+                      </div>
+                    </div>
+                    <form v-else class="dropzone text-center" :id="paragraph.dropzoneId">
+                    </form>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="text-black-50 d-inline">Paragraph
+                    <p class="text-danger d-inline">*</p>
+                  </h6>
+                  <div class="mb-3">
+                    <tinymce-vue v-model="paragraph.content" api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42"
+                      :init="{
+                        selector: 'textarea#premiumskinsandicons-jam',
+                        skin: 'jam',
+                        icons: 'jam',
+                        plugins: 'code image link lists',
+                        toolbar: 'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
+                        menubar: false,
+                        tinycomments_mode: 'embedded',
+                        tinycomments_author: 'Author name',
+                        mergetags_list: [
+                          { value: 'First.Name', title: 'First Name' },
+                          { value: 'Email', title: 'Email' },
+                        ],
+                        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+                      }" initial-value="" />
+                  </div>
+                  <div class="d-flex justify-content-end mt-2 mb-2">
+                    <button class="btn btn-danger" @click="deleteParagraph($event, index)">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-outline-dark w-100 p-3 mt-2 mb-2" type="button" @click="addParagraph">Add
+                Paragraph</button>
+            </div>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            @click="getBlogData(this.blogId)">Close</button>
+          <button type="button" class="btn btn-primary" @click="updateBlog(this.blogId)">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
 <script>
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
 import Swal from 'sweetalert2';
 import api from '@/vendors/api.js'
+import Editor from '@tinymce/tinymce-vue';
 export default {
+  components: {
+    'tinymce-vue': Editor,
+  },
   props: {
     blogId: {
       type: Number,
@@ -30,7 +177,9 @@ export default {
         addFileParagraph: false,
         addImage: false
       },
-      prefix: "https://strapi.gainlike-service.com"
+      prefix: "https://strapi.gainlike-service.com",
+      localPrefix: 'http://localhost:1338',
+
     };
   },
   methods: {
@@ -75,6 +224,7 @@ export default {
     },
     async getBlogData(id) {
       try {
+        // Get the blog data
         const blog = await api.getBlogId(id);
         this.paragraphs = [];
         this.BlogThumbnail = blog.data.attributes.coverImg;
@@ -87,6 +237,8 @@ export default {
         this.blog.headerImgId = (blog.data?.attributes?.headerImage?.data && blog.data.attributes.headerImage.data.length > 0)
           ? blog.data.attributes.headerImage.data[0].id
           : null
+
+        // Set up dropZones for blog
         if (!this.BlogThumbnail) {
           this.BlogThumbnail = null
           this.dropZone.BlogThumbnail = true
@@ -125,13 +277,14 @@ export default {
             });
           });
         }
+        // Get the paragrains data
         const paragraph = await api.getParagraph();
         let paragraphBlog = paragraph.data.filter(blogId => blogId.attributes.blogId == blog.data.id)
         for (let index = 0; index < paragraphBlog.length; index++) {
           this.paragraphs.push(
             {
               id: index + 1,
-              content: paragraphBlog[index].attributes.details,
+              content: paragraphBlog[index].attributes.wysiwyg,
               image: paragraphBlog[index]?.attributes?.img || null,
               dropzoneId: `DropzoneParagraph${index + 1}`,
               orderId: paragraphBlog[index].attributes.blogId,
@@ -367,131 +520,3 @@ export default {
   }
 };
 </script>
-
-<template>
-  <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-    :data-bs-target="'#staticBackdropUpdate' + this.blogId">
-    Edit
-  </button>
-
-  <div class="modal fade" :id="'staticBackdropUpdate' + this.blogId" data-bs-backdrop="static" data-bs-keyboard="false"
-    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Add a new blog</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            @click="getBlogData(this.blogId)"></button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <h6 class="text-black-50 d-inline">Thumbnail
-              <p class="text-danger d-inline">*</p>
-              <div class="mb-3">
-                <div v-if="BlogThumbnail && !dropZone.BlogThumbnail">
-                  <div class="d-block text-center mx-auto">
-                    <img class="img-fluid" :src="BlogThumbnail">
-                  </div>
-                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                    <button class="btn btn-warning" @click="removeImage($event, index, 'BlogThumbnail')">Remove</button>
-                  </div>
-                </div>
-                <form v-else class="dropzone text-center" :id="'ThumbnailUpdate' + blogId">
-                </form>
-              </div>
-            </h6>
-          </div>
-          <div>
-            <h6 class="text-black-50 d-inline">Topic
-              <p class="text-danger d-inline">*</p>
-              <input class="form-control mb-3" type="text" placeholder="Please, Input your topic."
-                aria-label="default input example" v-model="blog.Topic">
-            </h6>
-          </div>
-          <div>
-            <h6 class="text-black-50 d-inline">Image cover
-              <p class="text-danger d-inline">*</p>
-              <div class="mb-3">
-                <div v-if="BlogImagecover && !dropZone.BlogImagecover">
-                  <div class="d-block text-center mx-auto">
-                    <img class="img-fluid" :src="BlogImagecover">
-                  </div>
-                  <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                    <button class="btn btn-warning"
-                      @click="removeImage($event, index, 'BlogImagecover')">Remove</button>
-                  </div>
-                </div>
-                <form v-else class="dropzone text-center" :id="'imageCoverUpdate' + blogId">
-                </form>
-              </div>
-            </h6>
-          </div>
-          <div>
-            <h6 class="text-black-50 d-inline">Description
-              <p class="text-danger d-inline">*</p>
-              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
-                aria-label="default input example" v-model="blog.Description">
-            </h6>
-          </div>
-        </div>
-        <form>
-          <div class="modal-body mb-3">
-            <div class="modal-body mb-3 bg-light rounded-1">
-              <div v-for="(paragraph, index) in paragraphs" :key="paragraph.id">
-                <h4 class="text-black-50">Paragraph {{ index + 1 }}</h4>
-                <div>
-                  <h6 class="text-black-50 d-inline">Image
-                    <p class="text-danger d-inline">*</p>
-                  </h6>
-                  <div class="mb-3">
-                    <div v-if="paragraph.image && !dropZone.paragraphRemove">
-                      <div class="d-block text-center mx-auto">
-                        <img class="img-fluid" :src="paragraph.image">
-                      </div>
-                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                        <button class="btn btn-warning"
-                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
-                      </div>
-                    </div>
-                    <div v-else-if="paragraph.image && paragraph.imageId">
-                      <div class="d-block text-center mx-auto">
-                        <img class="img-fluid" :src="paragraph.image">
-                      </div>
-                      <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                        <button class="btn btn-warning"
-                          @click="removeImage($event, index, 'paragraphs')">Remove</button>
-                      </div>
-                    </div>
-                    <form v-else class="dropzone text-center" :id="paragraph.dropzoneId">
-                    </form>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="text-black-50 d-inline">Paragraph
-                    <p class="text-danger d-inline">*</p>
-                  </h6>
-                  <div class="mb-3">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                      v-model="paragraph.content"></textarea>
-                  </div>
-                  <div class="d-flex justify-content-end mt-2 mb-2">
-                    <button class="btn btn-danger" @click="deleteParagraph($event, index)">Delete</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <button class="btn btn-outline-dark w-100 p-3 mt-2 mb-2" type="button" @click="addParagraph">Add
-                Paragraph</button>
-            </div>
-          </div>
-        </form>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-            @click="getBlogData(this.blogId)">Close</button>
-          <button type="button" class="btn btn-primary" @click="updateBlog(this.blogId)">Update</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>

@@ -1,48 +1,81 @@
 <script>
+import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
-import BlogCreate from '@/views/components/blogCreate.vue'
-import Swal from 'sweetalert2';
 import api from '@/vendors/api'
+import moment from 'moment';
+import Swal from 'sweetalert2';
+import sortDropDown from '@/components/sortDropDown.vue'
+import Pagination from '@/components/Pagination.vue';
 
 import Loading from '@/components/Loading.vue';
+import packgeCreate from '@/components/Packages/packgeCreate.vue';
+import packageEdit from '@/components/Packages/packageEdit.vue';
 
-import blogEdit from '@/views/components/blogEdit.vue';
+import packageView from '@/components/Packages/packageView.vue'
 
-import Pagination from './components/Pagination.vue';
 export default {
     components: {
-        Loading,
         SideNavbar,
-        BlogCreate,
-        blogEdit,
-        Pagination
+        sortDropDown,
+        Pagination,
+        RouterLink,
+        Loading,
+        packgeCreate,
+        packageEdit,
+        packageView
     },
     data() {
         return {
-            blogs: [],
-            isLoading: true,
-            itemsInPage: 10,
+            package: [],
+            itemsPerPage: 10,
             currentPage: 1,
             totalPages: 0,
+            isLoading: true,
+            packageData: null,
         };
     },
-    async mounted() {
-        try {
-            await this.fetchBlogData();
-        } catch (error) {
-            console.log(error);
-        } finally {
-            this.isLoading = false;
-        }
-    },
     methods: {
-        async fetchBlogData(page = this.currentPage) {
+        formatDate(date) {
+            return moment(date).format('YYYY-MM-DD HH:mm:ss');
+        },
+        async fetchPackageData(page = this.currentPage) {
             try {
-                const response = await api.getBlogs(page, this.itemsInPage);
+                this.isLoading = true;
+                const response = await api.getPackages(page, this.itemsPerPage);
+                this.package = response.data;
                 this.totalPages = response.meta.pagination.pageCount;
-                this.blogs = response.data;
             } catch (error) {
                 console.error('Error fetching data:', error);
+            } finally {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 250);
+            }
+        },
+        async handlePageChange(page) {
+            this.currentPage = page;
+            await this.fetchPackageData();
+        },
+        // async searchUser(data) {
+        //     try {
+        //         const response = await api.getPackages();
+        //         // this.package = response.data.filter((package) => package);
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // },
+        async statePublish(packageId, status) {
+            try {
+                const updateStatePublish = await api.updatePackage(packageId, {
+                    data: {
+                        isPublish: status
+                    }
+                }).then(() => {
+                    this.fetchPackageData()
+                })
+            } catch (error) {
+                console.log(error);
+
             }
         },
         async deleteItem(id) {
@@ -65,13 +98,13 @@ export default {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await api.deleteBlogs(`${id}`);
+                        await api.deletePackage(`${id}`);
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
                             text: 'Your file has been deleted.',
                             icon: 'success',
                         });
-                        this.fetchBlogData();
+                        this.fetchPackageData();
                     } catch (error) {
                         console.error('Error deleting item:', error);
                         swalWithBootstrapButtons.fire({
@@ -89,24 +122,11 @@ export default {
                 }
             });
         },
-        async statePublish(blogId, status) {
-            try {
-                const updateStatePublish = await api.updateBlogs(blogId, {
-                    data: {
-                        publish: status
-                    }
-                }).then(() => {
-                    this.fetchBlogData()
-                })
-            } catch (error) {
-                console.log(error);
-
-            }
-        },
-        async handlePageChange(page) {
-            this.currentPage = page;
-            await this.fetchBlogData();
-        },
+    },
+    mounted() {
+        this.fetchPackageData().finally(() => {
+            this.isLoading = false;
+        });
     },
 };
 </script>
@@ -117,17 +137,27 @@ export default {
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Blog</h1>
+                    <h1 class="mt-4">Package</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Blog</li>
+                        <li class="breadcrumb-item active">Package</li>
                     </ol>
-                    <div class="card mb-4">
+                    <div class="card mb-4 mt-2 mb-2">
                         <div class="card-header">
                             <div class="row justify-content-between">
                                 <div class="col-auto">
+                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                        @submit.prevent="searchUser(userData)">
+                                        <div class="input-group">
+                                            <input v-model="packageData" class="form-control" type="text"
+                                                placeholder="Search for ?..." aria-label="Search for..."
+                                                aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="col-auto">
-                                    <BlogCreate />
+                                    <packgeCreate />
                                 </div>
                             </div>
                         </div>
@@ -136,23 +166,27 @@ export default {
                         </div>
                         <div v-else>
                             <div class="card-body">
-                                <table class="table table-striped table-hover">
+                                <table class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">Name</th>
-                                            <th class="text-center">Details</th>
+                                            <th>UserName</th>
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Price</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(item, index) in blogs" :key="index">
-                                            <td class="text-center">{{ item.attributes.topic }}</td>
-                                            <td class="text-center">{{ item.attributes.details }}</td>
+                                        <tr v-for="(item, index) in package" :key="index">
+                                            <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
+                                            <td>{{ formatDate(item.attributes.createdAt)
+                                                }}</td>
+                                            <td>{{ item.attributes.price }}</td>
+                                            <td>{{ item.attributes.status }}</td>
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-auto">
-                                                        <div v-if="item.attributes.publish" class="col">
+                                                        <div v-if="item.attributes.isPublish" class="col">
                                                             <button type="button" class="btn btn-success"
                                                                 @click="statePublish(item.id, false)">Active</button>
                                                         </div>
@@ -166,25 +200,24 @@ export default {
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col">
-                                                        <blogEdit :blogId="item.id || 'not found'" />
+                                                        <packageEdit :packageId="item.id" />
+                                                    </div>
+                                                    <div class="col">
+                                                        <packageView :packageId="item.id" />
                                                     </div>
                                                     <div class="col">
                                                         <button class="btn btn-danger btn-block"
                                                             @click="deleteItem(item.id)">Delete</button>
-                                                    </div>
-                                                    <div class="col">
-                                                        <RouterLink :to="'/Blog-Dashboard/view/' + item.id"
-                                                            class="btn btn-info btn-block">View</RouterLink>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                                    @page-change="handlePageChange" />
                             </div>
                         </div>
-                        <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                            @page-change="handlePageChange" />
                     </div>
                 </div>
             </main>
