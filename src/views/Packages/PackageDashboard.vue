@@ -1,3 +1,109 @@
+<template>
+    <div id="layoutSidenav">
+        <SideNavbar />
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">แพ็คเกจ</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Package</li>
+                    </ol>
+                    <div class="card mb-4 mt-2 mb-2">
+                        <div class="card-header">
+                            <div class="row justify-content-between">
+                                <div class="col-auto">
+                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                        @submit.prevent="searchUser(userData)">
+                                        <div class="input-group">
+                                            <input v-model="packageData" class="form-control" type="text"
+                                                placeholder="Search for ?..." aria-label="Search for..."
+                                                aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-auto">
+                                    <packgeCreate />
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading />
+                        </div>
+                        <div v-else>
+                            <div class="card-body">
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>หัวข้อ</th>
+                                            <th class="text-center">วันที่</th>
+                                            <th class="text-center">ราคา</th>
+                                            <th class="text-center">สถานะ</th>
+                                            <th class="text-center">การจัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in package" :key="index">
+                                            <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
+                                            <td>{{ formatDate(item.attributes.createdAt)
+                                                }}</td>
+                                            <td>{{ item.attributes.price }}</td>
+                                            <td>{{ item.attributes.status }}</td>
+                                            <td>
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div v-if="item.attributes.isPublish" class="col">
+                                                            <button type="button" class="btn btn-success"
+                                                                @click="statePublish(item.id, false)">Active</button>
+                                                        </div>
+                                                        <div v-else class="col">
+                                                            <button type="button" class="btn btn-danger"
+                                                                @click="statePublish(item.id, true)">Inactive</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col">
+                                                        <packageEdit :packageId="item.id" />
+                                                    </div>
+                                                    <div class="col">
+                                                        <packageView :packageId="item.id" />
+                                                    </div>
+                                                    <div class="col">
+                                                        <button class="btn btn-danger btn-block"
+                                                            @click="deleteItem(item.id)">Delete</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                                    @page-change="handlePageChange" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</template>
+
 <script>
 import { RouterLink } from 'vue-router';
 import SideNavbar from '@/components/SideNavbar.vue'
@@ -130,109 +236,3 @@ export default {
     },
 };
 </script>
-
-<template>
-    <div id="layoutSidenav">
-        <SideNavbar />
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Package</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Package</li>
-                    </ol>
-                    <div class="card mb-4 mt-2 mb-2">
-                        <div class="card-header">
-                            <div class="row justify-content-between">
-                                <div class="col-auto">
-                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
-                                        @submit.prevent="searchUser(userData)">
-                                        <div class="input-group">
-                                            <input v-model="packageData" class="form-control" type="text"
-                                                placeholder="Search for ?..." aria-label="Search for..."
-                                                aria-describedby="btnNavbarSearch" />
-                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
-                                                    class="fas fa-search"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="col-auto">
-                                    <packgeCreate />
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="isLoading" class="mt-2 mb-2">
-                            <Loading />
-                        </div>
-                        <div v-else>
-                            <div class="card-body">
-                                <table class="table table-striped table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>UserName</th>
-                                            <th class="text-center">Date</th>
-                                            <th class="text-center">Price</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(item, index) in package" :key="index">
-                                            <td>{{ item.attributes.user?.data?.attributes.username || 'No user' }}</td>
-                                            <td>{{ formatDate(item.attributes.createdAt)
-                                                }}</td>
-                                            <td>{{ item.attributes.price }}</td>
-                                            <td>{{ item.attributes.status }}</td>
-                                            <td>
-                                                <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col-auto">
-                                                        <div v-if="item.attributes.isPublish" class="col">
-                                                            <button type="button" class="btn btn-success"
-                                                                @click="statePublish(item.id, false)">Active</button>
-                                                        </div>
-                                                        <div v-else class="col">
-                                                            <button type="button" class="btn btn-danger"
-                                                                @click="statePublish(item.id, true)">Inactive</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col">
-                                                        <packageEdit :packageId="item.id" />
-                                                    </div>
-                                                    <div class="col">
-                                                        <packageView :packageId="item.id" />
-                                                    </div>
-                                                    <div class="col">
-                                                        <button class="btn btn-danger btn-block"
-                                                            @click="deleteItem(item.id)">Delete</button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                                    @page-change="handlePageChange" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-</template>

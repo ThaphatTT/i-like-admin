@@ -44,15 +44,15 @@ const getUser = localStorage.getItem('username');
                     </RouterLink>
 
                     <div class="sb-sidenav-menu-heading">การจัดการ</div>
-                    <RouterLink class="nav-link" to="/tickets">
+                    <!-- <RouterLink class="nav-link" to="/tickets">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         กิจกรรม
-                    </RouterLink>
+                    </RouterLink> -->
                     <RouterLink class="nav-link" to="/tickets">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         ตั๋วแจ้งปัญหา
                     </RouterLink>
-                    <RouterLink class="nav-link" to="/tickets">
+                    <RouterLink class="nav-link" to="/coupons">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         คูปอง
                     </RouterLink>

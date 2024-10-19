@@ -4,7 +4,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Blog</h1>
+                    <h1 class="mt-4">บทความ</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Blog</li>
                     </ol>
@@ -26,10 +26,10 @@
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">Name</th>
-                                            <th class="text-center">Details</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Action</th>
+                                            <th class="text-center">หัวข้อ</th>
+                                            <th class="text-center">คำอธิบาย</th>
+                                            <th class="text-center">สถานะ</th>
+                                            <th class="text-center">การจัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>

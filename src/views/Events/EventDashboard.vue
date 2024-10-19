@@ -1,3 +1,80 @@
+<template>
+    <div id="layoutSidenav">
+        <SideNavbar />
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">กิจกรรม</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Events</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="col-md-12">
+                                <Filtering :optionsData="[
+                                    'ทั้งหมด',
+                                ]" @updateSelection="handleSelectionChange" />
+                            </div>
+                        </div>
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading />
+                        </div>
+                        <div v-else>
+                            <div class="card-body">
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ชื่อกิจกรรม</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in tickets" :key="index">
+                                            <td> {{ item.attributes.topic }}</td>
+                                            <td> {{ item.attributes.status }}</td>
+                                            <td class="text-center">
+                                                <div class="row row-cols-auto justify-content-center">
+                                                    <div class="col-2">
+                                                        <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
+                                                            class="btn btn-info btn-block">View</RouterLink>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button class="btn btn-primary btn-block"
+                                                            v-if="item.attributes.status !== 'เสร็จสิ้น'"
+                                                            @click="handleUpdateSubmit(item.id)">
+                                                            Update
+                                                        </button>
+                                                        <p v-else></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                            @page-change="handlePageChange" />
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</template>
+
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
 import api from '@/vendors/api'
@@ -135,80 +212,3 @@ export default {
     },
 };
 </script>
-
-<template>
-    <div id="layoutSidenav">
-        <SideNavbar />
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Tickets</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Tickets</li>
-                    </ol>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="col-md-12">
-                                <Filtering :optionsData="[
-                                    'ทั้งหมด',
-                                ]" @updateSelection="handleSelectionChange" />
-                            </div>
-                        </div>
-                        <div v-if="isLoading" class="mt-2 mb-2">
-                            <Loading />
-                        </div>
-                        <div v-else>
-                            <div class="card-body">
-                                <table class="table table-striped table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(item, index) in tickets" :key="index">
-                                            <td> {{ item.attributes.topic }}</td>
-                                            <td> {{ item.attributes.status }}</td>
-                                            <td class="text-center">
-                                                <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col-2">
-                                                        <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
-                                                            class="btn btn-info btn-block">View</RouterLink>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button class="btn btn-primary btn-block"
-                                                            v-if="item.attributes.status !== 'เสร็จสิ้น'"
-                                                            @click="handleUpdateSubmit(item.id)">
-                                                            Update
-                                                        </button>
-                                                        <p v-else></p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                            @page-change="handlePageChange" />
-                    </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-</template>

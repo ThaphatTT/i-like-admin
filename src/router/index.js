@@ -31,6 +31,8 @@ import TicketDashboard from "@/views/Tickets/TicketDashboard.vue";
 
 import HistoryDashboard from "@/views/Histories/HistoryDashboard.vue";
 
+import CouponDashboard from "@/views/Coupons/CouponDashboard.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,6 +83,14 @@ const router = createRouter({
       path: "/histories",
       name: "history",
       component: HistoryDashboard,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/coupons",
+      name: "coupons",
+      component: CouponDashboard,
       meta: {
         middleware: auth,
       },

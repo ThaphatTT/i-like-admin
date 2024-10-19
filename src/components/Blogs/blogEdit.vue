@@ -409,6 +409,7 @@ export default {
         }
       });
       try {
+        // Update Blog thumbnail and image
         let uploadThumbnail;
         let uploadImagecover;
         if (this.dropZone.BlogThumbnail) {
@@ -432,33 +433,46 @@ export default {
         this.uploadThumbnail = uploadThumbnail ? uploadThumbnail[0].id : this.blog.coverImgId
         this.uploadImagecover = uploadImagecover ? uploadImagecover[0].id : this.blog.headerImgId
         this.updateBlogImageURL(blogId, this.uploadThumbnail, this.uploadImagecover)
+
+        // update paragraphs
         for (let index = 0; index < this.paragraphs.length; index++) {
           const element1 = this.paragraphs[index]
+
           if (!element1.imageId) {
             let stateCreate = false;
             let uploadParagraph;
             let paragraphImg = new FormData();
-            paragraphImg.append('files', this.paragraphs[index].image);
-            uploadParagraph = await api.upload(paragraphImg);
+
+            if (element1.image) {
+              paragraphImg.append('files', element1.image);
+              uploadParagraph = await api.upload(paragraphImg);
+
+            }
+
             for (let j = 0; j < this.paragraphsconst.length; j++) {
               const element2 = this.paragraphsconst[j]
               if (element1 <= element2) {
                 if (element1.id != element2.id) {
-                  paragraphImg.append('files', this.paragraphs[index].image);
-                  uploadParagraph = await api.upload(paragraphImg);
+                  if (element1.image) {
+                    paragraphImg.append('files', element1.image);
+                    uploadParagraph = await api.upload(paragraphImg);
+                  }
+
                   const createParagraph = await api.createParagraphs({
                     blogId: blogId.toString(),
-                    details: this.paragraphs[index].content,
-                    image: uploadParagraph[0].id,
+                    wysiwyg: element1.content,
+                    image: this.paragraphs[index].image ? uploadParagraph[0].id : null,
+                    img: this.paragraphs[index].image ? uploadParagraph[0].url : ''
                   });
-                  this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
+                  // this.updateParagraphs(createParagraph.data.id, uploadParagraph[0].id);
                   stateCreate = true;
                 }
               }
             }
+
             if (!stateCreate) {
-              let paragraphId = await api.getParagraphId(this.paragraphs[index].paragraphId)
-              paragraphId = paragraphId ? paragraphId : this.paragraphs[index].paragraphId;
+              let paragraphId = await api.getParagraphId(element1.paragraphId)
+              paragraphId = paragraphId ? paragraphId : element1.paragraphId;
               uploadParagraph = uploadParagraph ? uploadParagraph[0].id : this.paragraphs.imageId
               this.updateParagraphs(paragraphId.data.id, uploadParagraph);
             }

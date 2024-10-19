@@ -1,3 +1,95 @@
+<template>
+    <div id="layoutSidenav">
+        <SideNavbar />
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">รายการออเดอร์</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Order</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                                        @submit.prevent="">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" placeholder="Search for ?..."
+                                                aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col row align-items-start mt-2 mb-2">
+                                    <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'สถานะทั้งหมด'"
+                                        :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'"
+                                        :dataText4="'newest order'" @change="handleDropDown(selectedValue)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="isLoading" class="mt-2 mb-2">
+                            <Loading />
+                        </div>
+                        <div v-else class="card-body">
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ไอดี</th>
+                                        <th>ลูกค้า</th>
+                                        <th class="text-center">วันที่</th>
+                                        <th class="text-center">ราคา</th>
+                                        <th class="text-center">ข้อมูลรายละเอียด</th>
+                                        <th class="text-center">สถานะ</th>
+                                        <th class="text-center">การจัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in order" :key="index">
+                                        <td class="text-center">{{ item?.id || 'Not found Order ID' }}</td>
+                                        <td class="text-center">{{ item.attributes?.userId || 'Not found user' }}</td>
+                                        <td class="text-center">{{ formatDate(item.attributes.createdAt)
+                                            }}</td>
+                                        <td class="text-center">{{ item.attributes.price }}</td>
+                                        <td class="text-center">
+                                            <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"
+                                                :customerOrder="item.attributes.userId || 'No user'" />
+                                        </td>
+                                        <td class="text-center">{{ item.attributes.status }}</td>
+                                        <td class="text-center">
+                                            <button v-if="item.attributes.status !== 'เสร็จสิ้น'"
+                                                class="btn btn-primary btn-block"
+                                                @click="handleUpdateSubmit(item.id)">Update</button>
+
+                                            <p v-else class="">...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <Pagination :total-pages="totalPages" :currentPage="currentPage"
+                                @page-change="handlePageChange" />
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</template>
+
 <script>
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -233,95 +325,3 @@ export default {
     },
 };
 </script>
-
-<template>
-    <div id="layoutSidenav">
-        <SideNavbar />
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Order</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Order</li>
-                    </ol>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="row justify-content-between">
-                                <div class="col">
-                                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
-                                        @submit.prevent="">
-                                        <div class="input-group">
-                                            <input class="form-control" type="text" placeholder="Search for ?..."
-                                                aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
-                                                    class="fas fa-search"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="col row align-items-start mt-2 mb-2">
-                                    <sortDropDown @updateSelection="handleUpdateSelection" :dataText1="'สถานะทั้งหมด'"
-                                        :dataText2="'กำลังดำเนินการ'" :dataText3="'เสร็จสิ้น'"
-                                        :dataText4="'newest order'" @change="handleDropDown(selectedValue)" />
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="isLoading" class="mt-2 mb-2">
-                            <Loading />
-                        </div>
-                        <div v-else class="card-body">
-                            <table class="table table-striped table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>OrderID</th>
-                                        <th>UserName</th>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Sub list</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(item, index) in order" :key="index">
-                                        <td class="text-center">{{ item?.id || 'Not found Order ID' }}</td>
-                                        <td class="text-center">{{ item.attributes?.userId || 'Not found user' }}</td>
-                                        <td class="text-center">{{ formatDate(item.attributes.createdAt)
-                                            }}</td>
-                                        <td class="text-center">{{ item.attributes.price }}</td>
-                                        <td class="text-center">
-                                            <subList :dataText="item.attributes.link" :orderId="item.id" :index="index"
-                                                :customerOrder="item.attributes.userId || 'No user'" />
-                                        </td>
-                                        <td class="text-center">{{ item.attributes.status }}</td>
-                                        <td class="text-center">
-                                            <button v-if="item.attributes.status !== 'เสร็จสิ้น'"
-                                                class="btn btn-primary btn-block"
-                                                @click="handleUpdateSubmit(item.id)">Update</button>
-
-                                            <p v-else class="">...</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <Pagination :total-pages="totalPages" :currentPage="currentPage"
-                                @page-change="handlePageChange" />
-
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-</template>

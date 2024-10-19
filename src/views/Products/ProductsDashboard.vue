@@ -4,7 +4,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Products</h1>
+                    <h1 class="mt-4">บริการ</h1>
                     <div class="card mb-4">
                         <div class="card-header justify-contents-between">
                             <div class="row justify-content-between">
@@ -42,13 +42,13 @@
                                 <table class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th class="text-center">Platform</th>
-                                            <th class="text-center">Type</th>
-                                            <th class="text-center">Amount</th>
-                                            <th class="text-center">Price</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th>ชื่อรายการ</th>
+                                            <th class="text-center">แพลตฟอร์ม</th>
+                                            <th class="text-center">ประเภท</th>
+                                            <th class="text-center">จำนวน</th>
+                                            <th class="text-center">ราคา</th>
+                                            <th class="text-center">สถานะ</th>
+                                            <th class="text-center">การจัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>

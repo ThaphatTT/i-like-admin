@@ -208,8 +208,8 @@ export default {
           coverImage: uploadThumbnail[0].id,
           headerImage: uploadImagecover[0].id,
           publish: false,
-          coverImg: this.localPrefix + uploadThumbnail[0].url,
-          headerImg: this.localPrefix + uploadImagecover[0].url,
+          coverImg: this.prefix + uploadThumbnail[0].url,
+          headerImg: this.prefix + uploadImagecover[0].url,
         });
 
         for (let index = 0; index < this.paragraphs.length; index++) {
@@ -225,7 +225,7 @@ export default {
             blogId: createBlog.data.id.toString(),
             wysiwyg: this.paragraphs[index].content,
             image: this.paragraphs[index].image ? uploadParagraph[0].id : null,
-            img: this.paragraphs[index].image ? uploadParagraph[0].url : ''
+            img: this.paragraphs[index].image ? this.prefix + uploadParagraph[0].url : ''
           }).then((res) => {
             Swal.fire({
               position: 'center',
