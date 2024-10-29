@@ -39,6 +39,20 @@
             </h6>
           </div>
           <div>
+            <h6 class="text-black-50 d-inline">Description
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
+                aria-label="default input example" v-model="blog.Description">
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Tags
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
+                aria-label="default input example" v-model="blog.Tags">
+            </h6>
+          </div>
+          <div>
             <h6 class="text-black-50 d-inline">Image cover
               <p class="text-danger d-inline">*</p>
               <div class="mb-3">
@@ -56,19 +70,38 @@
               </div>
             </h6>
           </div>
-          <div>
-            <h6 class="text-black-50 d-inline">Description
-              <p class="text-danger d-inline">*</p>
-              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
-                aria-label="default input example" v-model="blog.Description">
-            </h6>
-          </div>
+
         </div>
         <form>
           <div class="modal-body mb-3">
             <div class="modal-body mb-3 bg-light rounded-1">
               <div v-for="(paragraph, index) in paragraphs" :key="paragraph.id">
                 <h4 class="text-black-50">Paragraph {{ index + 1 }}</h4>
+
+                <div>
+                  <h6 class="text-black-50 d-inline">Paragraph
+                    <p class="text-danger d-inline">*</p>
+                  </h6>
+                  <div class="mb-3">
+                    <tinymce-vue v-model="paragraph.content" api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42"
+                      :init="{
+                        selector: 'textarea#premiumskinsandicons-jam',
+                        skin: 'jam',
+                        icons: 'jam',
+                        plugins: 'code image link lists',
+                        toolbar: 'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
+                        menubar: false,
+                        tinycomments_mode: 'embedded',
+                        tinycomments_author: 'Author name',
+                        mergetags_list: [
+                          { value: 'First.Name', title: 'First Name' },
+                          { value: 'Email', title: 'Email' },
+                        ],
+                        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+                      }" initial-value="" />
+                  </div>
+
+                </div>
                 <div>
                   <h6 class="text-black-50 d-inline">Image
                     <!-- <p class="text-danger d-inline">*</p> -->
@@ -95,33 +128,11 @@
                     <form v-else class="dropzone text-center" :id="paragraph.dropzoneId">
                     </form>
                   </div>
-                </div>
-                <div>
-                  <h6 class="text-black-50 d-inline">Paragraph
-                    <p class="text-danger d-inline">*</p>
-                  </h6>
-                  <div class="mb-3">
-                    <tinymce-vue v-model="paragraph.content" api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42"
-                      :init="{
-                        selector: 'textarea#premiumskinsandicons-jam',
-                        skin: 'jam',
-                        icons: 'jam',
-                        plugins: 'code image link lists',
-                        toolbar: 'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
-                        menubar: false,
-                        tinycomments_mode: 'embedded',
-                        tinycomments_author: 'Author name',
-                        mergetags_list: [
-                          { value: 'First.Name', title: 'First Name' },
-                          { value: 'Email', title: 'Email' },
-                        ],
-                        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-                      }" initial-value="" />
-                  </div>
                   <div class="d-flex justify-content-end mt-2 mb-2">
                     <button class="btn btn-danger" @click="deleteParagraph($event, index)">Delete</button>
                   </div>
                 </div>
+
               </div>
             </div>
             <div>
@@ -168,6 +179,7 @@ export default {
         Description: '',
         coverImgId: '',
         headerImgId: '',
+        Tags: ''
       },
       dropZone: {
         BlogThumbnail: false,
@@ -210,9 +222,11 @@ export default {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          this.deleteDataParagraph(this.paragraphs[index])
+          console.log(this.paragraphs[index]);
+
+          await api.deleteParagraph(this.paragraphs[index].paragraphId)
           this.paragraphs.splice(index, 1);
           Swal.fire({
             title: "Deleted!",
@@ -231,6 +245,7 @@ export default {
         this.BlogImagecover = blog.data.attributes.headerImg
         this.blog.Topic = blog.data.attributes.topic;
         this.blog.Description = blog.data.attributes.details;
+        this.blog.Tags = blog.data.attributes.tags;
         this.blog.coverImgId = (blog.data?.attributes?.coverImage?.data && blog.data.attributes.coverImage.data.length > 0)
           ? blog.data.attributes.coverImage.data[0].id
           : null
@@ -522,11 +537,6 @@ export default {
       } catch (error) {
         console.error("Error updating paragraphs:", error);
       }
-    },
-    async deleteDataParagraph(index) {
-      const getParagraph = await api.getParagraph()
-      const filterIdParagraph = getParagraph.data.filter(paragraph => paragraph.attributes.img == index.image)
-      const deleteDataParagraph = await api.deleteParagraph(filterIdParagraph[0].id)
     },
   },
   mounted() {

@@ -4,10 +4,19 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">โปรโมชั่น</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Promotions</li>
-                    </ol>
+                    <div class="row mt-4 justify-content-between">
+                        <div class="col-4">
+                            <h1 class="mt-4">โปรโมชั่น</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">Promotions</li>
+                            </ol>
+                        </div>
+                        <div class="col-4 text-center align-content-center">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <promotionCreate />
+                            </div>
+                        </div>
+                    </div>
                     <div class="card mb-4 mt-2 mb-2">
                         <div class="card-header">
                             <div class="row justify-content-between">
@@ -21,9 +30,6 @@
                                                     class="fas fa-search"></i></button>
                                         </div>
                                     </form>
-                                </div>
-                                <div class="col-auto">
-                                    <promotionCreate />
                                 </div>
                             </div>
                         </div>
@@ -48,11 +54,11 @@
                                                     <div class="col-auto">
                                                         <div v-if="item.attributes.isPublish" class="col">
                                                             <button type="button" class="btn btn-success"
-                                                                @click="statePublish(item.id, false)">Active</button>
+                                                                @click="statePublish(item.id, false)">เผยแพร่</button>
                                                         </div>
                                                         <div v-else class="col">
                                                             <button type="button" class="btn btn-danger"
-                                                                @click="statePublish(item.id, true)">Inactive</button>
+                                                                @click="statePublish(item.id, true)">ปิด</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -64,7 +70,7 @@
                                                     </div>
                                                     <div class="col">
                                                         <button class="btn btn-danger btn-block"
-                                                            @click="deleteItem(item.id)">Delete</button>
+                                                            @click="deleteItem(item.id)">ลบ</button>
                                                     </div>
                                                     <div class="col">
                                                         <promotionView :promotionId="item.id" />

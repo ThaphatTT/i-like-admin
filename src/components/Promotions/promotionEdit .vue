@@ -148,7 +148,7 @@ export default {
 <template>
     <button type="button" class="btn btn-warning" data-bs-toggle="modal"
         :data-bs-target="'#editPromotion' + this.promotionId">
-        Edit
+        แกไข
     </button>
 
     <div class="modal fade" :id="'editPromotion' + promotionId" data-bs-backdrop="static" data-bs-keyboard="false"

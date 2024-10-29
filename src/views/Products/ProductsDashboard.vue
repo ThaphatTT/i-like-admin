@@ -4,7 +4,19 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">บริการ</h1>
+                    <div class="row mt-4 justify-content-between">
+                        <div class="col-4">
+                            <h1 class="mt-4">รายการบริการ</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">Products</li>
+                            </ol>
+                        </div>
+                        <div class="col-4 text-center align-content-center">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <ProductsCreate />
+                            </div>
+                        </div>
+                    </div>
                     <div class="card mb-4">
                         <div class="card-header justify-contents-between">
                             <div class="row justify-content-between">
@@ -21,9 +33,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col">
-                                    <ProductsCreate />
-                                </div>
+
                                 <div class="col-md-6">
                                     <Filter :optionsData="[
                                         'ทั้งหมด',
@@ -62,17 +72,17 @@
                                             <td class="text-center">{{ item.attributes.platform }}</td>
                                             <td class="text-center">{{ item.attributes.type }}</td>
                                             <td class="text-center">{{ item.attributes.amount }} </td>
-                                            <td class="text-center">{{ item.attributes.price }} baht</td>
+                                            <td class="text-center">{{ item.attributes.price }} บาท</td>
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-auto">
                                                         <div v-if="item.attributes.isPublish" class="col">
                                                             <button type="button" class="btn btn-success"
-                                                                @click="statePublish(item.id, false)">Active</button>
+                                                                @click="statePublish(item.id, false)">เผยแพร่</button>
                                                         </div>
                                                         <div v-else class="col">
                                                             <button type="button" class="btn btn-danger"
-                                                                @click="statePublish(item.id, true)">Inactive</button>
+                                                                @click="statePublish(item.id, true)">ปิด</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -84,7 +94,7 @@
                                                     </div>
                                                     <div class="m-1">
                                                         <button class="btn btn-danger btn-block"
-                                                            @click="deleteItem(item.id)">Delete</button>
+                                                            @click="deleteItem(item.id)">ลบ</button>
                                                     </div>
                                                     <div class="m-1">
                                                         <ProductsView :productId="item.id" />

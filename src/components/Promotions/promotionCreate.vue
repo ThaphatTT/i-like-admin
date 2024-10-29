@@ -92,7 +92,7 @@ export default {
 
 <template>
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPackage">
-    Add
+    เพิ่มโปรโมชั่นใหม่
   </button>
 
   <div class="modal fade" id="createPackage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

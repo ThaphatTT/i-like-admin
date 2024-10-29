@@ -37,7 +37,7 @@ export default {
 <template>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
         :data-bs-target="'#viewPackage' + this.promotionId">
-        View
+        อ่าน
     </button>
 
     <div class="modal fade" :id="'viewPackage' + this.promotionId" data-bs-backdrop="static" data-bs-keyboard="false"

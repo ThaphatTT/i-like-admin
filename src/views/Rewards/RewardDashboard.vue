@@ -144,9 +144,9 @@ export default {
                 <div class="container-fluid px-4">
                     <div class="row mt-4 justify-content-between">
                         <div class="col-4">
-                            <h1 class="mt-4">ตั๋วแจ้งปัญหา</h1>
+                            <h1 class="mt-4">รางวัล</h1>
                             <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">Tickets</li>
+                                <li class="breadcrumb-item active">Rewards</li>
                             </ol>
                         </div>
                         <div class="col-4 text-center align-content-center">

@@ -20,16 +20,20 @@ const getUser = localStorage.getItem('username');
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         แดชบอร์ด
                     </RouterLink>
-                    <RouterLink class="nav-link" to="/blogs">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        บทความ
-                    </RouterLink>
                     <RouterLink class="nav-link" to="/orders">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         รายการออเดอร์
                     </RouterLink>
 
                     <div class="sb-sidenav-menu-heading">บริการ</div>
+                    <RouterLink class="nav-link" to="/blogs">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        บทความ
+                    </RouterLink>
+                    <RouterLink class="nav-link" to="/events">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        กิจกรรม
+                    </RouterLink>
                     <RouterLink class="nav-link" to="/products">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         บริการ
@@ -42,20 +46,26 @@ const getUser = localStorage.getItem('username');
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         โปรโมชั่น
                     </RouterLink>
-
-                    <div class="sb-sidenav-menu-heading">การจัดการ</div>
-                    <!-- <RouterLink class="nav-link" to="/tickets">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        กิจกรรม
-                    </RouterLink> -->
-                    <RouterLink class="nav-link" to="/tickets">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        ตั๋วแจ้งปัญหา
-                    </RouterLink>
                     <RouterLink class="nav-link" to="/coupons">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         คูปอง
                     </RouterLink>
+
+
+                    <div class="sb-sidenav-menu-heading">เครื่องมือ</div>
+                    <RouterLink class="nav-link" to="/coupons">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        ตัวปั๊มออโต้
+                    </RouterLink>
+
+
+                    <div class="sb-sidenav-menu-heading">การจัดการ</div>
+
+                    <RouterLink class="nav-link" to="/tickets">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        ตั๋วแจ้งปัญหา
+                    </RouterLink>
+
                     <RouterLink class="nav-link" to="/histories">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         ประวัติการเงิน

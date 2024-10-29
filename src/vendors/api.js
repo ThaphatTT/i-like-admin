@@ -1,9 +1,10 @@
 import axios from "axios";
 
-// const url = "http://localhost:1338/api";
-const url = 'https://strapi.gainlike-service.com/api'
+const url = "http://localhost:1338/api";
+// const url = 'https://strapi.gainlike-service.com/api'
 
 const api = {
+  // Authentications
   login(data) {
     return new Promise((resolve, reject) => {
       axios
@@ -16,6 +17,25 @@ const api = {
         });
     });
   },
+  getUsers(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/users/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Blogs
   getBlogs(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
@@ -108,6 +128,25 @@ const api = {
         });
     });
   },
+  updateBlog(id, data) {
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${url}/blogs/${id}`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Promotions
   getPromotions(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
@@ -179,6 +218,25 @@ const api = {
         });
     });
   },
+  getPromotionId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/promotions/${id}?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Products
   getProducts(page, pageSize, filter, search) {
     let filtering = "";
     let query = "";
@@ -199,6 +257,23 @@ const api = {
             },
           }
         )
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getProductId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/products/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
         .then((response) => {
           resolve(response.data);
         })
@@ -258,6 +333,8 @@ const api = {
         });
     });
   },
+
+  // Orders
   getOrders(data) {
     return new Promise((resolve, reject) => {
       axios
@@ -366,6 +443,8 @@ const api = {
         });
     });
   },
+
+  // Carts
   queryCarts(id) {
     return new Promise((resolve, reject) => {
       axios
@@ -383,23 +462,8 @@ const api = {
         });
     });
   },
-  getUsers(id) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${url}/users/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
+
+  // Paragraphes
   createParagraphs(data) {
     return new Promise((resolve, reject) => {
       axios
@@ -438,6 +502,59 @@ const api = {
         });
     });
   },
+  getParagraph() {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/paragraphs?populate=*`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  getParagraphId(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${url}/paragraphs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  deleteParagraph(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(`${url}/paragraphs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Image files 
   upload(data) {
     return new Promise((resolve, reject) => {
       axios({
@@ -522,57 +639,6 @@ const api = {
         });
     });
   },
-  getParagraph() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${url}/paragraphs?populate=*`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
-  updateBlog(id, data) {
-    return new Promise((resolve, reject) => {
-      axios
-        .put(`${url}/blogs/${id}`, data, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
-  deleteParagraph(id) {
-    return new Promise((resolve, reject) => {
-      axios
-        .delete(`${url}/paragraphs/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
   deleteImg(id) {
     return new Promise((resolve, reject) => {
       axios
@@ -590,40 +656,8 @@ const api = {
         });
     });
   },
-  getParagraphId(id) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${url}/paragraphs/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
-  getProductId(id) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${url}/products/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
+
+  // Packages
   getPackages(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
@@ -712,23 +746,9 @@ const api = {
         });
     });
   },
-  getPromotionId(id) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${url}/promotions/${id}?populate=*`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
+
+
+  // Tickets
   getTickets(page, pageSize) {
     return new Promise((resolve, reject) => {
       axios
@@ -783,6 +803,91 @@ const api = {
         });
     });
   },
+
+  // Payments history
+  getHistories(page, pageSize) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `${url}/payments?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // Coupons
+  Coupons: {
+    get: (page, pageSize) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${url}/coupons?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    find: (id) => { },
+    create: (data) => { },
+    update: (id, data) => { },
+    delete: (id, data) => { },
+  },
+  // Events and rewards
+  Events: {
+    get: (page, pageSize) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${url}/events?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    find: (id) => { },
+    create: (data) => { },
+    update: (id, data) => { },
+    delete: (id, data) => { },
+  },
+  Rewards: {
+    get: () => { },
+    find: (id) => { },
+    create: (data) => { },
+    update: (id, data) => { },
+    delete: (id, data) => { },
+  },
+
 };
 
 export default api;

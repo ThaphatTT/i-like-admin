@@ -28,30 +28,18 @@
                                             <th>ชื่อผู้ใช้</th>
                                             <th>ประเภท</th>
                                             <th>สถานะ</th>
-                                            <th>ช่วงเวลา</th>
+                                            <th>วันที่</th>
                                             <th>จำนวนเงิน</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in tickets" :key="index">
-                                            <td> {{ item.attributes.topic }}</td>
+                                            <td> {{ item.id }}</td>
+                                            <td> {{ item.attributes.username }}</td>
+                                            <td> {{ item.attributes.type }}</td>
                                             <td> {{ item.attributes.status }}</td>
-                                            <td class="text-center">
-                                                <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col-2">
-                                                        <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
-                                                            class="btn btn-info btn-block">View</RouterLink>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button class="btn btn-primary btn-block"
-                                                            v-if="item.attributes.status !== 'เสร็จสิ้น'"
-                                                            @click="handleUpdateSubmit(item.id)">
-                                                            Update
-                                                        </button>
-                                                        <p v-else></p>
-                                                    </div>
-                                                </div>
-                                            </td>
+                                            <td> {{ new Date(item.attributes.createdAt).toLocaleDateString() }} </td>
+                                            <td> {{ item.attributes.amount }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -80,12 +68,11 @@
 
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vendors/api'
 import Pagination from '@/components/Pagination.vue';
-
-import Loading from '@/components/Loading.vue';
 import Filtering from '@/components/Filtering.vue';
+import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
+import api from '@/vendors/api'
 
 export default {
     components: {
@@ -105,9 +92,18 @@ export default {
         };
     },
     methods: {
-        async fetchTicketsData(page = this.currentPage, items = this.itemsInPage) {
+        async fetchHistoriesData(page = this.currentPage, items = this.itemsInPage) {
             try {
-                const response = await api.getTickets(page, items);
+                const response = await api.getHistories(page, items)
+                    .then(async (result) => {
+                        for (let i = 0; i < result.data.length; i++) {
+                            const element = result.data[i];
+                            const username = await api.getUsers(element.attributes.userId)
+                            element.attributes.username = username.data.username
+                        }
+                        return result;
+
+                    })
                 this.tickets = response.data;
                 this.totalPages = response.meta.pagination.pageCount;
                 console.log(this.tickets);
@@ -207,7 +203,7 @@ export default {
         },
     },
     async created() {
-        await this.fetchTicketsData()
+        await this.fetchHistoriesData()
             .catch((error) => console.log(error))
             .finally(() => {
                 this.isLoading = false;

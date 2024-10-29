@@ -4,20 +4,21 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">บทความ</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Blog</li>
-                    </ol>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="row justify-content-between">
-                                <div class="col-auto">
-                                </div>
-                                <div class="col-auto">
-                                    <BlogCreate />
-                                </div>
+                    <div class="row mt-4 justify-content-between">
+                        <div class="col-4">
+                            <h1 class="mt-4">บทความ</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">Blog</li>
+                            </ol>
+                        </div>
+                        <div class="col-4 align-content-center">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <BlogCreate />
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card mb-4">
                         <div v-if="isLoading" class="mt-2 mb-2">
                             <Loading />
                         </div>

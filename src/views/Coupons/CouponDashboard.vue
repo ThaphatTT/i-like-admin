@@ -30,23 +30,28 @@
                                             <th>จำนวน</th>
                                             <th>ประเภท</th>
                                             <th>วันหมดอายุ</th>
+                                            <th class="text-center">การจัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in tickets" :key="index">
-                                            <td> {{ item.attributes.topic }}</td>
-                                            <td> {{ item.attributes.status }}</td>
+                                            <td> {{ item.id }}</td>
+                                            <td> {{ item.attributes.code }}</td>
+                                            <td> {{ item.attributes.descriptions }}</td>
+                                            <td> {{ item.attributes.limits }}</td>
+                                            <td> {{ item.attributes.type }}</td>
+                                            <td> {{ item.attributes.expiredDate }}</td>
                                             <td class="text-center">
                                                 <div class="row row-cols-auto justify-content-center">
-                                                    <div class="col-2">
+                                                    <div class="col-2 me-4">
                                                         <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
-                                                            class="btn btn-info btn-block">View</RouterLink>
+                                                            class="btn btn-info btn-block">แก้ไข</RouterLink>
                                                     </div>
                                                     <div class="col-2">
                                                         <button class="btn btn-primary btn-block"
                                                             v-if="item.attributes.status !== 'เสร็จสิ้น'"
                                                             @click="handleUpdateSubmit(item.id)">
-                                                            Update
+                                                            ลบ
                                                         </button>
                                                         <p v-else></p>
                                                     </div>
@@ -105,9 +110,9 @@ export default {
         };
     },
     methods: {
-        async fetchTicketsData(page = this.currentPage, items = this.itemsInPage) {
+        async fetchCouponsData(page = this.currentPage, items = this.itemsInPage) {
             try {
-                const response = await api.getTickets(page, items);
+                const response = await api.Coupons.get(page, items);
                 this.tickets = response.data;
                 this.totalPages = response.meta.pagination.pageCount;
                 console.log(this.tickets);
@@ -115,32 +120,9 @@ export default {
                 console.error('Error fetching data:', error);
             }
         },
-        changeLanguage(data) {
-            if (data === true) {
-                return 'เผยแพร่แล้ว';
-            } else if (data === false) {
-                return 'ยังไม่ได้เผยแพร่';
-            } else {
-                return 'ไม่พบข้อมูล';
-            }
-        },
-        handlePageChange(data) {
-            this.currentPage = data;
-        },
-        async statePublish(promotionId, status) {
-            try {
-                const updateStatePublish = await api.updatePromotions(promotionId, {
-                    data: {
-                        isPublish: status
-                    }
-                }).then(() => {
-                    this.fetchTicketsData()
-                })
-            } catch (error) {
-                console.log(error);
-
-            }
-        },
+        // handlePageChange(data) {
+        //     this.currentPage = data;
+        // },
         async handlePageChange(page) {
             this.currentPage = page;
             await this.fetchTicketsData();
@@ -207,7 +189,7 @@ export default {
         },
     },
     async created() {
-        await this.fetchTicketsData()
+        await this.fetchCouponsData()
             .catch((error) => console.log(error))
             .finally(() => {
                 this.isLoading = false;

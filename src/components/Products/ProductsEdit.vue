@@ -86,7 +86,7 @@ export default {
 <template>
     <button type="button" class="btn btn-warning" data-bs-toggle="modal"
         :data-bs-target="'#editProduct' + this.productId">
-        Edit
+        แก้ไข
     </button>
 
     <div class="modal fade" :id="'editProduct' + this.productId" data-bs-backdrop="static" data-bs-keyboard="false"

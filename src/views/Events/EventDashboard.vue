@@ -1,21 +1,27 @@
 <template>
+
     <div id="layoutSidenav">
         <SideNavbar />
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">กิจกรรม</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Events</li>
-                    </ol>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="col-md-12">
-                                <Filtering :optionsData="[
-                                    'ทั้งหมด',
-                                ]" @updateSelection="handleSelectionChange" />
+                    <div class="row mt-4 justify-content-between">
+                        <div class="col-4">
+                            <h1 class="mt-4">กิจกรรม</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">Events</li>
+                            </ol>
+                        </div>
+                        <div class="col-4 text-center align-content-center">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop">เพิ่มกิจกกรรมใหม่</button>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card mb-4">
+
                         <div v-if="isLoading" class="mt-2 mb-2">
                             <Loading />
                         </div>
@@ -25,25 +31,25 @@
                                     <thead>
                                         <tr>
                                             <th>ชื่อกิจกรรม</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>หมดเขต</th>
+                                            <th>การจัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in tickets" :key="index">
                                             <td> {{ item.attributes.topic }}</td>
-                                            <td> {{ item.attributes.status }}</td>
+                                            <td> {{ item.attributes.expiredDate }}</td>
                                             <td class="text-center">
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-2">
                                                         <RouterLink :to="'/Ticket-Dashboard/view/' + item.id"
-                                                            class="btn btn-info btn-block">View</RouterLink>
+                                                            class="btn btn-info btn-block">แก้ไข</RouterLink>
                                                     </div>
                                                     <div class="col-2">
                                                         <button class="btn btn-primary btn-block"
                                                             v-if="item.attributes.status !== 'เสร็จสิ้น'"
                                                             @click="handleUpdateSubmit(item.id)">
-                                                            Update
+                                                            ลบ
                                                         </button>
                                                         <p v-else></p>
                                                     </div>
@@ -73,16 +79,21 @@
             </footer>
         </div>
     </div>
+
+    <EventCreate />
+
+
 </template>
 
 <script>
 import SideNavbar from '@/components/SideNavbar.vue'
-import api from '@/vendors/api'
 import Pagination from '@/components/Pagination.vue';
-
-import Loading from '@/components/Loading.vue';
 import Filtering from '@/components/Filtering.vue';
+import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
+import api from '@/vendors/api'
+
+import EventCreate from '@/components/Events/create.vue';
 
 export default {
     components: {
@@ -90,6 +101,7 @@ export default {
         SideNavbar,
         Filtering,
         Pagination,
+        EventCreate
     },
     data() {
         return {
@@ -102,42 +114,20 @@ export default {
         };
     },
     methods: {
-        async fetchTicketsData(page = this.currentPage, items = this.itemsInPage) {
+        async fetchEventsData(page = this.currentPage, items = this.itemsInPage) {
             try {
-                const response = await api.getTickets(page, items);
+                const response = await api.Events.get(page, items);
                 this.tickets = response.data;
                 this.totalPages = response.meta.pagination.pageCount;
                 console.log(this.tickets);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         },
-        changeLanguage(data) {
-            if (data === true) {
-                return 'เผยแพร่แล้ว';
-            } else if (data === false) {
-                return 'ยังไม่ได้เผยแพร่';
-            } else {
-                return 'ไม่พบข้อมูล';
-            }
-        },
-        handlePageChange(data) {
-            this.currentPage = data;
-        },
-        async statePublish(promotionId, status) {
-            try {
-                const updateStatePublish = await api.updatePromotions(promotionId, {
-                    data: {
-                        isPublish: status
-                    }
-                }).then(() => {
-                    this.fetchTicketsData()
-                })
-            } catch (error) {
-                console.log(error);
-
-            }
-        },
+        // handlePageChange(data) {
+        //     this.currentPage = data;
+        // },
         async handlePageChange(page) {
             this.currentPage = page;
             await this.fetchTicketsData();
@@ -204,7 +194,7 @@ export default {
         },
     },
     async created() {
-        await this.fetchTicketsData()
+        await this.fetchEventsData()
             .catch((error) => console.log(error))
             .finally(() => {
                 this.isLoading = false;

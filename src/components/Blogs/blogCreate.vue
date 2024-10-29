@@ -1,6 +1,6 @@
 <template>
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Add
+    เพิ่มบทความใหม่
   </button>
 
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -23,8 +23,22 @@
           <div>
             <h6 class="text-black-50 d-inline">Topic
               <p class="text-danger d-inline">*</p>
-              <input class="form-control mb-3" type="text" placeholder="Please, Input your topic."
+              <input class="form-control mb-3" type="text" placeholder="Please, fill in your topic."
                 aria-label="default input example" v-model="blog.Topic">
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Description
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, fill in your description."
+                aria-label="default input example" v-model="blog.Description">
+            </h6>
+          </div>
+          <div>
+            <h6 class="text-black-50 d-inline">Tags
+              <p class="text-danger d-inline">*</p>
+              <input class="form-control mb-3" type="text" placeholder="Please, fill in your tags."
+                aria-label="default input example" v-model="blog.Tags">
             </h6>
           </div>
           <div>
@@ -35,27 +49,14 @@
               </div>
             </h6>
           </div>
-          <div>
-            <h6 class="text-black-50 d-inline">Description
-              <p class="text-danger d-inline">*</p>
-              <input class="form-control mb-3" type="text" placeholder="Please, Input your description."
-                aria-label="default input example" v-model="blog.Description">
-            </h6>
-          </div>
+
         </div>
         <form>
           <div class="modal-body mb-3">
             <div class="modal-body mb-3 bg-light rounded-1">
               <div v-for="(paragraph, index) in paragraphs" :key="paragraph.id">
                 <h4 class="text-black-50">Paragraph {{ index + 1 }}</h4>
-                <div>
-                  <h6 class="text-black-50 d-inline">Image
-                    <!-- <p class="text-danger d-inline">*</p> -->
-                  </h6>
-                  <div class="mb-3">
-                    <form class="dropzone text-center" :id="'paragraph-' + parseInt(index + 1)"></form>
-                  </div>
-                </div>
+
                 <div>
                   <h6 class="text-black-50 d-inline">Paragraph
                     <p class="text-danger d-inline">*</p>
@@ -78,6 +79,15 @@
                         ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
                       }" initial-value="" />
 
+                  </div>
+
+                </div>
+                <div>
+                  <h6 class="text-black-50 d-inline">Image
+                    <!-- <p class="text-danger d-inline">*</p> -->
+                  </h6>
+                  <div class="mb-3">
+                    <form class="dropzone text-center" :id="'paragraph-' + parseInt(index + 1)"></form>
                   </div>
                   <div class="d-flex justify-content-end mt-2 mb-2">
                     <button class="btn btn-danger" @click="deleteParagraph($event, index)">Delete</button>
@@ -120,6 +130,7 @@ export default {
       blog: {
         Topic: '',
         Description: '',
+        Tags: ''
       },
       prefix: "https://strapi.gainlike-service.com",
       localPrefix: 'http://localhost:1338',
@@ -205,6 +216,7 @@ export default {
         const createBlog = await api.createBlogs({
           topic: blog.Topic,
           details: blog.Description,
+          tags: blog.Tags,
           coverImage: uploadThumbnail[0].id,
           headerImage: uploadImagecover[0].id,
           publish: false,
