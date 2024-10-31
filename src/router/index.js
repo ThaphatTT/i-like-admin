@@ -24,6 +24,9 @@ import CouponDashboard from "@/views/Coupons/CouponDashboard.vue";
 
 import EventDashboard from "@/views/Events/EventDashboard.vue";
 
+import RewardDashboard from "@/views/Rewards/RewardDashboard.vue";
+
+import TicketView from "@/components/Tickets/ticketView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -114,6 +117,22 @@ const router = createRouter({
       path: "/tickets",
       name: "ticket-dashboard",
       component: TicketDashboard,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/tickets/view/:id",
+      name: "ticket-view",
+      component: TicketView,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/rewards",
+      name: "reward-dashboard",
+      component: RewardDashboard,
       meta: {
         middleware: auth,
       },

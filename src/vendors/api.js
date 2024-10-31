@@ -554,7 +554,7 @@ const api = {
     });
   },
 
-  // Image files 
+  // Image files
   upload(data) {
     return new Promise((resolve, reject) => {
       axios({
@@ -747,7 +747,6 @@ const api = {
     });
   },
 
-
   // Tickets
   getTickets(page, pageSize) {
     return new Promise((resolve, reject) => {
@@ -848,10 +847,42 @@ const api = {
           });
       });
     },
-    find: (id) => { },
-    create: (data) => { },
-    update: (id, data) => { },
-    delete: (id, data) => { },
+    find: (id) => {},
+    create: (data) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${url}/coupons`, data, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    update: (id, data) => {},
+    delete: (id, data) => {
+      return new Promise((reslove, reject) => {
+        axios
+          .delete(`${url}/coupons/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            reslove(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
   // Events and rewards
   Events: {
@@ -875,19 +906,133 @@ const api = {
           });
       });
     },
-    find: (id) => { },
-    create: (data) => { },
-    update: (id, data) => { },
-    delete: (id, data) => { },
+    find: (id) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${url}/events/${id}?populate=*`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    create: (data) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${url}/events`, data, {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    update: (id, data) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .put(`${url}/events/${id}`, data, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    delete: (id, data) => {
+      return new Promise((reslove, reject) => {
+        axios
+          .delete(`${url}/events/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            reslove(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
   Rewards: {
-    get: () => { },
-    find: (id) => { },
-    create: (data) => { },
-    update: (id, data) => { },
-    delete: (id, data) => { },
+    get: (page, pageSize) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${url}/rewards?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    find: (id) => {},
+    create: (data) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${url}/rewards`, data, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    update: (id, data) => {},
+    delete: (id, data) => {
+      return new Promise((reslove, reject) => {
+        axios
+          .delete(`${url}/rewards/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            reslove(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
-
 };
 
 export default api;

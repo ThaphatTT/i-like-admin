@@ -11,7 +11,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">สร้างคูปองใหม่</h5>
+          <h5 class="modal-title" id="exampleModalLabel">สร้างรางวัลใหม่</h5>
           <button
             type="button"
             class="btn-close"
@@ -22,9 +22,21 @@
         <div class="modal-body">
           <div class="row mb-3 mt-3">
             <div class="col-md-12">
+              <div class="fw-bold mb-1 text-star">ผู้ใช้</div>
+              <input
+                v-model="reward.user"
+                class="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                placeholder="ผู้ใช้ lorem..."
+              />
+            </div>
+          </div>
+          <div class="row mb-3 mt-3">
+            <div class="col-md-12">
               <div class="fw-bold mb-1 text-star">โค๊ด</div>
               <input
-                v-model="coupon.code"
+                v-model="reward.code"
                 class="form-control"
                 id="exampleFormControlTextarea1"
                 rows="3"
@@ -36,7 +48,7 @@
             <div class="col-md-6">
               <div class="fw-bold mb-1 text-star">จำกัด</div>
               <input
-                v-model="coupon.limits"
+                v-model="reward.limits"
                 id="numberInput"
                 type="number"
                 class="form-control"
@@ -47,7 +59,7 @@
             <div class="col-md-6">
               <div class="fw-bold mb-1 text-star">จำนวน</div>
               <input
-                v-model="coupon.amount"
+                v-model="reward.amount"
                 id="numberInput"
                 type="number"
                 class="form-control"
@@ -60,7 +72,7 @@
             <div class="col-md-6">
               <div class="fw-bold mb-1 text-star">ประเภท</div>
               <input
-                v-model="coupon.type"
+                v-model="reward.type"
                 class="form-control"
                 rows="3"
                 placeholder="ประเภท lorem..."
@@ -69,7 +81,7 @@
             <div class="col-md-6">
               <div class="fw-bold mb-1 text-star">หน่วย</div>
               <input
-                v-model="coupon.unit"
+                v-model="reward.unit"
                 class="form-control"
                 rows="3"
                 placeholder="หน่วย lorem..."
@@ -80,7 +92,7 @@
             <div class="col-md-12">
               <div class="fw-bold mb-1 text-star">ข้อมูลเพิ่มเติม</div>
               <textarea
-                v-model="coupon.descriptions"
+                v-model="reward.descriptions"
                 class="form-control"
                 id="exampleFormControlTextarea1"
                 rows="3"
@@ -97,7 +109,7 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary" @click="createCoupon()">
+          <button type="button" class="btn btn-primary" @click="createReward()">
             Create
           </button>
         </div>
@@ -112,7 +124,8 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      coupon: {
+      reward: {
+        user: null,
         code: null,
         limits: null,
         amount: null,
@@ -123,7 +136,7 @@ export default {
     };
   },
   methods: {
-    async createCoupon() {
+    async createReward() {
       Swal.fire({
         title: "กำลังโหลด...",
         text: "กรุณารอสักครู่",
@@ -135,14 +148,15 @@ export default {
         },
       });
       try {
-        const couponCreate = await api.Coupons.create({
+        const rewardCreate = await api.Rewards.create({
           data: {
-            code: this.coupon.code,
-            limits: this.coupon.limits,
-            amount: this.coupon.amount,
-            type: this.coupon.type,
-            unit: this.coupon.unit,
-            descriptions: this.coupon.descriptions,
+            user: this.reward.user,
+            code: this.reward.code,
+            limits: this.reward.limits,
+            amount: this.reward.amount,
+            type: this.reward.type,
+            unit: this.reward.unit,
+            descriptions: this.reward.descriptions,
           },
         });
         Swal.fire({
