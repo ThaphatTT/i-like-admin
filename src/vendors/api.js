@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = "http://localhost:1338/api";
-// const url = 'https://strapi.gainlike-service.com/api'
+// const url = "http://localhost:1338/api";
+const url = 'https://strapi.gainlike-service.com/api'
 
 const api = {
   // Authentications
