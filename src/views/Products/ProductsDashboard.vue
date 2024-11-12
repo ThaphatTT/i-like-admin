@@ -34,7 +34,13 @@
                                     </form>
                                 </div>
 
+
                                 <div class="col-md-6">
+                                    <Filter :optionsData="[
+                                        'ประเภท',
+                                        'ไทย',
+                                        'ต่างชาติ',
+                                        '-',]" @updateSelection="handleFilterSelectionType" />
                                     <Filter :optionsData="[
                                         'ทั้งหมด',
                                         'facebook',
@@ -42,8 +48,10 @@
                                         'twitter',
                                         'youtube',
                                         'shopee',
-                                        'tiktok',]" @updateSelection="handleFilterSelection" />
+                                        'tiktok',
+                                        'lemon8']" @updateSelection="handleFilterSelection" />
                                 </div>
+
                             </div>
                         </div>
 
@@ -55,8 +63,10 @@
                                             <th>ชื่อรายการ</th>
                                             <th class="text-center">แพลตฟอร์ม</th>
                                             <th class="text-center">ประเภท</th>
-                                            <th class="text-center">จำนวน</th>
+                                            <th class="text-center" @click="sortProductsByPrice">จำนวน <i
+                                                    class="fas fa-sort"></i></th>
                                             <th class="text-center">ราคา</th>
+
                                             <th class="text-center">สถานะ</th>
                                             <th class="text-center">การจัดการ</th>
                                         </tr>
@@ -152,6 +162,7 @@ export default {
     data() {
         return {
             productName: '',
+            type: 'ประเภท',
             selectedFilter: 'ทั้งหมด',
             products: [],
             isLoading: true,
@@ -167,7 +178,7 @@ export default {
         async fetchProductData(page = this.currentPage) {
             try {
                 this.isLoading = true;
-                const response = await api.getProducts(page, this.itemsPerPage, this.selectedFilter, this.productName);
+                const response = await api.getProducts(page, this.itemsPerPage, this.selectedFilter, this.type, this.productName);
                 this.products = response.data;
                 this.totalPages = response.meta.pagination.pageCount;
             } catch (error) {
@@ -185,6 +196,10 @@ export default {
         },
         handleFilterSelection(filter) {
             this.selectedFilter = filter;
+            this.searchAndFilter();
+        },
+        handleFilterSelectionType(filter) {
+            this.type = filter;
             this.searchAndFilter();
         },
         async handlePageChange(page) {
@@ -247,6 +262,16 @@ export default {
                 }
             });
         },
+        // Add this sorting function
+        sortProductsByPrice() {
+            if (this.sortOrder === 'asc') {
+                this.products.sort((a, b) => a.attributes.amount - b.attributes.amount);
+                this.sortOrder = 'desc';
+            } else {
+                this.products.sort((a, b) => b.attributes.amount - a.attributes.amount);
+                this.sortOrder = 'asc';
+            }
+        }
     }
 };
 </script>

@@ -13,12 +13,7 @@
             </div>
             <div class="col-4 text-center align-content-center">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#staticBackdrop"
-                >
+                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   เพิ่มกิจกกรรมใหม่
                 </button>
               </div>
@@ -28,10 +23,7 @@
           <div class="card mb-4">
             <div class="card-header">
               <div class="col-md-12">
-                <Filtering
-                  :optionsData="['ทั้งหมด']"
-                  @updateSelection="handleSelectionChange"
-                />
+                <Filtering :optionsData="['ทั้งหมด']" @updateSelection="handleSelectionChange" />
               </div>
             </div>
             <div v-if="isLoading" class="mt-2 mb-2">
@@ -61,19 +53,16 @@
                       <td>{{ item.attributes.expiredDate }}</td>
                       <td class="text-center">
                         <div class="row row-cols-auto justify-content-center">
-                          <div class="col-2 me-4">
+                          <!-- <div class="col-2 me-4">
                             <RouterLink
                               :to="'/Ticket-Dashboard/view/' + item.id"
                               class="btn btn-info btn-block"
                               >แก้ไข</RouterLink
                             >
-                          </div>
-                          <div class="col-2">
-                            <button
-                              class="btn btn-primary btn-block"
-                              v-if="item.attributes.status !== 'เสร็จสิ้น'"
-                              @click="deleteItem(item.id)"
-                            >
+                          </div> -->
+                          <div class="col-12">
+                            <button class="btn btn-primary btn-block" v-if="item.attributes.status !== 'เสร็จสิ้น'"
+                              @click="deleteItem(item.id)">
                               ลบ
                             </button>
                             <p v-else></p>
@@ -85,11 +74,7 @@
                 </table>
               </div>
             </div>
-            <Pagination
-              :total-pages="totalPages"
-              :currentPage="currentPage"
-              @page-change="handlePageChange"
-            />
+            <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange" />
           </div>
         </div>
       </main>

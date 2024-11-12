@@ -237,9 +237,13 @@ const api = {
   },
 
   // Products
-  getProducts(page, pageSize, filter, search) {
+  getProducts(page, pageSize, filter, type, search) {
+    let typing = '';
     let filtering = "";
     let query = "";
+    if (type && type != "ประเภท") {
+      typing = `&filters[type][$eq]=${type}`;
+    }
     if (filter && filter != "ทั้งหมด") {
       filtering = `&filters[platform][$eq]=${filter}`;
     }
@@ -249,7 +253,7 @@ const api = {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `${url}/products?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}${filtering}${query}`,
+          `${url}/products?sort[0]=id:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}${filtering}${query}${typing}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -847,7 +851,7 @@ const api = {
           });
       });
     },
-    find: (id) => {},
+    find: (id) => { },
     create: (data) => {
       return new Promise((resolve, reject) => {
         axios
@@ -865,7 +869,7 @@ const api = {
           });
       });
     },
-    update: (id, data) => {},
+    update: (id, data) => { },
     delete: (id, data) => {
       return new Promise((reslove, reject) => {
         axios
@@ -996,7 +1000,7 @@ const api = {
           });
       });
     },
-    find: (id) => {},
+    find: (id) => { },
     create: (data) => {
       return new Promise((resolve, reject) => {
         axios
@@ -1014,7 +1018,7 @@ const api = {
           });
       });
     },
-    update: (id, data) => {},
+    update: (id, data) => { },
     delete: (id, data) => {
       return new Promise((reslove, reject) => {
         axios
@@ -1033,6 +1037,28 @@ const api = {
       });
     },
   },
+  Farm: {
+    get: (page, pageSize, platform = '', status = '') => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${url}/farms?sort[0]=id:asc&pagination[page]=${page}&pagination[pageSize]=${pageSize}&filters[status][$contains]=${status}&filters[platform][$contains]=${platform}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+  }
 };
 
 export default api;

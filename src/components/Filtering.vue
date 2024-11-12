@@ -19,7 +19,6 @@ export default {
     methods: {
         handleSelectionChange(event) {
             if (event == 'ทั้งหมด') { event = '' }
-
             this.$emit('updateSelection', event.target.value);
         }
     }

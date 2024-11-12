@@ -117,11 +117,8 @@ export default {
                             <select v-model="product.attributes.service" class="form-select"
                                 aria-label="Default select example">
                                 <option value="view">view</option>
-                                <option value="add">instagram</option>
-                                <option value="twitter">twitter</option>
-                                <option value="youtube">youtube</option>
-                                <option value="shopee">shopee</option>
-                                <option value="tiktok">tiktok</option>
+                                <option value="like">like</option>
+                                <option value="follow">follow</option>
                             </select>
                         </div>
                     </div>
@@ -144,6 +141,7 @@ export default {
                                 <option value="youtube">youtube</option>
                                 <option value="shopee">shopee</option>
                                 <option value="tiktok">tiktok</option>
+                                <option value="tiktok">lemon8</option>
                             </select>
                         </div>
                         <div class="col-md-3">

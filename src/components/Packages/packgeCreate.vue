@@ -138,6 +138,7 @@ export default {
                 <option value="youtube">youtube</option>
                 <option value="shopee">shopee</option>
                 <option value="tiktok">tiktok</option>
+                <option value="tiktok">lemon8</option>
               </select>
             </div>
           </div>

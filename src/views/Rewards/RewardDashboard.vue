@@ -116,12 +116,7 @@ export default {
             </div>
             <div class="col-4 text-center align-content-center">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#staticBackdrop"
-                >
+                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   เพิ่มรางวัลใหม่
                 </button>
               </div>
@@ -130,10 +125,7 @@ export default {
           <div class="card mb-4">
             <div class="card-header">
               <div class="col-md-12">
-                <Filtering
-                  :optionsData="['ทั้งหมด']"
-                  @updateSelection="handleSelectionChange"
-                />
+                <Filtering :optionsData="['ทั้งหมด']" @updateSelection="handleSelectionChange" />
               </div>
             </div>
             <div v-if="isLoading" class="mt-2 mb-2">
@@ -144,24 +136,25 @@ export default {
                 <table class="table table-striped table-hover table-bordered">
                   <thead>
                     <tr>
-                      <th>ชื่อผู้ใช้</th>
-                      <th>หัวข้อ</th>
-                      <th>สถานะ</th>
-                      <th>ช่วงเวลา</th>
+                      <th>โค้ด</th>
+                      <th>คำอธิบาย</th>
+                      <th>ประเภท</th>
+                      <th>หน่วย</th>
+                      <th>วันหมดอายุ</th>
                       <th>จัดการ</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in rewards" :key="index">
-                      <td>{{ item.attributes.user }}</td>
+                      <td>{{ item.attributes.code }}</td>
+                      <td>{{ item.attributes.descriptions }}</td>
                       <td>{{ item.attributes.type }}</td>
+                      <td>{{ item.attributes.unit }}</td>
+                      <td>{{ item.attributes.expiredDate }}</td>
                       <td class="text-center">
                         <div class="row row-cols-auto justify-content-center">
                           <div class="col">
-                            <button
-                              class="btn btn-danger btn-block"
-                              @click="deleteItem(item.id)"
-                            >
+                            <button class="btn btn-danger btn-block" @click="deleteItem(item.id)">
                               ลบ
                             </button>
                           </div>
@@ -172,11 +165,7 @@ export default {
                 </table>
               </div>
             </div>
-            <Pagination
-              :total-pages="totalPages"
-              :currentPage="currentPage"
-              @page-change="handlePageChange"
-            />
+            <Pagination :total-pages="totalPages" :currentPage="currentPage" @page-change="handlePageChange" />
           </div>
         </div>
       </main>

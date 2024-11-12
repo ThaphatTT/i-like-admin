@@ -43,7 +43,7 @@ export default {
 
 <template>
   <nav aria-label="Page navigation example">
-    <ul class="pagination">
+    <ul class="pagination justify-content-center">
       <li class="page-item" :class="{ disabled: currentPage === 1 }">
         <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>

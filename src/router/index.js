@@ -28,6 +28,8 @@ import RewardDashboard from "@/views/Rewards/RewardDashboard.vue";
 
 import TicketView from "@/components/Tickets/ticketView.vue";
 
+import Farm from "@/views/Farm/farm.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -133,6 +135,14 @@ const router = createRouter({
       path: "/rewards",
       name: "reward-dashboard",
       component: RewardDashboard,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/farm",
+      name: "farm",
+      component: Farm,
       meta: {
         middleware: auth,
       },
