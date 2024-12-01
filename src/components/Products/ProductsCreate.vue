@@ -74,34 +74,42 @@ export default {
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Create a Product</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">เพิ่มบริการใหม่</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div>
-                        <div class="fw-bold mb-1  text-start">Details</div>
+                        <div class="fw-bold mb-1  text-start">รายละเอียด</div>
                         <input v-model="product.details" class="form-control" id="inputLastName" type="text"
-                            placeholder="Please, Input a product details." />
+                            placeholder="ชื่อบริการ" />
                     </div>
                     <div class="row mb-3 mt-3">
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <div class="fw-bold mb-1 text-star">Link</div>
                             <input v-model="product.link" class="form-control" id="inputLastName" type="text"
                                 placeholder="Please, Input a customer link." />
-                        </div>
+                        </div> -->
                         <div class="col-md-6">
-                            <div class="fw-bold mb-1">Service</div>
+                            <div class="fw-bold mb-1">บริการ</div>
                             <select v-model="product.service" class="form-select" aria-label="Default select example">
-                                <option value="view">view</option>
-                                <option value="like">like</option>
-                                <option value="follow">follow</option>
+                                <option value="view">ยอดวิว</option>
+                                <option value="like">ไลก์</option>
+                                <option value="follow">ติดตาม</option>
+                                <option value="save post">บันทึกโพสต์</option>
+                                <option value="comment">คอมเม้นท์</option>
+                                <option value="live">ไลฟ์</option>
+                                <option value="share post">แชร์โพสต์</option>
+                                <option value="month like">ไลก์รายเดือน</option>
+                                <option value="like + follow">ไลก์ + ติดตาม</option>
+                                <option value="emoji">อีโมจิ</option>
+                                <option value="add member">เพิ่มเข้ากลุ่ม</option>
 
                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <div class="fw-bold mb-1">Customer type</div>
+                            <div class="fw-bold mb-1">ประเภท</div>
                             <select v-model="product.customerType" class="form-select"
                                 aria-label="Default select example">
                                 <option value="ไทย">ไทย</option>
@@ -109,7 +117,7 @@ export default {
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <div class="fw-bold mb-1">Platform</div>
+                            <div class="fw-bold mb-1">แพลตฟอร์ม</div>
                             <select v-model="product.platform" class="form-select" aria-label="Default select example">
                                 <option value="facebook">facebook</option>
                                 <option value="instagram">instagram</option>
@@ -121,25 +129,25 @@ export default {
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <div class="fw-bold mb-1">Amount</div>
+                            <div class="fw-bold mb-1">จำนวน</div>
                             <input v-model="product.amount" class="form-control" id="inputLastName" type="text"
                                 placeholder="Input product amount." />
                         </div>
                         <div class="col-md-3">
-                            <div class="fw-bold mb-1">Price</div>
+                            <div class="fw-bold mb-1">ราคา</div>
                             <input v-model="product.price" class="form-control" id="inputLastName" type="text"
                                 placeholder="Input product price." />
                         </div>
-                        <div class="col-md-12 mb-3">
+                        <!-- <div class="col-md-12 mb-3">
                             <div class="fw-bold mb-1">Comments</div>
                             <textarea v-model="product.comments" class="form-control" id="exampleFormControlTextarea1"
                                 rows="3"></textarea>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="createProduct">Add</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary" @click="createProduct">เพิ่ม</button>
                 </div>
             </div>
         </div>
