@@ -81,8 +81,9 @@
                                             <td>{{ item.attributes.details }}</td>
                                             <td class="text-center">{{ item.attributes.platform }}</td>
                                             <td class="text-center">{{ item.attributes.type }}</td>
-                                            <td class="text-center">{{ item.attributes.amount }} </td>
-                                            <td class="text-center">{{ item.attributes.price }} บาท</td>
+                                            <td class="text-center">{{ item.attributes.amount.toLocaleString() }} </td>
+                                            <td class="text-center">{{ item.attributes.price.toLocaleString() }} บาท
+                                            </td>
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-auto">

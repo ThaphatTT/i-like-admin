@@ -1,25 +1,13 @@
 <template>
-  <div
-    class="modal fade"
-    id="staticBackdrop"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
-    tabindex="-1"
-    aria-labelledby="staticBackdropLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">
             กิจกกรรมใหม่
           </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div>
@@ -44,51 +32,37 @@
             <h6 class="text-black-50 d-inline">
               หัวข้อ
               <p class="text-danger d-inline">*</p>
-              <input
-                class="form-control mb-3"
-                type="text"
-                aria-label="default input example"
-                v-model="tickets.topic"
-              />
+              <input class="form-control mb-3" type="text" aria-label="default input example" v-model="tickets.topic" />
             </h6>
           </div>
           <div>
             <h6 class="text-black-50 d-inline">
               คำอธิบาย
               <p class="text-danger d-inline">*</p>
-              <tinymce-vue
-                v-model="tickets.details"
-                api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42"
-                :init="{
-                  selector: 'textarea#premiumskinsandicons-jam',
-                  skin: 'jam',
-                  icons: 'jam',
-                  plugins: 'code image link lists',
-                  toolbar:
-                    'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
-                  menubar: false,
-                  tinycomments_mode: 'embedded',
-                  tinycomments_author: 'Author name',
-                  mergetags_list: [
-                    { value: 'First.Name', title: 'First Name' },
-                    { value: 'Email', title: 'Email' },
-                  ],
-                  ai_request: (request, respondWith) =>
-                    respondWith.string(() =>
-                      Promise.reject('See docs to implement AI Assistant')
-                    ),
-                }"
-                initial-value=""
-              />
+              <tinymce-vue v-model="tickets.details" api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42" :init="{
+                selector: 'textarea#premiumskinsandicons-jam',
+                skin: 'jam',
+                icons: 'jam',
+                plugins: 'code image link lists',
+                toolbar:
+                  'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
+                menubar: false,
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [
+                  { value: 'First.Name', title: 'First Name' },
+                  { value: 'Email', title: 'Email' },
+                ],
+                ai_request: (request, respondWith) =>
+                  respondWith.string(() =>
+                    Promise.reject('See docs to implement AI Assistant')
+                  ),
+              }" initial-value="" />
             </h6>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancel
           </button>
           <button type="button" class="btn btn-primary" @click="createEvent()">
@@ -191,8 +165,8 @@ export default {
             details: this.tickets.details,
             thumbnail: uploadThumbnail[0].id,
             image: uploadImagecover[0].id,
-            thumbnailUrl: this.localPrefix + uploadThumbnail[0].url,
-            imageUrl: this.localPrefix + uploadImagecover[0].url,
+            thumbnailUrl: this.prefix + uploadThumbnail[0].url,
+            imageUrl: this.prefix + uploadImagecover[0].url,
           },
         });
         Swal.fire({

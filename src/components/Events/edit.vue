@@ -1,33 +1,17 @@
 <template>
-  <button
-    type="button"
-    class="btn btn-warning"
-    data-bs-toggle="modal"
-    :data-bs-target="'#staticBackdropEventUpdate' + this.eventId"
-  >
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+    :data-bs-target="'#staticBackdropEventUpdate' + this.eventId">
     แก้ไข
   </button>
 
-  <div
-    class="modal fade"
-    :id="'staticBackdropEventUpdate' + this.eventId"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
-    tabindex="-1"
-    aria-labelledby="staticBackdropEventUpdate"
-    aria-hidden="true"
-  >
+  <div class="modal fade" :id="'staticBackdropEventUpdate' + this.eventId" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropEventUpdate" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">แก้ไขกิจกรรม</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            @click="getEventData(this.eventId)"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            @click="getEventData(this.eventId)"></button>
         </div>
         <div class="modal-body text-start">
           <div>
@@ -40,19 +24,12 @@
                     <img class="img-fluid" :src="eventThumbnail" />
                   </div>
                   <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                    <button
-                      class="btn btn-warning"
-                      @click="removeImage($event, index, 'eventThumbnail')"
-                    >
+                    <button class="btn btn-warning" @click="removeImage($event, index, 'eventThumbnail')">
                       Remove
                     </button>
                   </div>
                 </div>
-                <form
-                  v-else
-                  class="dropzone text-center"
-                  :id="'eventThumbnail' + eventId"
-                ></form>
+                <form v-else class="dropzone text-center" :id="'eventThumbnail' + eventId"></form>
               </div>
             </h6>
           </div>
@@ -66,19 +43,12 @@
                     <img class="img-fluid" :src="eventImagecover" />
                   </div>
                   <div class="d-block d-flex justify-content-end mt-2 mb-2">
-                    <button
-                      class="btn btn-warning"
-                      @click="removeImage($event, index, 'eventImagecover')"
-                    >
+                    <button class="btn btn-warning" @click="removeImage($event, index, 'eventImagecover')">
                       Remove
                     </button>
                   </div>
                 </div>
-                <form
-                  v-else
-                  class="dropzone text-center"
-                  :id="'eventImageUpdate' + eventId"
-                ></form>
+                <form v-else class="dropzone text-center" :id="'eventImageUpdate' + eventId"></form>
               </div>
             </h6>
           </div>
@@ -86,59 +56,40 @@
             <h6 class="text-black-50 d-inline">
               หัวข้อ
               <p class="text-danger d-inline">*</p>
-              <input
-                class="form-control mb-3"
-                type="text"
-                aria-label="default input example"
-                v-model="event.topic"
-              />
+              <input class="form-control mb-3" type="text" aria-label="default input example" v-model="event.topic" />
             </h6>
           </div>
           <div>
             <h6 class="text-black-50 d-inline">
               คำอธิบาย
               <p class="text-danger d-inline">*</p>
-              <tinymce-vue
-                v-model="event.details"
-                api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42"
-                :init="{
-                  selector: 'textarea#premiumskinsandicons-jam',
-                  skin: 'jam',
-                  icons: 'jam',
-                  plugins: 'code image link lists',
-                  toolbar:
-                    'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
-                  menubar: false,
-                  tinycomments_mode: 'embedded',
-                  tinycomments_author: 'Author name',
-                  mergetags_list: [
-                    { value: 'First.Name', title: 'First Name' },
-                    { value: 'Email', title: 'Email' },
-                  ],
-                  ai_request: (request, respondWith) =>
-                    respondWith.string(() =>
-                      Promise.reject('See docs to implement AI Assistant')
-                    ),
-                }"
-                initial-value=""
-              />
+              <tinymce-vue v-model="event.details" api-key="nfke35xnxz7bxhuividf2jqprve4fetqodofpcdtrrirsz42" :init="{
+                selector: 'textarea#premiumskinsandicons-jam',
+                skin: 'jam',
+                icons: 'jam',
+                plugins: 'code image link lists',
+                toolbar:
+                  'undo redo | styles | bold italic underline forecolor backcolor | align | bullist numlist',
+                menubar: false,
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [
+                  { value: 'First.Name', title: 'First Name' },
+                  { value: 'Email', title: 'Email' },
+                ],
+                ai_request: (request, respondWith) =>
+                  respondWith.string(() =>
+                    Promise.reject('See docs to implement AI Assistant')
+                  ),
+              }" initial-value="" />
             </h6>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-            @click="getEventData(this.eventId)"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="getEventData(this.eventId)">
             Close
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="updateEvent(this.eventId)"
-          >
+          <button type="button" class="btn btn-primary" @click="updateEvent(this.eventId)">
             Update
           </button>
         </div>
@@ -195,7 +146,7 @@ export default {
           : null;
         this.event.thumbnailId =
           event.data?.attributes?.thumbnail?.data &&
-          event.data.attributes.thumbnail.data.length > 0
+            event.data.attributes.thumbnail.data.length > 0
             ? event.data.attributes.thumbnail.data[0].id
             : null;
         // Set up dropZones for event
@@ -375,10 +326,10 @@ export default {
       const updateEvent = await api.Events.update(idEvent, {
         data: {
           thumbnailUrl: thumbnail.data.url
-            ? this.localPrefix + thumbnail.data.url
+            ? this.prefix + thumbnail.data.url
             : this.eventThumbnail,
           imageUrl: coverImage.data.url
-            ? this.localPrefix + coverImage.data.url
+            ? this.prefix + coverImage.data.url
             : this.eventImagecover,
         },
       });

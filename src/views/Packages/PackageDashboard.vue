@@ -25,7 +25,7 @@
                                         @submit.prevent="searchUser(userData)">
                                         <div class="input-group">
                                             <input v-model="packageData" class="form-control" type="text"
-                                                placeholder="Search for ?..." aria-label="Search for..."
+                                                placeholder="ค้นหา..." aria-label="Search for..."
                                                 aria-describedby="btnNavbarSearch" />
                                             <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
                                                     class="fas fa-search"></i></button>

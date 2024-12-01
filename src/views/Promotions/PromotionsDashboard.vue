@@ -42,13 +42,15 @@
                                     <thead>
                                         <tr>
                                             <th>หัวข้อ</th>
+                                            <th>คำอธิบาย</th>
                                             <th>สถานะ</th>
                                             <th>การจัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in promotions" :key="index">
-                                            <td> {{ item.attributes.details }}</td>
+                                            <td> {{ item.attributes.topic }}</td>
+                                            <td v-html="truncateHtml(item.attributes.details, 200)"></td>
                                             <td>
                                                 <div class="row row-cols-auto justify-content-center">
                                                     <div class="col-auto">
@@ -258,6 +260,22 @@ export default {
                 }
             });
         },
+        truncateHtml(html, maxLength) {
+            // Create a temporary element to parse the HTML
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = html;
+
+            // Extract the text content from the HTML
+            let textContent = tempElement.textContent || tempElement.innerText || '';
+
+            // Truncate the text content to the specified length
+            if (textContent.length > maxLength) {
+                textContent = textContent.substring(0, maxLength) + '...';
+            }
+
+            // Return the truncated text as HTML
+            return textContent;
+        }
     },
     mounted() {
         this.fetchPromotionsData()

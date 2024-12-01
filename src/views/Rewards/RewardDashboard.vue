@@ -116,9 +116,9 @@ export default {
             </div>
             <div class="col-4 text-center align-content-center">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <!-- <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   เพิ่มรางวัลใหม่
-                </button>
+                </button> -->
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default {
                       <th>ประเภท</th>
                       <th>หน่วย</th>
                       <th>วันหมดอายุ</th>
-                      <th>จัดการ</th>
+                      <!-- <th>จัดการ</th> -->
                     </tr>
                   </thead>
                   <tbody>
@@ -151,7 +151,7 @@ export default {
                       <td>{{ item.attributes.type }}</td>
                       <td>{{ item.attributes.unit }}</td>
                       <td>{{ item.attributes.expiredDate }}</td>
-                      <td class="text-center">
+                      <!-- <td class="text-center">
                         <div class="row row-cols-auto justify-content-center">
                           <div class="col">
                             <button class="btn btn-danger btn-block" @click="deleteItem(item.id)">
@@ -159,7 +159,7 @@ export default {
                             </button>
                           </div>
                         </div>
-                      </td>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>

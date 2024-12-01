@@ -1,3 +1,123 @@
+<template>
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+        :data-bs-target="'#editProduct' + this.packageId">
+        แก้ไข
+    </button>
+
+    <div class="modal fade" :id="'editProduct' + packageId" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">แก้ไขแพ็คเกจ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Loading Spinner -->
+                <div v-if="isLoading">
+                    <Loading />
+                </div>
+
+                <!-- Modal Body -->
+                <div v-else class="modal-body">
+                    <!-- Cover Image Section -->
+                    <div>
+                        <h6 class="text-black-50 d-inline">รูปปก
+                            <p class="text-danger d-inline">*</p>
+                        </h6>
+                        <div class="mb-3">
+                            <div v-if="PackageCoverImage !== null">
+                                <div class="d-block text-center mx-auto">
+                                    <img class="img-fluid" :src="PackageCoverImage" alt="Cover Image" />
+                                </div>
+                                <div class="d-flex justify-content-end mt-2 mb-2">
+                                    <button class="btn btn-warning" @click="removeImage">ลบออก</button>
+                                </div>
+                            </div>
+
+                            <!-- Dropzone to Upload New Image -->
+                            <form v-else :id="'coverImageDropzone' + packageId" class="dropzone text-center">
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Package Details -->
+                    <div class="mb-3">
+                        <label class="fw-bold mb-1 text-start" for="topic">ชื่อรายการ</label>
+                        <input v-model="package.attributes.topic" class="form-control" id="topic" type="text"
+                            placeholder="Topic" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold mb-1 text-start" for="details">รายละเอียด</label>
+                        <textarea v-model="package.attributes.details" class="form-control" id="details" rows="3"
+                            placeholder="Details"></textarea>
+                    </div>
+
+                    <!-- Service Dropdown -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold mb-1 text-start">บริการ</label>
+                            <select v-model="package.attributes.service" class="form-select">
+                                <option value="view">ยอดวิว</option>
+                                <option value="like">ไลก์</option>
+                                <option value="follow">ติดตาม</option>
+                                <option value="comment">คอมเมนต์</option>
+                                <option value="save post">บันทึกโพสต์</option>
+                                <option value="share post">แชร์โพสต์</option>
+                                <option value="live">ไลฟ์</option>
+                                <option value="month like">รายเดือน</option>
+                                <option value="like + follow">ไลก์ + ติดตาม</option>
+                                <option value="emoji">อีโมจิ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Other Package Attributes -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="fw-bold mb-1 text-start">ประเภท</label>
+                            <select v-model="package.attributes.type" class="form-select">
+                                <option value="ไทย">ไทย</option>
+                                <option value="ต่างชาติ">ต่างชาติ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="fw-bold mb-1 text-start">แพลตฟอร์ม</label>
+                            <select v-model="package.attributes.platform" class="form-select">
+                                <option value="facebook">facebook</option>
+                                <option value="instagram">instagram</option>
+                                <option value="twitter">twitter</option>
+                                <option value="youtube">youtube</option>
+                                <option value="shopee">shopee</option>
+                                <option value="tiktok">tiktok</option>
+                                <option value="lemon8">lemon8</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="fw-bold mb-1 text-start">จำนวน</label>
+                            <input v-model="package.attributes.amount" class="form-control" type="number"
+                                placeholder="จำนวน" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="fw-bold mb-1 text-start">ราคา</label>
+                            <input v-model="package.attributes.price" class="form-control" type="number"
+                                placeholder="ราคา" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer with Action Buttons -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-primary" @click="updateProduct(package.id)">แก้ไข</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
 <script>
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
@@ -82,14 +202,7 @@ export default {
                 }
 
                 const updatedData = {
-                    topic: this.package.attributes.topic,
-                    details: this.package.attributes.details,
-                    price: this.package.attributes.price,
-                    isPublish: this.package.attributes.isPublish,
-                    amount: this.package.attributes.amount,
-                    type: this.package.attributes.type,
-                    platform: this.package.attributes.platform,
-                    service: this.package.attributes.service,
+                    ...this.package,
                     img: uploadImagecover ? uploadImagecover[0].id : this.package.attributes.img.data[0].id, // Use new or existing image
                     coverImg: uploadImagecover ? this.prefix + uploadImagecover[0].url : this.PackageCoverImage
                 };
@@ -151,118 +264,3 @@ export default {
     }
 };
 </script>
-
-<template>
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-        :data-bs-target="'#editProduct' + this.packageId">
-        แก้ไข
-    </button>
-
-    <div class="modal fade" :id="'editProduct' + packageId" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit a Package</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!-- Loading Spinner -->
-                <div v-if="isLoading">
-                    <Loading />
-                </div>
-
-                <!-- Modal Body -->
-                <div v-else class="modal-body">
-                    <!-- Cover Image Section -->
-                    <div>
-                        <h6 class="text-black-50 d-inline">Cover Image
-                            <p class="text-danger d-inline">*</p>
-                        </h6>
-                        <div class="mb-3">
-                            <div v-if="PackageCoverImage !== null">
-                                <div class="d-block text-center mx-auto">
-                                    <img class="img-fluid" :src="PackageCoverImage" alt="Cover Image" />
-                                </div>
-                                <div class="d-flex justify-content-end mt-2 mb-2">
-                                    <button class="btn btn-warning" @click="removeImage">Remove</button>
-                                </div>
-                            </div>
-
-                            <!-- Dropzone to Upload New Image -->
-                            <form v-else :id="'coverImageDropzone' + packageId" class="dropzone text-center">
-
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Package Details -->
-                    <div class="mb-3">
-                        <label class="fw-bold mb-1 text-start" for="topic">Details</label>
-                        <input v-model="package.attributes.topic" class="form-control" id="topic" type="text"
-                            placeholder="Topic" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="fw-bold mb-1 text-start" for="details">Comments</label>
-                        <textarea v-model="package.attributes.details" class="form-control" id="details" rows="3"
-                            placeholder="Details"></textarea>
-                    </div>
-
-                    <!-- Service Dropdown -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="fw-bold mb-1 text-start">Service</label>
-                            <select v-model="package.attributes.service" class="form-select">
-                                <option value="view">view</option>
-                                <option value="instagram">instagram</option>
-                                <option value="twitter">twitter</option>
-                                <option value="youtube">youtube</option>
-                                <option value="shopee">shopee</option>
-                                <option value="tiktok">tiktok</option>
-                                <option value="tiktok">lemon8</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Other Package Attributes -->
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label class="fw-bold mb-1 text-start">Customer Type</label>
-                            <select v-model="package.attributes.type" class="form-select">
-                                <option value="ไทย">ไทย</option>
-                                <option value="ต่างชาติ">ต่างชาติ</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fw-bold mb-1 text-start">Platform</label>
-                            <select v-model="package.attributes.platform" class="form-select">
-                                <option value="facebook">facebook</option>
-                                <option value="instagram">instagram</option>
-                                <option value="twitter">twitter</option>
-                                <option value="youtube">youtube</option>
-                                <option value="shopee">shopee</option>
-                                <option value="tiktok">tiktok</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fw-bold mb-1 text-start">Amount</label>
-                            <input v-model="package.attributes.amount" class="form-control" type="text"
-                                placeholder="Amount" />
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fw-bold mb-1 text-start">Price</label>
-                            <input v-model="package.attributes.price" class="form-control" type="text"
-                                placeholder="Price" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Footer with Action Buttons -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="updateProduct(package.id)">Update</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
