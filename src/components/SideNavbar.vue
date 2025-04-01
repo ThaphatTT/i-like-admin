@@ -67,7 +67,7 @@ const getUser = localStorage.getItem("username");
           </RouterLink>
 
           <div class="sb-sidenav-menu-heading">เครื่องมือ</div>
-          <RouterLink class="nav-link" to="/coupons">
+          <RouterLink class="nav-link" to="/automate">
             <div class="sb-nav-link-icon">
               <i class="fas fa-tachometer-alt"></i>
             </div>

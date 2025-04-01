@@ -30,6 +30,8 @@ import TicketView from "@/components/Tickets/ticketView.vue";
 
 import Farm from "@/views/Farm/farm.vue";
 
+import Automate from "@/views/Automate/auto.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -143,6 +145,14 @@ const router = createRouter({
       path: "/farm",
       name: "farm",
       component: Farm,
+      meta: {
+        middleware: auth,
+      },
+    },
+    {
+      path: "/automate",
+      name: "automate",
+      component: Automate,
       meta: {
         middleware: auth,
       },
